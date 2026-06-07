@@ -78,7 +78,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Standby Screen Saver Overlay */
+/* Standby Screensaver Overlay */
 #ambient-overlay {
   display: none;
   position: fixed;
@@ -96,19 +96,18 @@ body {
 #ambient-prompt { margin-top: 100px; font-size: 14px; color: #1e293b; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 800; }
 
 .app-shell {
-  max-width: 1560px;
+  max-width: 1600px;
   min-height: 100vh;
   margin: 0 auto;
   background: var(--app);
   padding: 0 16px;
 }
 
-/* Premium Streamlined Header Layout */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--app) 70%, transparent);
+  background: color-mix(in srgb, var(--app) 75%, transparent);
   backdrop-filter: blur(30px);
   border-bottom: 1px solid var(--border);
   padding: 18px 12px;
@@ -152,17 +151,6 @@ body {
   -webkit-text-fill-color: transparent;
 }
 
-.time-block { text-align: right; }
-#clock {
-  color: var(--text-strong);
-  font-size: clamp(32px, 3.8vw, 46px);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.04em;
-}
-#date { color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 2px; }
-
-/* REbuilt Unified Dock Menu Bar Structure */
 .dock-container {
   display: inline-flex;
   background: var(--card-soft);
@@ -222,7 +210,7 @@ body {
 .panel { display: none; }
 .panel.active { display: block; }
 
-/* MASTER HUB SITE GRID PLAN */
+/* TWO-COLUMN PERFECTED ULTRA COMMAND CENTER GRID */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -230,7 +218,7 @@ body {
 }
 @media (min-width: 1024px) {
   .dashboard-grid {
-    grid-template-columns: minmax(440px, 1.15fr) minmax(420px, 1fr) minmax(340px, 0.85fr);
+    grid-template-columns: minmax(420px, 1fr) minmax(680px, 1.6fr);
   }
 }
 
@@ -253,9 +241,9 @@ body {
 }
 .card-main-title { font-size: 18px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; }
 
-/* SEAMLESS EMBED LAYER */
+/* CALENDAR EMBED LAYER */
 .calendar-frame-wrap {
-  height: 570px;
+  height: 600px;
   background: var(--app);
   overflow: hidden;
   position: relative;
@@ -269,88 +257,95 @@ body {
 }
 .calendar-frame-wrap.full { height: 800px; }
 
-/* HIGHER RESPONSE DOPAMINE INTERACTION ELEMENTS */
+/* RESPONSIVE FLUID TASK CHORE BAR */
 .chore-row {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 16px;
   border-radius: var(--radius-sm);
-  padding: 16px 18px;
-  min-height: 64px;
+  padding: 14px 18px;
+  min-height: 58px;
   background: var(--card-soft);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.chore-row:hover { border-color: var(--border); transform: translateY(-3px) scale(1.01); background: var(--card); box-shadow: var(--shadow-soft); }
-.chore-row:active { transform: scale(0.97); }
+.chore-row:hover { border-color: var(--border); transform: translateY(-2px); background: var(--card); box-shadow: var(--shadow); }
+.chore-row:active { transform: scale(0.98); }
 .chore-row.done { opacity: 0.4; }
 .chore-row.done .chore-name { text-decoration: line-through; }
 
 .chk {
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 9px;
   border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 13px;
   color: white;
-  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); transform: scale(1.08) rotate(360deg); }
+.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); transform: scale(1.05); }
 
-/* GAMIFIED DONUT PROGRESS BLOCKS */
-.person-widget {
+/* FRONT COMPONENT QUICK INJECTION BAR */
+.quick-inject-box {
   background: var(--card-soft);
+  border: 1px solid var(--border);
+  padding: 14px 18px;
   border-radius: var(--radius-sm);
-  padding: 18px;
-  margin-bottom: 14px;
-  border: 1px solid var(--border-soft);
+  margin-bottom: 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
 }
-.person-widget-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px;}
-.p-widget-avatar { width: 46px; height: 46px; border-radius: 14px; background: var(--person-soft); color: var(--person); display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
-.p-widget-name { font-weight: 800; color: var(--text-strong); font-size: 17px; }
+.quick-select {
+  border: 1px solid var(--border);
+  background: var(--app);
+  color: var(--text-strong);
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  outline: none;
+}
 
-/* GLOWING STREAK COMPONENT */
 .p-widget-streak { 
   font-size: 11px; 
   background: linear-gradient(135deg, #ff9800, #ff5722); 
   color: #ffffff; 
-  padding: 4px 12px; 
-  border-radius: 10px; 
-  font-weight: 800; 
-  margin-left: auto;
-  box-shadow: 0 4px 10px rgba(255, 87, 34, 0.25);
+  padding: 3px 10px; 
+  border-radius: 8px; 
+  font-weight: 800;
+  box-shadow: 0 3px 8px rgba(255, 87, 34, 0.2);
 }
 
-.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-.stat-mini { background: var(--card-soft); padding: 16px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
+.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-mini { background: var(--card-soft); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
 .stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; }
-.stat-m-val { font-size: 26px; font-weight: 800; color: var(--text-strong); margin-top: 4px; }
+.stat-m-val { font-size: 24px; font-weight: 800; color: var(--text-strong); margin-top: 4px; }
 
-/* KITCHEN DISPATCH MODULE STYLE */
 .dinner-premium-box {
   background: linear-gradient(135deg, var(--purple-soft), transparent);
   border: 1px solid color-mix(in srgb, var(--purple) 30%, var(--border));
-  padding: 24px;
+  padding: 18px 22px;
   border-radius: var(--radius-sm);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
-.dinner-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.12em; margin-bottom: 6px;}
-.dinner-text { font-size: 20px; font-weight: 800; color: var(--text-strong); }
+.dinner-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.12em; margin-bottom: 4px;}
+.dinner-text { font-size: 18px; font-weight: 800; color: var(--text-strong); }
 
 .pill-btn {
-  border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 18px; font-size: 13px; font-weight: 700;
+  border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700;
 }
 .pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
 .pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
 .pill-btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
 
-.section-title-row { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; margin-bottom: 14px; }
 .person-grid-chores { display: grid; grid-template-columns: 1fr; gap: 24px; }
 @media(min-width: 768px) { .person-grid-chores { grid-template-columns: repeat(2, 1fr); } }
 
@@ -371,7 +366,7 @@ body {
 
 .modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); backdrop-filter: blur(16px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
 .modal-bg.open { display:flex; }
-.modal { background:var(--card); border:1px solid var(--border); border-radius:28px; padding:32px; width:380px; box-width:100%; text-align: center; }
+.modal { background:var(--card); border:1px solid var(--border); border-radius:28px; padding:32px; width:380px; text-align: center; }
 .pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
 .pin-dot { width:16px; height:16px; border-radius:99px; background:var(--border); }
 .pin-dot.filled { background:var(--blue); box-shadow: 0 0 10px var(--blue); }
@@ -382,8 +377,8 @@ body {
 .toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 16px 32px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 14px; }
 .toast.show { display:block; animation: toastIn .25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-.progress-inline-bar { height: 7px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 8px; }
-.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.progress-inline-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.6s ease; }
 </style>
 </head>
 <body class="theme-focus">
@@ -392,19 +387,19 @@ body {
 <div id="ambient-overlay" onclick="wakeKiosk()">
   <div id="ambient-time">--:--</div>
   <div id="ambient-date">---</div>
-  <div id="ambient-prompt">👋 Tap anywhere to access console</div>
+  <div id="ambient-prompt">👋 Tap screen to wake control center</div>
 </div>
 
 <div class="app-shell">
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Syncing Engine</span></div>
+        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Sync Active</span></div>
         <h1 class="main-title-headline">Deutmeyer Family Dashboard</h1>
       </div>
       
-      <!-- Seamless Control Menu Dock Row -->
-      <div class="dock-container" aria-label="Dashboard controls">
+      <!-- Dock Menu Options -->
+      <div class="dock-container" aria-label="Dashboard views">
         <button class="nav-tab active" onclick="switchTab('home')">Today</button>
         <button class="nav-tab" onclick="switchTab('chores')">Chores</button>
         <button class="nav-tab" onclick="switchTab('approvals')">Approvals <span class="badge" id="appr-badge" style="display:none">0</span></button>
@@ -415,73 +410,78 @@ body {
       <div class="time-block">
         <div id="clock">--:--</div>
         <div id="date">--</div>
-        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" style="margin-top: 6px; padding: 4px 10px; border-radius: 8px;">Theme</button>
+        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" style="margin-top: 4px; padding: 3px 8px; border-radius: 6px;">Theme</button>
       </div>
     </div>
   </header>
 
   <main class="content">
     
-    <!-- MAIN INTERACTIVE TODAY PANEL -->
+    <!-- CONSOLIDATED HIGH-VALUE FRONT PANEL -->
     <section class="panel active" id="panel-home">
       <div class="dashboard-grid">
         
-        <!-- Column 1: Native Inverted Calendar Embed Component -->
+        <!-- Left: Calendar Widget Node -->
         <div class="card">
           <div class="card-header-main">
             <div>
               <div class="card-main-title">Today's Schedule</div>
-              <div style="font-size:12px; color:var(--muted); margin-top:2px;">Denver Time Sync</div>
+              <div style="font-size:12px; color:var(--muted); margin-top:2px;">Google Live Data Stream</div>
             </div>
-            <button class="pill-btn ghost" onclick="switchTab('calendar')">Full Grid</button>
           </div>
           <div class="calendar-frame-wrap">
             <iframe id="cal-agenda" src="" loading="lazy"></iframe>
           </div>
         </div>
 
-        <!-- Column 2: Interactive Family Hub -->
+        <!-- Right: Master Command Core (Chores, To-Dos, On-The-Fly Input) -->
         <div class="card pad">
-          <div class="section-title-row" style="margin-top:0; margin-bottom:16px;">
-            <div class="card-main-title">Track Metrics</div>
-            <div id="week-label" style="font-size:12px; color:var(--muted)">Cycle Tracker</div>
-          </div>
-          <div id="home-people"></div>
-        </div>
-
-        <!-- Column 3: Live Quick Modules & Micro Chores -->
-        <div class="side-stack">
-          <div class="card dinner-premium-box" id="home-dinner-card" style="display:none;">
-            <div class="dinner-title">🍽️ Tonight's Dinner Menu</div>
-            <div id="home-dinner-text" class="dinner-text"></div>
+          
+          <!-- Live Secondary Metrics & Meal Headers -->
+          <div style="display:flex; gap:16px; align-items:start; flex-wrap:wrap; margin-bottom:14px;">
+            <div class="quick-stats-stack" id="quick-stats" style="flex:1; margin-bottom:0;"></div>
+            
+            <div class="card dinner-premium-box" id="home-dinner-card" style="display:none; flex:1; margin-bottom:0; padding:12px 16px;">
+              <div class="dinner-title">🍽️ Tonight's Dinner</div>
+              <div id="home-dinner-text" style="font-size:15px; font-weight:700; color:var(--text-strong)"></div>
+            </div>
           </div>
 
-          <div class="quick-stats-stack" id="quick-stats"></div>
-
-          <div class="card pad">
-            <div class="card-main-title" style="margin-bottom:14px;">Instant Action Focus Items</div>
-            <div id="focus-list"></div>
+          <!-- ON-THE-FLY INJECTION COMPONENT CONTAINER -->
+          <div class="quick-inject-box">
+            <span style="font-weight:800; font-size:14px; color:var(--text-strong);">⚡ On-The-Fly Add:</span>
+            <input type="text" id="front-task-input" class="inp" placeholder="Type task item name..." style="flex:1; min-width:180px; padding:8px 12px; border-radius:10px;" />
+            <select id="front-assignee-select" class="quick-select">
+              <option value="global_todo">📝 Global To-Do Item</option>
+              <option value="jules">⭐ Assign Jules</option>
+              <option value="henry">🚀 Assign Henry</option>
+              <option value="dad">👨 Assign Dad</option>
+              <option value="mom">👩 Assign Jessica</option>
+            </select>
+            <button class="pill-btn primary" onclick="injectTaskOnTheFly()" style="padding:8px 16px; border-radius:10px;">Inject Task</button>
           </div>
+
+          <!-- Master Unified Scroll Sheet for Chores and To-Dos -->
+          <div style="font-size:15px; font-weight:800; color:var(--text-strong); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;">Active Track Logs</div>
+          <div id="unified-master-tracks"></div>
+          
         </div>
 
       </div>
     </section>
 
-    <!-- DETAILED RESPONSIBILITY SPREAD PANEL -->
+    <!-- TRADITIONAL MANIFEST PANEL LAYOUTS -->
     <section class="panel" id="panel-chores">
       <div class="person-grid-chores" id="chores-people"></div>
       <div class="footer-actions">
-        <span>Allowances disburse to verified cloud layers following confirmation. Premium tasks sign off automatically.</span>
         <button class="pill-btn danger" onclick="requirePin('reset')">Reset Log</button>
       </div>
     </section>
 
-    <!-- APPROVALS LOG PANEL -->
     <section class="panel" id="panel-approvals">
       <div id="approvals-container"></div>
     </section>
 
-    <!-- FULL FRAME CALENDAR VIEW -->
     <section class="panel" id="panel-calendar">
       <div class="card">
         <div class="calendar-frame-wrap full">
@@ -490,16 +490,15 @@ body {
       </div>
     </section>
 
-    <!-- ADMINISTRATION ACCESS CORE MATRIX -->
     <section class="panel" id="panel-manage">
       <div class="card pad" style="margin-bottom: 24px;">
-        <div class="card-main-title" style="margin-bottom:14px">Control Center Configs</div>
+        <div class="card-main-title" style="margin-bottom:14px">Operational Parameter Adjustments</div>
         <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer;">
-          <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:22px; height:22px;"> Enable Shared Household Dinner Matrix
+          <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:22px; height:22px;"> Enable Kitchen Menu Layer
         </label>
         <div id="manage-dinner-box" style="margin-top:16px; display:none;">
-          <input type="text" id="dinner-input" class="inp" placeholder="Type system meal output..." style="max-width:400px; display:inline-block; margin-right:10px;" />
-          <button class="pill-btn primary" onclick="saveDinnerMenu()">Broadcast Menu</button>
+          <input type="text" id="dinner-input" class="inp" placeholder="Type menu data..." style="max-width:400px; display:inline-block; margin-right:10px;" />
+          <button class="pill-btn primary" onclick="saveDinnerMenu()">Broadcast</button>
         </div>
       </div>
       <div class="manage-grid" id="manage-grid"></div>
@@ -508,11 +507,10 @@ body {
   </main>
 </div>
 
-<!-- SECURITY ENTRY PIN MODAL -->
+<!-- Parent Code Auth Overlay Panel -->
 <div class="modal-bg" id="pin-modal">
   <div class="modal">
-    <h3 style="margin:0 0 6px; font-size:22px; color:var(--text-strong)">Parent PIN Entry</h3>
-    <p id="pin-desc" style="margin:0; font-size:14px; color:var(--muted)">Security validation required</p>
+    <h3 style="margin:0 0 6px; font-size:22px; color:var(--text-strong)">Clearance PIN Required</h3>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
@@ -528,11 +526,10 @@ body {
 
 <div class="modal-bg" id="reset-modal">
   <div class="modal">
-    <h3 style="color:var(--text-strong)">Cycle Matrix Reset?</h3>
-    <p style="color:var(--muted)">This operation purges weekly data points for the next scheduling loop.</p>
+    <h3 style="color:var(--text-strong)">Purge Database Metrics?</h3>
     <div class="modal-btns">
       <button class="pill-btn" onclick="closeModal('reset-modal')">Abort</button>
-      <button class="pill-btn danger" onclick="doReset()">Confirm Purge</button>
+      <button class="pill-btn danger" onclick="doReset()">Confirm</button>
     </div>
   </div>
 </div>
@@ -544,7 +541,7 @@ body {
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
 // ══════════════════════════════════════════════
-// OPERATIONAL ARCHITECTURE VALUES
+// ARCHITECTURE RUNTIME VALUES
 // ══════════════════════════════════════════════
 const GOOGLE_CAL_URL = 'https://calendar.google.com/calendar/embed?src=family11684173322375554414%40group.calendar.google.com&ctz=America%2FDenver';
 const PARENT_PIN = '1234';
@@ -560,13 +557,12 @@ const firebaseConfig = {
 };
 
 // ══════════════════════════════════════════════
-// OSCILLATOR SOUND EX EFFECTS MATRIX
+// OSCILLATOR AUDIO DOPAMINE ENGINES
 // ══════════════════════════════════════════════
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playAudioTone(freq, type, duration, vol) {
   try {
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
+    const osc = audioCtx.createOscillator(); const gainNode = audioCtx.createGain();
     osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
     gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
     gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
@@ -574,7 +570,6 @@ function playAudioTone(freq, type, duration, vol) {
     osc.start(); osc.stop(audioCtx.currentTime + duration);
   } catch(e){}
 }
-
 function playSuccessChime() {
   playAudioTone(587.33, 'sine', 0.12, 0.12);
   setTimeout(() => playAudioTone(783.99, 'sine', 0.25, 0.12), 70);
@@ -582,15 +577,14 @@ function playSuccessChime() {
 function playApprovalCascade() {
   playAudioTone(523.25, 'triangle', 0.08, 0.1);
   setTimeout(() => playAudioTone(659.25, 'triangle', 0.08, 0.1), 50);
-  setTimeout(() => playAudioTone(783.99, 'triangle', 0.08, 0.1), 100);
-  setTimeout(() => playAudioTone(1046.50, 'triangle', 0.35, 0.12), 150);
+  setTimeout(() => playAudioTone(783.99, 'triangle', 0.12, 0.1), 100);
 }
 
 let stateRef = null; let firebaseOnline = false; let isLoadingFromCloud = false; let hasLoadedCloudOnce = false; let saveTimer = null;
 
 try {
   firebase.initializeApp(firebaseConfig); stateRef = firebase.database().ref('familyDashboard/state'); firebaseOnline = true;
-} catch (err) { console.warn('Firebase routing failure.', err); }
+} catch (err) { console.warn('Local engine operation active.', err); }
 
 const DEFAULT_PEOPLE = [
   { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, streak:0, chores:[
@@ -624,7 +618,8 @@ function getWeekKey() {
   return `w${d.getFullYear()}_${Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7)}`;
 }
 function deepCopy(v) { return JSON.parse(JSON.stringify(v)); }
-function freshState() { return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], weekKey:getWeekKey(), theme:'focus', dinnerEnabled: false, dinnerMenu: '' }; }
+function freshState() { return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], globalTodos:[], weekKey:getWeekKey(), theme:'focus', dinnerEnabled: false, dinnerMenu: '' }; }
+
 function normalizeState(input) {
   const base = freshState(); const s = (input && typeof input === 'object') ? input : {};
   const normalized = {
@@ -632,6 +627,7 @@ function normalizeState(input) {
     checked: s.checked && typeof s.checked === 'object' && !Array.isArray(s.checked) ? s.checked : {},
     approved: s.approved && typeof s.approved === 'object' && !Array.isArray(s.approved) ? s.approved : {},
     pending: Array.isArray(s.pending) ? s.pending : [],
+    globalTodos: Array.isArray(s.globalTodos) ? s.globalTodos : [],
     weekKey: typeof s.weekKey === 'string' ? s.weekKey : getWeekKey(),
     theme: s.theme === 'classic' ? 'classic' : 'focus',
     dinnerEnabled: typeof s.dinnerEnabled === 'boolean' ? s.dinnerEnabled : base.dinnerEnabled,
@@ -651,12 +647,13 @@ function normalizeState(input) {
   }));
   return normalized;
 }
+
 function loadState() {
-  try { const r = localStorage.getItem('fb_v7'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem('fb_v8'); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
 function saveState() {
-  state = normalizeState(state); try { localStorage.setItem('fb_v7', JSON.stringify(state)); } catch {}
+  state = normalizeState(state); try { localStorage.setItem('fb_v8', JSON.stringify(state)); } catch {}
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
@@ -667,15 +664,12 @@ function saveState() {
 }
 let state = loadState(); state = normalizeState(state);
 
-// ══════════════════════════════════════════════
-// SCREENSAVER STANDBY LOOPS
-// ══════════════════════════════════════════════
+// Ambient Backlight Dimmers
 let ambientTimer;
 function resetAmbientTimer() {
   clearTimeout(ambientTimer);
   ambientTimer = setTimeout(() => {
-    const now = new Date();
-    if (now.getHours() >= 19 || now.getHours() < 7) {
+    if (new Date().getHours() >= 19 || new Date().getHours() < 7) {
       document.getElementById('ambient-overlay').style.display = 'flex'; updateAmbientClock();
     }
   }, 5 * 60 * 1000);
@@ -714,12 +708,12 @@ function personProgress(p) {
 function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot'); const label = document.getElementById('sync-label'); if (!dot || !label) return;
   dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' ? ' offline' : '');
-  label.textContent = mode === 'synced' ? 'System Live' : mode === 'saving' ? 'Syncing...' : 'Local Engine';
+  label.textContent = mode === 'synced' ? 'System Live' : mode === 'saving' ? 'Syncing System...' : 'Local File Link';
 }
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2800); }
 
 // ══════════════════════════════════════════════
-// INTERACTIVE ENGINE OPERATIONS
+// OPERATIONS ENGINE
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
   if (isApproved(pid)) {
@@ -737,10 +731,49 @@ function toggleChore(pid,cid) {
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
     if (!state.pending.some(x => x.type === 'allowance' && x.personId === pid)) {
       state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
-      showToast(`${p.name} completed the payload! 🎉`); confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+      showToast(`${p.name} cleared the layout! 🎉`); confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
     }
   }
   saveState(); renderAll(); updateBadge();
+}
+
+// ON THE FLY ASSIGNMENT INJECTOR ENGINE
+function injectTaskOnTheFly() {
+  const inputEl = document.getElementById('front-task-input');
+  const targetSel = document.getElementById('front-assignee-select');
+  const value = inputEl.value.trim();
+  if(!value) { inputEl.focus(); return; }
+  
+  const target = targetSel.value;
+  if(target === 'global_todo') {
+    state.globalTodos.push({ id: uid(), name: value, done: false });
+    showToast('To-Do added to shared sheet! 📝');
+  } else {
+    const p = state.people.find(x => x.id === target);
+    if(p) {
+      p.chores.push({ id: uid(), name: value, type: 'weekly', amt: 0 });
+      showToast(`Injected chore onto ${p.name}'s manifest! ⚡`);
+    }
+  }
+  inputEl.value = '';
+  saveState(); renderAll();
+}
+
+function toggleGlobalTodo(id) {
+  const todo = state.globalTodos.find(x => x.id === id);
+  if(todo) {
+    todo.done = !todo.done;
+    if(todo.done) {
+      playSuccessChime();
+      confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
+    }
+    saveState(); renderAll();
+  }
+}
+
+function clearFinishedTodos() {
+  state.globalTodos = state.globalTodos.filter(x => !x.done);
+  saveState(); renderAll();
 }
 
 function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll(); }
@@ -782,13 +815,11 @@ function addChore(pid) {
   const type = getSelectedType(pid), amt = type === 'job' ? (parseFloat(amtEl.value) || 0) : 0;
   state.people.find(x => x.id === pid).chores.push({ id: uid(), name, amt, type }); saveState(); renderAll();
 }
-
 function deleteChore(pid,cid) {
   const p = state.people.find(x => x.id === pid); p.chores = p.chores.filter(c => c.id !== cid);
   if (state.checked[pid]) state.checked[pid] = state.checked[pid].filter(x => x !== cid);
   state.pending = state.pending.filter(x => !(x.personId === pid && x.choreId === cid)); saveState(); renderAll(); updateBadge();
 }
-
 function undoApproval(pid) { if (state.approved[pid]) { state.approved[pid].allowance = false; const p = state.people.find(x => x.id === pid); if(p && p.streak > 0) p.streak--; } saveState(); renderAll(); }
 function doReset() {
   const kept = state.people.map(p => ({...p, chores:p.chores.filter(c => c.type === 'weekly')}));
@@ -797,50 +828,35 @@ function doReset() {
 }
 
 // ══════════════════════════════════════════════
-// RENDER COMPONENT CONTROLLERS
+// COMPONENT MATRIX BUILDERS
 // ══════════════════════════════════════════════
 function renderPersonCard(person, compact=false) {
   const weekly = person.chores.filter(c => c.type === 'weekly'), jobs = person.chores.filter(c => c.type === 'job');
-  const prog = personProgress(person), approved = isApproved(person.id), pendingAllowance = state.pending.some(x => x.type === 'allowance' && x.personId === person.id);
-  const earned = earnedTotal(person.id), streakText = person.streak > 0 ? `<span class="p-widget-streak">🔥 ${person.streak} Wk Streak</span>` : '';
-
-  if (compact) {
-    return `<div class="person-widget">
-      <div class="person-widget-header">
-        <div class="p-widget-avatar" style="background:var(--${person.id}-soft); color:var(--${person.id})">${person.emoji}</div>
-        <div>
-          <div class="p-widget-name">${person.name}</div>
-          <div style="font-size:12px; color:var(--muted)">Progress: ${prog.done}/${prog.total} · Earned: ${fmt(earned)}</div>
-        </div>
-        ${streakText}
-      </div>
-      <div class="progress-inline-bar"><div class="progress-inline-fill" style="background:var(--${person.id}); width:${prog.pct}%"></div></div>
-    </div>`;
-  }
+  const approved = isApproved(person.id), pendingAllowance = state.pending.some(x => x.type === 'allowance' && x.personId === person.id);
+  const earned = earnedTotal(person.id);
 
   let statusHtml = '';
   if (person.weeklyAllowance > 0) {
     if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Disbursed</strong><span>Allowance logged.</span></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Rollback</button></div>`;
     else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Awaiting Signature</strong><span>Ready for signoff.</span></div></div>`;
-    else if (allWeeklyDone(person.id)) statusHtml = `<div class="status-card ready"><div class="status-icon">★</div><div class="status-main"><strong>Ready</strong><span>Manifest green.</span></div></div>`;
   }
 
   const weeklyHtml = `${weekly.map(c => {
     const done = isChecked(person.id,c.id), locked = approved && done;
-    return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk" style="--person:var(--${person.id})">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div></div>`;
+    return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk" style="--person:var(--${person.id})">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div><div></div></div>`;
   }).join('')}`;
 
   const jobsHtml = `${jobs.map(c => {
     const checked = isChecked(person.id,c.id), jpending = state.pending.some(x => x.type === 'job' && x.personId === person.id && x.choreId === c.id), japproved = isJobApproved(person.id,c.id);
     let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">Signoff</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
     const clickFn = checked && !jpending && !japproved ? `requestJobApproval('${person.id}','${c.id}')` : (!checked ? `toggleChore('${person.id}','${c.id}')` : '');
-    return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}</div>`;
+    return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}<div></div></div>`;
   }).join('')}`;
 
   return `<div class="card pad" style="border-top: 4px solid var(--${person.id})">
     <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
       <div class="avatar" style="font-size:32px">${person.emoji}</div>
-      <div><div class="p-widget-name" style="font-size:20px">${person.name}</div><div style="font-size:12px; color:var(--muted)">Base Node ${person.age?'· '+person.age:''}</div></div>
+      <div><div class="p-widget-name" style="font-size:20px">${person.name}</div><div style="font-size:12px; color:var(--muted)">Base Parameter Track</div></div>
       <div style="margin-left:auto; text-align:right"><div style="font-size:24px; font-weight:800; color:var(--text-strong)">${fmt(earned)}</div><div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Balance</div></div>
     </div>
     ${statusHtml}
@@ -849,44 +865,85 @@ function renderPersonCard(person, compact=false) {
   </div>`;
 }
 
+// THOROUGH UNIFIED FRONT PAGE DISPLAY CONSOLIDATION
+function renderUnifiedFrontMatrix() {
+  let html = '';
+  
+  // Render Global Shared To-Do Nodes
+  if(state.globalTodos && state.globalTodos.length > 0) {
+    html += `<div class="list-label" style="color:var(--purple); font-weight:800; display:flex; justify-content:space-between; align-items:center;">
+      <span>📌 Shared Family Tasks</span>
+      <button class="pill-btn ghost" onclick="clearFinishedTodos()" style="font-size:11px; padding:2px 8px;">Clear Checked</button>
+    </div>`;
+    state.globalTodos.forEach(todo => {
+      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')">
+        <div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div>
+        <div class="chore-name">${todo.name}</div>
+        <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--purple-soft)">To-Do</div>
+        <div></div>
+      </div>`;
+    });
+  }
+
+  // Loop Individual Kid Nodes Thoroughly Into Main Track View
+  state.people.forEach(p => {
+    const activeChores = p.chores.filter(c => !isChecked(p.id, c.id));
+    const completedChores = p.chores.filter(c => isChecked(p.id, c.id));
+    const streakText = p.streak > 0 ? `<span class="p-widget-streak" style="font-size:10px; padding:2px 6px;">🔥 ${p.streak} Wk</span>` : '';
+
+    html += `<div class="list-label" style="display:flex; align-items:center; gap:8px; margin-top:16px;">
+      <span style="font-size:16px">${p.emoji}</span> 
+      <span style="color:var(--text-strong); font-weight:800;">${p.name}'s Manifest</span>
+      ${streakText}
+    </div>`;
+
+    if(p.chores.length === 0) {
+      html += `<div style="font-size:13px; color:var(--muted); padding:10px 18px;">No active track nodes assigned.</div>`;
+      return;
+    }
+
+    // List unchecked items first to focus attention
+    activeChores.forEach(c => {
+      html += `<div class="chore-row" onclick="toggleChore('${p.id}','${c.id}')">
+        <div class="chk" style="--person:var(--${p.id})"></div>
+        <div class="chore-name">${c.name}</div>
+        <div style="font-size:11px; color:var(--muted); font-weight:600;">${c.type==='job'?'Premium':'Core'}</div>
+        <div></div>
+      </div>`;
+    });
+
+    // List checked items secondary
+    completedChores.forEach(c => {
+      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')">
+        <div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div>
+        <div class="chore-name">${c.name}</div>
+        <div style="font-size:11px; color:var(--muted-2);">Clear</div>
+        <div></div>
+      </div>`;
+    });
+  });
+
+  document.getElementById('unified-master-tracks').innerHTML = html;
+}
+
 function renderQuickStats() {
   const total = state.people.reduce((sum,p) => sum + p.chores.length, 0), done = state.people.reduce((sum,p) => sum + p.chores.filter(c => isChecked(p.id,c.id)).length, 0), earned = state.people.reduce((sum,p) => sum + earnedTotal(p.id), 0);
   document.getElementById('quick-stats').innerHTML = `
-    <div class="stat-mini"><div class="stat-m-label">Chores</div><div class="stat-m-val">${done}/${total}</div></div>
-    <div class="stat-mini"><div class="stat-m-label">Awaiting</div><div class="stat-m-val">${pendingCount()}</div></div>
-    <div class="stat-mini"><div class="stat-m-label">Total Paid</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
-}
-
-function renderFocusList() {
-  const lines = state.people.filter(p => p.weeklyAllowance > 0).map(p => {
-    const next = p.chores.filter(c => c.type === 'weekly').find(c => !isChecked(p.id,c.id));
-    if (next) {
-      return `<div class="chore-row" onclick="toggleChore('${p.id}','${next.id}')" style="min-height:54px; padding:10px 14px; margin-bottom:8px;">
-        <div class="chk" style="--person:var(--${p.id})"></div>
-        <div class="chore-name" style="font-size:14px">${p.name}: <span style="font-weight:500; color:var(--text-strong)">${next.name}</span></div>
-        <div style="font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase;">Tap Clear</div>
-      </div>`;
-    } else {
-      return `<div class="chore-row done" style="cursor:default; min-height:54px; padding:10px 14px; margin-bottom:8px;">
-        <div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div>
-        <div class="chore-name" style="font-size:14px; color:var(--muted)">${p.name}: Track Green ★</div>
-        <div></div>
-      </div>`;
-    }
-  }).join('');
-  document.getElementById('focus-list').innerHTML = lines || '<div class="empty-state">No track logs.</div>';
+    <div class="stat-mini"><div class="stat-m-label">System Tasks</div><div class="stat-m-val">${done}/${total}</div></div>
+    <div class="stat-mini"><div class="stat-m-label">Pending Sign</div><div class="stat-m-val">${pendingCount()}</div></div>
+    <div class="stat-mini"><div class="stat-m-label">Disbursed</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
 }
 
 function renderPeople() {
-  document.getElementById('home-people').innerHTML = state.people.filter(p => p.weeklyAllowance > 0).map(p => renderPersonCard(p, true)).join('');
+  renderUnifiedFrontMatrix();
   document.getElementById('chores-people').innerHTML = state.people.map(p => renderPersonCard(p, false)).join('');
 }
 
 function renderApprovals() {
-  const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>All cleared. No pending parameters.</div></div>`; return; }
+  const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>All cleared. No pending elements.</div></div>`; return; }
   container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
     const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'User'};
-    return `<div class="approval-item"><div><div style="font-size:24px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div class="appr-what">${item.type==='allowance'?'Core completion disburse request':'Premium venture clear request: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign Off</button></div></div>`;
+    return `<div class="approval-item"><div><div style="font-size:24px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div class="appr-what">${item.type==='allowance'?'Core manifest payout check':'Premium ventures sign-off: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign Off</button></div></div>`;
   }).join('')}</div>`;
 }
 
@@ -906,20 +963,20 @@ function renderManage() {
 function updateBadge() { const n = pendingCount(); const b = document.getElementById('appr-badge'); b.style.display = n > 0 ? 'inline-flex' : 'none'; b.textContent = n; }
 
 function renderAll() {
-  state = normalizeState(state); renderQuickStats(); renderFocusList(); renderPeople(); renderApprovals(); renderManage(); updateBadge(); applyTheme();
+  state = normalizeState(state); renderQuickStats(); renderPeople(); renderApprovals(); renderManage(); updateBadge(); applyTheme();
   const dinnerCard = document.getElementById('home-dinner-card');
   if(state.dinnerEnabled && state.dinnerMenu) { dinnerCard.style.display = 'block'; document.getElementById('home-dinner-text').textContent = state.dinnerMenu; } else { dinnerCard.style.display = 'none'; }
 }
 
 // ══════════════════════════════════════════════
-// ROUTING LAYER SYSTEMS
+// SWITCH INTERFACES & ROUTERS
 // ══════════════════════════════════════════════
 let manageUnlocked = false;
 function switchTab(name) {
   if (name === 'manage' && !manageUnlocked) { requirePin('manage'); return; }
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', ['home','chores','approvals','calendar','manage'][i] === name));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
-  if (name === 'approvals') renderApprovals(); if (name === 'manage') renderManage();
+  if (name === 'home') renderUnifiedFrontMatrix(); if (name === 'approvals') renderApprovals(); if (name === 'manage') renderManage();
 }
 function toggleTheme() { state.theme = state.theme === 'classic' ? 'focus' : 'classic'; saveState(); applyTheme(); }
 function applyTheme() {
@@ -943,7 +1000,7 @@ function updateClock() {
 let pinBuffer = '', pinAction = null, pinMeta = null;
 function requirePin(action, meta) {
   pinAction = action; pinMeta = meta; pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = '';
-  document.getElementById('pin-desc').textContent = action==='reset'?'Wiping system parameters requires confirmation':'Security authorization required';
+  document.getElementById('pin-desc').textContent = action==='reset'?'Wiping parameters requires parent authorization':'Parent security code mandatory';
   document.getElementById('pin-modal').classList.add('open');
 }
 function pinKey(k) {
@@ -958,7 +1015,7 @@ function checkPin() {
     if (pinAction === 'unapprove') undoApproval(pinMeta);
     if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); }
   } else {
-    document.getElementById('pin-error').textContent = 'Authorization failed.'; pinBuffer = ''; updatePinDots();
+    document.getElementById('pin-error').textContent = 'Clearance failure.'; pinBuffer = ''; updatePinDots();
   }
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
