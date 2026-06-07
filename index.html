@@ -384,12 +384,34 @@ body {
   </div>
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
 <script>
 // ══════════════════════════════════════════════
 // ⚙️  CONFIG
 // ══════════════════════════════════════════════
 const GOOGLE_CAL_URL = '';   // paste Google Calendar embed src here
 const PARENT_PIN     = '1234'; // change this to your family's PIN
+
+// Firebase cloud sync
+const firebaseConfig = {
+  apiKey: "AIzaSyAPmQm4lGjzcG8lp6NrObOqyEC8hqbwdzE",
+  authDomain: "trevica-dashboard.firebaseapp.com",
+  databaseURL: "https://trevica-dashboard-default-rtdb.firebaseio.com",
+  projectId: "trevica-dashboard",
+  storageBucket: "trevica-dashboard.firebasestorage.app",
+  messagingSenderId: "231538201509",
+  appId: "1:231538201509:web:e8ca93e484efc1750f8e4c"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const stateRef = db.ref('familyDashboard/state');
+
+let isLoadingFromCloud = false;
+let hasLoadedCloudOnce = false;
 
 // ══════════════════════════════════════════════
 // DEFAULT PEOPLE  — edit names & weekly allowance
@@ -461,6 +483,10 @@ function loadState() {
 }
 function saveState() {
   try { localStorage.setItem('fb_v3', JSON.stringify(state)); } catch {}
+
+  if (!isLoadingFromCloud) {
+    stateRef.set(state);
+  }
 }
 
 let state = loadState();
@@ -934,6 +960,31 @@ function renderAll() {
 
 updateClock(); setInterval(updateClock,15000);
 renderAll(); updateBadge(); setupCalendar();
+
+// Load and sync shared state from Firebase.
+stateRef.on('value', (snapshot) => {
+  const cloudState = snapshot.val();
+
+  // If Firebase is empty, push this device's current state up to the cloud.
+  if (!cloudState && !hasLoadedCloudOnce) {
+    hasLoadedCloudOnce = true;
+    saveState();
+    return;
+  }
+
+  if (cloudState) {
+    hasLoadedCloudOnce = true;
+    isLoadingFromCloud = true;
+    state = cloudState;
+
+    try { localStorage.setItem('fb_v3', JSON.stringify(state)); } catch {}
+
+    renderAll();
+    updateBadge();
+
+    isLoadingFromCloud = false;
+  }
+});
 </script>
 </body>
 </html>
