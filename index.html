@@ -2,23 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Deutmeyer Family Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
 <!-- Canvas Confetti Library for Celebrations -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 :root {
   --bg: #f8fafc;
   --app: #ffffff;
-  --card: rgba(255, 255, 255, 0.9);
+  --card: rgba(255, 255, 255, 0.95);
   --card-soft: #f1f5f9;
-  --text: #334155;
+  --text: #475569;
   --text-strong: #0f172a;
   --muted: #64748b;
-  --muted-2: #94a3b8;
   --border: #e2e8f0;
   --border-soft: #f1f5f9;
   --blue: #0284c7;
@@ -31,10 +30,9 @@
   --red-soft: #fee2e2;
   --purple: #7c3aed;
   --purple-soft: #f3e8fd;
-  --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.03), 0 8px 16px -6px rgba(15, 23, 42, 0.03);
-  --shadow-soft: 0 30px 60px -15px rgba(15, 23, 42, 0.06);
-  --radius: 24px;
-  --radius-sm: 16px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.02);
+  --radius: 20px;
+  --radius-sm: 14px;
   --dad: #16a34a;
   --mom: #dc2626;
   --jules: #0284c7;
@@ -43,14 +41,13 @@
 }
 
 body.theme-focus {
-  --bg: #070a13;
-  --app: #0c111d;
-  --card: rgba(21, 30, 48, 0.7);
-  --card-soft: rgba(30, 41, 59, 0.5);
+  --bg: #05070f;
+  --app: #090d16;
+  --card: rgba(17, 24, 39, 0.8);
+  --card-soft: rgba(31, 41, 55, 0.5);
   --text: #94a3b8;
   --text-strong: #f8fafc;
-  --muted: #64748b;
-  --muted-2: #334155;
+  --muted: #4b5563;
   --border: rgba(255, 255, 255, 0.05);
   --border-soft: rgba(255, 255, 255, 0.02);
   --blue: #38bdf8;
@@ -63,163 +60,77 @@ body.theme-focus {
   --red-soft: rgba(248, 113, 113, 0.12);
   --purple: #c084fc;
   --purple-soft: rgba(192, 132, 252, 0.12);
-  --shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.4);
-  --shadow-soft: 0 40px 80px -20px rgba(0, 0, 0, 0.6);
-  --cal-filter: invert(0.92) hue-rotate(180deg) contrast(1.25);
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --cal-filter: invert(0.92) hue-rotate(180deg) contrast(1.2);
 }
 
-* { box-sizing: border-box; touch-action: manipulation; }
+* { box-sizing: border-box; touch-action: manipulation; user-select: none; }
+html, body { height: 100vh; overflow: hidden; margin: 0; }
 body {
-  margin: 0;
   font-family: 'Plus Jakarta Sans', Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
-/* Standby Screensaver Overlay */
+/* Ambient Saver Screen styling */
 #ambient-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: #02040a;
+  background: #010204;
   z-index: 9999;
   color: #ffffff;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(40px);
 }
-#ambient-time { font-size: clamp(100px, 16vw, 180px); font-weight: 800; letter-spacing: -0.05em; color: #ffffff; text-shadow: 0 0 50px rgba(255,255,255,0.08); }
-#ambient-date { font-size: clamp(24px, 4vw, 40px); color: #475569; font-weight: 600; margin-top: 12px; }
-#ambient-prompt { margin-top: 100px; font-size: 14px; color: #1e293b; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 800; }
+#ambient-time { font-size: 130px; font-weight: 800; letter-spacing: -0.05em; color: #ffffff; }
+#ambient-date { font-size: 28px; color: #475569; font-weight: 600; margin-top: 10px; }
 
+/* Fixed Fullscreen Framework Layout (Eliminates All Scrolling) */
 .app-shell {
-  max-width: 1600px;
-  min-height: 100vh;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0 12px;
   background: var(--app);
-  padding: 0 16px;
 }
 
 .topbar {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: color-mix(in srgb, var(--app) 75%, transparent);
-  backdrop-filter: blur(30px);
+  padding: 14px 8px 10px;
   border-bottom: 1px solid var(--border);
-  padding: 18px 12px;
+  flex-shrink: 0;
 }
+.topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.eyebrow { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.status-dot { width: 8px; height: 8px; border-radius: 99px; background: var(--green); box-shadow: 0 0 10px var(--green); }
+.status-dot.offline { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.main-title-headline { margin: 0; color: var(--text-strong); font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
 
-.topbar-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .15em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.status-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 99px;
-  background: var(--green);
-  box-shadow: 0 0 12px var(--green);
-}
-.status-dot.offline { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
-
-.main-title-headline {
-  margin: 0;
-  color: var(--text-strong);
-  font-size: clamp(24px, 3.2vw, 36px);
-  letter-spacing: -0.04em;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--text-strong), color-mix(in srgb, var(--text-strong) 70%, var(--muted)));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.dock-container {
-  display: inline-flex;
-  background: var(--card-soft);
-  border: 1px solid var(--border);
-  padding: 6px;
-  border-radius: 20px;
-  gap: 6px;
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-}
+.dock-container { display: inline-flex; background: var(--card-soft); border: 1px solid var(--border); padding: 4px; border-radius: 14px; gap: 4px; }
 .nav-tab {
-  appearance: none;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text);
-  border-radius: 14px;
-  padding: 10px 22px;
-  font-size: 14px;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  appearance: none; border: none; background: transparent; color: var(--text); border-radius: 10px;
+  padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
 }
-.nav-tab:hover { color: var(--text-strong); background: rgba(255,255,255,0.1); }
-.nav-tab.active {
-  background: var(--app);
-  color: var(--blue);
-  border-color: var(--border);
-  box-shadow: var(--shadow);
-}
-.theme-toggle {
-  appearance: none;
-  background: var(--card-soft);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 10px 16px;
-  font-weight: 700;
-  font-size: 13px;
-  color: var(--text);
-}
+.nav-tab.active { background: var(--app); color: var(--blue); box-shadow: var(--shadow); }
+.time-block { text-align: right; line-height: 1.1; }
+#clock { color: var(--text-strong); font-size: 24px; font-weight: 800; }
+#date { color: var(--muted); font-size: 11px; font-weight: 600; }
 
-.badge {
-  min-width: 18px;
-  height: 18px;
-  border-radius: 99px;
-  background: var(--red);
-  color: white;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 800;
-}
+.content { flex: 1; min-height: 0; padding: 12px 0 16px; position: relative; }
+.panel { display: none; height: 100%; }
+.panel.active { display: flex; flex-direction: column; }
 
-.content { padding: 24px 12px 48px; }
-.panel { display: none; }
-.panel.active { display: block; }
-
-/* TWO-COLUMN PERFECTED ULTRA COMMAND CENTER GRID */
-.dashboard-grid {
+/* Today Tab 2-Column Split View Grid */
+.today-split-layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  height: 100%;
+  gap: 16px;
 }
-@media (min-width: 1024px) {
-  .dashboard-grid {
-    grid-template-columns: minmax(420px, 1fr) minmax(680px, 1.6fr);
-  }
+@media (min-width: 768px) {
+  .today-split-layout { grid-template-columns: 0.95fr 1.05fr; }
 }
 
 .card {
@@ -227,179 +138,138 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  overflow: hidden;
-  backdrop-filter: blur(20px);
-}
-.card.pad { padding: 24px; }
-
-.card-header-main {
-  padding: 20px 24px;
-  border-bottom: 1px solid var(--border-soft);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.card-main-title { font-size: 18px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; }
-
-/* CALENDAR EMBED LAYER */
-.calendar-frame-wrap {
-  height: 600px;
-  background: var(--app);
+  flex-direction: column;
   overflow: hidden;
-  position: relative;
 }
-.calendar-frame-wrap iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  filter: var(--cal-filter);
-  transition: filter 0.3s ease;
-}
-.calendar-frame-wrap.full { height: 800px; }
+.card-header-main { padding: 12px 16px; border-bottom: 1px solid var(--border-soft); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.card-main-title { font-size: 15px; font-weight: 800; color: var(--text-strong); }
 
-/* RESPONSIVE FLUID TASK CHORE BAR */
+/* Left Column: Calendar Container Box */
+.calendar-frame-wrap { flex: 1; min-height: 0; background: var(--app); position: relative; }
+.calendar-frame-wrap iframe { width: 100%; height: 100%; border: 0; filter: var(--cal-filter); }
+
+/* Right Column: Combined Dynamic Chore Stream */
+.main-tracking-core { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.scroll-payload-box { flex: 1; min-height: 0; overflow-y: auto; padding-right: 4px; }
+
+/* Global Stats Mini Indicators Bar */
+.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; flex-shrink: 0; }
+.stat-mini { background: var(--card-soft); padding: 10px 6px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
+.stat-m-label { font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+.stat-m-val { font-size: 18px; font-weight: 800; color: var(--text-strong); margin-top: 2px; }
+
+/* Interactive Arcade Rows layout */
 .chore-row {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   border-radius: var(--radius-sm);
-  padding: 14px 18px;
-  min-height: 58px;
+  padding: 12px 14px;
+  min-height: 48px;
   background: var(--card-soft);
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.chore-row:hover { border-color: var(--border); transform: translateY(-2px); background: var(--card); box-shadow: var(--shadow); }
-.chore-row:active { transform: scale(0.98); }
-.chore-row.done { opacity: 0.4; }
+.chore-row:hover { border-color: var(--border); background: var(--card); }
+.chore-row.done { opacity: 0.35; }
 .chore-row.done .chore-name { text-decoration: line-through; }
 
 .chk {
-  width: 26px;
-  height: 26px;
-  border-radius: 9px;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
   border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
+  font-size: 12px;
   color: white;
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  background: rgba(0,0,0,0.02);
 }
-.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); transform: scale(1.05); }
+.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
+.chore-name { font-size: 14px; font-weight: 600; color: var(--text-strong); }
 
-/* FRONT COMPONENT QUICK INJECTION BAR */
-.quick-inject-box {
-  background: var(--card-soft);
-  border: 1px solid var(--border);
-  padding: 14px 18px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
+.list-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; padding: 10px 4px 6px; display: flex; align-items: center; justify-content: space-between; }
+.p-widget-streak { font-size: 10px; background: linear-gradient(135deg, #ff9800, #ff5722); color: #ffffff; padding: 2px 8px; border-radius: 6px; font-weight: 800; margin-left: auto; }
+
+/* FLOATING OVERLAY FLY INJECTION SYSTEM (Saves Valuable Layout Real Estate) */
+.floating-add-btn {
+  position: absolute; right: 16px; bottom: 16px; width: 52px; height: 52px; border-radius: 99px;
+  background: var(--blue); color: white; border: none; font-size: 24px; font-weight: 700;
+  box-shadow: 0 10px 20px rgba(2, 132, 199, 0.3); z-index: 100;
 }
-.quick-select {
-  border: 1px solid var(--border);
-  background: var(--app);
-  color: var(--text-strong);
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  outline: none;
+.on-the-fly-overlay {
+  display: none; position: absolute; inset: 0; background: rgba(5,7,15,0.4);
+  backdrop-filter: blur(12px); z-index: 90; align-items: center; justify-content: center; padding: 16px;
 }
+.on-the-fly-overlay.open { display: flex; }
+.overlay-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); width: 100%; max-width: 400px; box-shadow: var(--shadow-soft); }
 
-.p-widget-streak { 
-  font-size: 11px; 
-  background: linear-gradient(135deg, #ff9800, #ff5722); 
-  color: #ffffff; 
-  padding: 3px 10px; 
-  border-radius: 8px; 
-  font-weight: 800;
-  box-shadow: 0 3px 8px rgba(255, 87, 34, 0.2);
-}
-
-.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-.stat-mini { background: var(--card-soft); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
-.stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; }
-.stat-m-val { font-size: 24px; font-weight: 800; color: var(--text-strong); margin-top: 4px; }
-
-.dinner-premium-box {
-  background: linear-gradient(135deg, var(--purple-soft), transparent);
-  border: 1px solid color-mix(in srgb, var(--purple) 30%, var(--border));
-  padding: 18px 22px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-}
-.dinner-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.12em; margin-bottom: 4px;}
-.dinner-text { font-size: 18px; font-weight: 800; color: var(--text-strong); }
-
-.pill-btn {
-  border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700;
-}
-.pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
-.pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
-.pill-btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
-
-.person-grid-chores { display: grid; grid-template-columns: 1fr; gap: 24px; }
+/* Other tab page system scroll frames */
+.panel-scroll-frame { flex: 1; min-height: 0; overflow-y: auto; padding-right: 4px; }
+.person-grid-chores { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media(min-width: 768px) { .person-grid-chores { grid-template-columns: repeat(2, 1fr); } }
 
-.approval-list { display: grid; gap: 14px; }
-.approval-item { background: var(--card); border: 1px solid var(--border); padding: 22px; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
-.manage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.approval-list { display: grid; gap: 10px; }
+.approval-item { background: var(--card); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.manage-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media(min-width: 768px) { .manage-grid { grid-template-columns: repeat(2, 1fr); } }
 
-.field-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft); margin-bottom: 14px; }
-.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 12px; font-size: 14px; outline: none; width: 100%; }
-.add-form { margin-top: 16px; background: var(--card-soft); padding: 14px; border-radius: var(--radius-sm); display: grid; gap: 10px; }
-.type-row { display: flex; gap: 10px; }
-.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 700; }
+.field-row { display: grid; grid-template-columns: 1fr 100px; gap: 10px; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--border-soft); margin-bottom: 10px; }
+.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 10px; font-size: 14px; outline: none; width: 100%; }
+.add-form { margin-top: 12px; background: var(--card-soft); padding: 10px; border-radius: var(--radius-sm); display: grid; gap: 8px; }
+.type-row { display: flex; gap: 8px; }
+.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 8px; border-radius: 8px; font-weight: 700; font-size: 12px; }
 .type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
-.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 10px; padding: 12px; font-weight: 700; }
-.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; }
-.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
+.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 8px; padding: 10px; font-weight: 700; font-size: 13px; }
+.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 28px; height: 28px; border-radius: 6px; font-weight: 700; }
+.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-soft); }
 
 .modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); backdrop-filter: blur(16px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
 .modal-bg.open { display:flex; }
-.modal { background:var(--card); border:1px solid var(--border); border-radius:28px; padding:32px; width:380px; text-align: center; }
-.pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
-.pin-dot { width:16px; height:16px; border-radius:99px; background:var(--border); }
+.modal { background:var(--card); border:1px solid var(--border); border-radius:24px; padding:24px; width:340px; text-align: center; }
+.pin-dots { display:flex; justify-content:center; gap:12px; margin:20px 0; }
+.pin-dot { width:14px; height:14px; border-radius:99px; background:var(--border); }
 .pin-dot.filled { background:var(--blue); box-shadow: 0 0 10px var(--blue); }
-.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:240px; margin:0 auto; }
-.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; user-select:none; }
-.pin-error { color: var(--red); font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 600; }
+.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:220px; margin:0 auto; }
+.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:14px; padding:14px; font-size:20px; font-weight:700; }
+.pin-error { color: var(--red); font-size: 13px; margin-top: 10px; min-height: 18px; font-weight: 600; }
 
-.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 16px 32px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 14px; }
-.toast.show { display:block; animation: toastIn .25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.toast { display:none; position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 12px 24px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 13px; }
+.toast.show { display:block; animation: toastIn .2s ease; }
+@keyframes toastIn { from { transform: translate(-50%, 15px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
 .progress-inline-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 6px; }
-.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.6s ease; }
+.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.4s ease; }
+.badge { min-width: 16px; height: 16px; border-radius: 99px; background: var(--red); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; }
+.dinner-title { font-size: 9px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.1em; margin-bottom: 2px;}
+.pill-btn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 8px 14px; font-size: 12px; font-weight: 700; }
+.pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
+.pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
+.footer-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-shrink: 0; }
 </style>
 </head>
 <body class="theme-focus">
 
-<!-- Screen Saver Layer -->
+<!-- Screen Saver Standby Template Component -->
 <div id="ambient-overlay" onclick="wakeKiosk()">
   <div id="ambient-time">--:--</div>
   <div id="ambient-date">---</div>
-  <div id="ambient-prompt">👋 Tap screen to wake control center</div>
 </div>
 
 <div class="app-shell">
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Sync Active</span></div>
+        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Matrix Connect</span></div>
         <h1 class="main-title-headline">Deutmeyer Family Dashboard</h1>
       </div>
       
-      <!-- Dock Menu Options -->
-      <div class="dock-container" aria-label="Dashboard views">
+      <div class="dock-container" aria-label="Dashboard view modes">
         <button class="nav-tab active" onclick="switchTab('home')">Today</button>
         <button class="nav-tab" onclick="switchTab('chores')">Chores</button>
         <button class="nav-tab" onclick="switchTab('approvals')">Approvals <span class="badge" id="appr-badge" style="display:none">0</span></button>
@@ -410,80 +280,78 @@ body {
       <div class="time-block">
         <div id="clock">--:--</div>
         <div id="date">--</div>
-        <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" style="margin-top: 4px; padding: 3px 8px; border-radius: 6px;">Theme</button>
+        <button class="nav-tab" onclick="toggleTheme()" id="theme-btn" style="padding:2px 6px; font-size:10px; margin-top:2px; border-radius:6px;">Theme</button>
       </div>
     </div>
   </header>
 
   <main class="content">
     
-    <!-- CONSOLIDATED HIGH-VALUE FRONT PANEL -->
+    <!-- MASTER TWO COLUMN SYSTEM CONSOLE PANEL -->
     <section class="panel active" id="panel-home">
-      <div class="dashboard-grid">
+      <div class="today-split-layout">
         
-        <!-- Left: Calendar Widget Node -->
+        <!-- Left Split Frame: Calendar Layer Component -->
         <div class="card">
-          <div class="card-header-main">
-            <div>
-              <div class="card-main-title">Today's Schedule</div>
-              <div style="font-size:12px; color:var(--muted); margin-top:2px;">Google Live Data Stream</div>
-            </div>
-          </div>
           <div class="calendar-frame-wrap">
             <iframe id="cal-agenda" src="" loading="lazy"></iframe>
           </div>
         </div>
 
-        <!-- Right: Master Command Core (Chores, To-Dos, On-The-Fly Input) -->
-        <div class="card pad">
+        <!-- Right Split Frame: Unified Task Processing Engine -->
+        <div class="main-tracking-core">
           
-          <!-- Live Secondary Metrics & Meal Headers -->
-          <div style="display:flex; gap:16px; align-items:start; flex-wrap:wrap; margin-bottom:14px;">
-            <div class="quick-stats-stack" id="quick-stats" style="flex:1; margin-bottom:0;"></div>
-            
-            <div class="card dinner-premium-box" id="home-dinner-card" style="display:none; flex:1; margin-bottom:0; padding:12px 16px;">
+          <div style="display:flex; gap:10px; align-items:center; flex-shrink:0;">
+            <div class="quick-stats-stack" id="quick-stats" style="flex:1.2; margin-bottom:0;"></div>
+            <div class="card" id="home-dinner-card" style="display:none; flex:0.8; padding:8px 12px; background:linear-gradient(135deg, var(--purple-soft), transparent); border-color:var(--purple);">
               <div class="dinner-title">🍽️ Tonight's Dinner</div>
-              <div id="home-dinner-text" style="font-size:15px; font-weight:700; color:var(--text-strong)"></div>
+              <div id="home-dinner-text" style="font-size:13px; font-weight:700; color:var(--text-strong)"></div>
             </div>
           </div>
 
-          <!-- ON-THE-FLY INJECTION COMPONENT CONTAINER -->
-          <div class="quick-inject-box">
-            <span style="font-weight:800; font-size:14px; color:var(--text-strong);">⚡ On-The-Fly Add:</span>
-            <input type="text" id="front-task-input" class="inp" placeholder="Type task item name..." style="flex:1; min-width:180px; padding:8px 12px; border-radius:10px;" />
-            <select id="front-assignee-select" class="quick-select">
-              <option value="global_todo">📝 Global To-Do Item</option>
-              <option value="jules">⭐ Assign Jules</option>
-              <option value="henry">🚀 Assign Henry</option>
-              <option value="dad">👨 Assign Dad</option>
-              <option value="mom">👩 Assign Jessica</option>
-            </select>
-            <button class="pill-btn primary" onclick="injectTaskOnTheFly()" style="padding:8px 16px; border-radius:10px;">Inject Task</button>
-          </div>
-
-          <!-- Master Unified Scroll Sheet for Chores and To-Dos -->
-          <div style="font-size:15px; font-weight:800; color:var(--text-strong); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;">Active Track Logs</div>
-          <div id="unified-master-tracks"></div>
+          <!-- Master Task Render Container Frame -->
+          <div class="scroll-payload-box" id="unified-master-tracks"></div>
           
         </div>
+      </div>
 
+      <!-- Floating Injection Triggers -->
+      <button class="floating-add-btn" onclick="openOnTheFlyOverlay()">+</button>
+      <div class="on-the-fly-overlay" id="fast-task-overlay" onclick="closeOnTheFlyOverlay(event)">
+        <div class="overlay-card">
+          <h3 style="margin:0 0 12px; font-size:16px; color:var(--text-strong)">⚡ Fast Task Injection</h3>
+          <input type="text" id="front-task-input" class="inp" placeholder="Type name..." style="margin-bottom:10px;" />
+          <select id="front-assignee-select" class="inp" style="margin-bottom:14px; font-weight:700;">
+            <option value="global_todo">📌 Global To-Do Item</option>
+            <option value="jules">⭐ Assign Jules</option>
+            <option value="henry">🚀 Assign Henry</option>
+            <option value="dad">👨 Assign Dad</option>
+            <option value="mom">👩 Assign Jessica</option>
+          </select>
+          <div style="display:flex; gap:10px; justify-content:flex-end;">
+            <button class="pill-btn ghost" onclick="document.getElementById('fast-task-overlay').classList.remove('open')">Cancel</button>
+            <button class="pill-btn primary" onclick="injectTaskOnTheFly()">Inject Task</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- TRADITIONAL MANIFEST PANEL LAYOUTS -->
+    <!-- EXPANDED DETAIL VIEW MANIFESTS -->
     <section class="panel" id="panel-chores">
-      <div class="person-grid-chores" id="chores-people"></div>
+      <div class="panel-scroll-frame">
+        <div class="person-grid-chores" id="chores-people"></div>
+      </div>
       <div class="footer-actions">
-        <button class="pill-btn danger" onclick="requirePin('reset')">Reset Log</button>
+        <button class="pill-btn danger" onclick="requirePin('reset')">Reset Loop</button>
       </div>
     </section>
 
     <section class="panel" id="panel-approvals">
-      <div id="approvals-container"></div>
+      <div class="panel-scroll-frame" id="approvals-container"></div>
     </section>
 
     <section class="panel" id="panel-calendar">
-      <div class="card">
+      <div class="card" style="height:100%">
         <div class="calendar-frame-wrap full">
           <iframe id="cal-full" src="" loading="lazy"></iframe>
         </div>
@@ -491,26 +359,28 @@ body {
     </section>
 
     <section class="panel" id="panel-manage">
-      <div class="card pad" style="margin-bottom: 24px;">
-        <div class="card-main-title" style="margin-bottom:14px">Operational Parameter Adjustments</div>
-        <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer;">
-          <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:22px; height:22px;"> Enable Kitchen Menu Layer
-        </label>
-        <div id="manage-dinner-box" style="margin-top:16px; display:none;">
-          <input type="text" id="dinner-input" class="inp" placeholder="Type menu data..." style="max-width:400px; display:inline-block; margin-right:10px;" />
-          <button class="pill-btn primary" onclick="saveDinnerMenu()">Broadcast</button>
+      <div class="panel-scroll-frame">
+        <div class="card pad" style="margin-bottom: 16px;">
+          <div class="card-main-title" style="margin-bottom:10px">Control Configurations</div>
+          <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer; font-size:14px;">
+            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:18px; height:18px;"> Activate Dinner Notification Node
+          </label>
+          <div id="manage-dinner-box" style="margin-top:12px; display:none;">
+            <input type="text" id="dinner-input" class="inp" placeholder="Type item..." style="max-width:300px; display:inline-block; margin-right:8px;" />
+            <button class="pill-btn primary" onclick="saveDinnerMenu()">Broadcast</button>
+          </div>
         </div>
+        <div class="manage-grid" id="manage-grid"></div>
       </div>
-      <div class="manage-grid" id="manage-grid"></div>
     </section>
 
   </main>
 </div>
 
-<!-- Parent Code Auth Overlay Panel -->
+<!-- ParentPIN Security Auth Box Overlays -->
 <div class="modal-bg" id="pin-modal">
   <div class="modal">
-    <h3 style="margin:0 0 6px; font-size:22px; color:var(--text-strong)">Clearance PIN Required</h3>
+    <h3 style="margin:0 0 6px; font-size:18px; color:var(--text-strong)">Parent PIN Entry</h3>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
@@ -518,7 +388,7 @@ body {
       <div class="pin-key" onclick="pinKey('1')">1</div><div class="pin-key" onclick="pinKey('2')">2</div><div class="pin-key" onclick="pinKey('3')">3</div>
       <div class="pin-key" onclick="pinKey('4')">4</div><div class="pin-key" onclick="pinKey('5')">5</div><div class="pin-key" onclick="pinKey('6')">6</div>
       <div class="pin-key" onclick="pinKey('7')">7</div><div class="pin-key" onclick="pinKey('8')">8</div><div class="pin-key" onclick="pinKey('9')">9</div>
-      <div class="pin-key" onclick="pinKey('cancel')" style="font-size:12px; color:var(--muted)">Cancel</div><div class="pin-key" onclick="pinKey('0')">0</div><div class="pin-key" onclick="pinKey('back')">⌫</div>
+      <div class="pin-key" onclick="pinKey('cancel')" style="font-size:11px; color:var(--muted)">Cancel</div><div class="pin-key" onclick="pinKey('0')">0</div><div class="pin-key" onclick="pinKey('back')">⌫</div>
     </div>
     <div class="pin-error" id="pin-error"></div>
   </div>
@@ -526,22 +396,22 @@ body {
 
 <div class="modal-bg" id="reset-modal">
   <div class="modal">
-    <h3 style="color:var(--text-strong)">Purge Database Metrics?</h3>
+    <h3 style="color:var(--text-strong)">Reset All Manifest Lines?</h3>
     <div class="modal-btns">
       <button class="pill-btn" onclick="closeModal('reset-modal')">Abort</button>
-      <button class="pill-btn danger" onclick="doReset()">Confirm</button>
+      <button class="pill-btn danger" onclick="doReset()">Confirm Purge</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- COMPAT BINDINGS FOR LIVE CLOUD ACCESS -->
+<!-- FIREBASE REFTIME DATABASE CONNECTOR BINDINGS -->
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
 // ══════════════════════════════════════════════
-// ARCHITECTURE RUNTIME VALUES
+// PARAMETER SETUP MATRIX
 // ══════════════════════════════════════════════
 const GOOGLE_CAL_URL = 'https://calendar.google.com/calendar/embed?src=family11684173322375554414%40group.calendar.google.com&ctz=America%2FDenver';
 const PARENT_PIN = '1234';
@@ -556,9 +426,7 @@ const firebaseConfig = {
   appId: "1:231538201509:web:e8ca93e484efc1750f8e4c"
 };
 
-// ══════════════════════════════════════════════
-// OSCILLATOR AUDIO DOPAMINE ENGINES
-// ══════════════════════════════════════════════
+// Audio Synthesis Engine (Dopamine Rewards Generator)
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playAudioTone(freq, type, duration, vol) {
   try {
@@ -584,7 +452,7 @@ let stateRef = null; let firebaseOnline = false; let isLoadingFromCloud = false;
 
 try {
   firebase.initializeApp(firebaseConfig); stateRef = firebase.database().ref('familyDashboard/state'); firebaseOnline = true;
-} catch (err) { console.warn('Local engine operation active.', err); }
+} catch (err) { console.warn('Firebase connection bypassed.', err); }
 
 const DEFAULT_PEOPLE = [
   { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, streak:0, chores:[
@@ -649,11 +517,11 @@ function normalizeState(input) {
 }
 
 function loadState() {
-  try { const r = localStorage.getItem('fb_v8'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem('fb_v9'); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
 function saveState() {
-  state = normalizeState(state); try { localStorage.setItem('fb_v8', JSON.stringify(state)); } catch {}
+  state = normalizeState(state); try { localStorage.setItem('fb_v9', JSON.stringify(state)); } catch {}
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
@@ -664,7 +532,7 @@ function saveState() {
 }
 let state = loadState(); state = normalizeState(state);
 
-// Ambient Backlight Dimmers
+// Ambient Backlight Controls
 let ambientTimer;
 function resetAmbientTimer() {
   clearTimeout(ambientTimer);
@@ -708,12 +576,12 @@ function personProgress(p) {
 function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot'); const label = document.getElementById('sync-label'); if (!dot || !label) return;
   dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' ? ' offline' : '');
-  label.textContent = mode === 'synced' ? 'System Live' : mode === 'saving' ? 'Syncing System...' : 'Local File Link';
+  label.textContent = mode === 'synced' ? 'System Synced' : mode === 'saving' ? 'Syncing...' : 'Local Link Only';
 }
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2800); }
 
 // ══════════════════════════════════════════════
-// OPERATIONS ENGINE
+// DATA MUTATION CONTROLLERS
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
   if (isApproved(pid)) {
@@ -722,7 +590,7 @@ function toggleChore(pid,cid) {
   if (!state.checked[pid]) state.checked[pid] = [];
   const idx = state.checked[pid].indexOf(cid);
   if (idx === -1) {
-    state.checked[pid].push(cid); playSuccessChime(); confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+    state.checked[pid].push(cid); playSuccessChime(); confetti({ particleCount: 40, spread: 45, origin: { y: 0.85 } });
   } else {
     state.checked[pid].splice(idx,1);
   }
@@ -731,53 +599,38 @@ function toggleChore(pid,cid) {
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
     if (!state.pending.some(x => x.type === 'allowance' && x.personId === pid)) {
       state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
-      showToast(`${p.name} cleared the layout! 🎉`); confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 } });
+      showToast(`${p.name} completed their tracks! 🎉`); confetti({ particleCount: 180, spread: 90, origin: { y: 0.5 } });
     }
   }
   saveState(); renderAll(); updateBadge();
 }
 
-// ON THE FLY ASSIGNMENT INJECTOR ENGINE
+function openOnTheFlyOverlay() { document.getElementById('fast-task-overlay').classList.add('open'); document.getElementById('front-task-input').focus(); }
+function closeOnTheFlyOverlay(e) { if(e.target.id === 'fast-task-overlay') e.target.classList.remove('open'); }
+
 function injectTaskOnTheFly() {
-  const inputEl = document.getElementById('front-task-input');
-  const targetSel = document.getElementById('front-assignee-select');
-  const value = inputEl.value.trim();
-  if(!value) { inputEl.focus(); return; }
-  
+  const inputEl = document.getElementById('front-task-input'); const targetSel = document.getElementById('front-assignee-select');
+  const value = inputEl.value.trim(); if(!value) { inputEl.focus(); return; }
   const target = targetSel.value;
   if(target === 'global_todo') {
-    state.globalTodos.push({ id: uid(), name: value, done: false });
-    showToast('To-Do added to shared sheet! 📝');
+    state.globalTodos.push({ id: uid(), name: value, done: false }); showToast('Shared Task Logged! 📌');
   } else {
     const p = state.people.find(x => x.id === target);
-    if(p) {
-      p.chores.push({ id: uid(), name: value, type: 'weekly', amt: 0 });
-      showToast(`Injected chore onto ${p.name}'s manifest! ⚡`);
-    }
+    if(p) { p.chores.push({ id: uid(), name: value, type: 'weekly', amt: 0 }); showToast(`Assigned to ${p.name}! ⚡`); }
   }
-  inputEl.value = '';
-  saveState(); renderAll();
+  inputEl.value = ''; document.getElementById('fast-task-overlay').classList.remove('open'); saveState(); renderAll();
 }
 
 function toggleGlobalTodo(id) {
   const todo = state.globalTodos.find(x => x.id === id);
   if(todo) {
-    todo.done = !todo.done;
-    if(todo.done) {
-      playSuccessChime();
-      confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } });
-    }
+    todo.done = !todo.done; if(todo.done) { playSuccessChime(); confetti({ particleCount: 35, spread: 40, origin: { y: 0.85 } }); }
     saveState(); renderAll();
   }
 }
-
-function clearFinishedTodos() {
-  state.globalTodos = state.globalTodos.filter(x => !x.done);
-  saveState(); renderAll();
-}
-
+function clearFinishedTodos() { state.globalTodos = state.globalTodos.filter(x => !x.done); saveState(); renderAll(); }
 function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll(); }
-function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Updated! 🍽️'); }
+function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Broadcast Synced! 🍽️'); }
 
 function requestJobApproval(pid,cid) {
   const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid); if (!c || isJobApproved(pid,cid)) return;
@@ -796,7 +649,7 @@ function approveItem(itemId) {
   } else {
     state.approved[item.personId].jobs[item.choreId] = true;
   }
-  playApprovalCascade(); state.pending = state.pending.filter(x => x.id !== itemId); saveState(); renderAll(); updateBadge(); showToast('Verified.');
+  playApprovalCascade(); state.pending = state.pending.filter(x => x.id !== itemId); saveState(); renderAll(); updateBadge(); showToast('Approved.');
 }
 
 function denyItem(itemId) {
@@ -828,7 +681,7 @@ function doReset() {
 }
 
 // ══════════════════════════════════════════════
-// COMPONENT MATRIX BUILDERS
+// MASTER CONSOLIDATED RENDER LAYOUT
 // ══════════════════════════════════════════════
 function renderPersonCard(person, compact=false) {
   const weekly = person.chores.filter(c => c.type === 'weekly'), jobs = person.chores.filter(c => c.type === 'job');
@@ -837,90 +690,73 @@ function renderPersonCard(person, compact=false) {
 
   let statusHtml = '';
   if (person.weeklyAllowance > 0) {
-    if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Disbursed</strong><span>Allowance logged.</span></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Rollback</button></div>`;
-    else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Awaiting Signature</strong><span>Ready for signoff.</span></div></div>`;
+    if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Disbursed</strong></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Rollback</button></div>`;
+    else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Awaiting Signoff</strong></div></div>`;
   }
 
   const weeklyHtml = `${weekly.map(c => {
     const done = isChecked(person.id,c.id), locked = approved && done;
-    return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk" style="--person:var(--${person.id})">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div><div></div></div>`;
+    return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk" style="--person:var(--${person.id})">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div></div>`;
   }).join('')}`;
 
   const jobsHtml = `${jobs.map(c => {
     const checked = isChecked(person.id,c.id), jpending = state.pending.some(x => x.type === 'job' && x.personId === person.id && x.choreId === c.id), japproved = isJobApproved(person.id,c.id);
     let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">Signoff</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
     const clickFn = checked && !jpending && !japproved ? `requestJobApproval('${person.id}','${c.id}')` : (!checked ? `toggleChore('${person.id}','${c.id}')` : '');
-    return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}<div></div></div>`;
+    return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}</div>`;
   }).join('')}`;
 
   return `<div class="card pad" style="border-top: 4px solid var(--${person.id})">
-    <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
-      <div class="avatar" style="font-size:32px">${person.emoji}</div>
-      <div><div class="p-widget-name" style="font-size:20px">${person.name}</div><div style="font-size:12px; color:var(--muted)">Base Parameter Track</div></div>
-      <div style="margin-left:auto; text-align:right"><div style="font-size:24px; font-weight:800; color:var(--text-strong)">${fmt(earned)}</div><div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Balance</div></div>
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:12px;">
+      <div class="avatar" style="font-size:26px">${person.emoji}</div>
+      <div><div class="p-widget-name" style="font-size:16px">${person.name}</div></div>
+      <div style="margin-left:auto; text-align:right"><div style="font-size:18px; font-weight:800; color:var(--text-strong)">${fmt(earned)}</div></div>
     </div>
     ${statusHtml}
-    <div class="list-label">Core Matrix</div>${weeklyHtml}
-    ${jobs.length ? '<div class="list-label" style="margin-top:14px">Premium Ventures</div>' : ''}${jobsHtml}
+    <div class="list-label">Core Tracks</div>${weeklyHtml}
+    ${jobs.length ? '<div class="list-label" style="margin-top:10px">Premium Track</div>' : ''}${jobsHtml}
   </div>`;
 }
 
-// THOROUGH UNIFIED FRONT PAGE DISPLAY CONSOLIDATION
+// THE ZERO SCROLL PRIORITY TRACK RENDER TREE
 function renderUnifiedFrontMatrix() {
   let html = '';
   
-  // Render Global Shared To-Do Nodes
+  // 1. PIN Shared Global Tasks First
   if(state.globalTodos && state.globalTodos.length > 0) {
-    html += `<div class="list-label" style="color:var(--purple); font-weight:800; display:flex; justify-content:space-between; align-items:center;">
-      <span>📌 Shared Family Tasks</span>
-      <button class="pill-btn ghost" onclick="clearFinishedTodos()" style="font-size:11px; padding:2px 8px;">Clear Checked</button>
-    </div>`;
+    html += `<div class="list-label" style="color:var(--purple);"><span>📌 Shared Family Tasks</span><button class="pill-btn ghost" onclick="clearFinishedTodos()" style="font-size:10px; padding:2px 6px;">Clear Checked</button></div>`;
     state.globalTodos.forEach(todo => {
-      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')">
-        <div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div>
-        <div class="chore-name">${todo.name}</div>
-        <div style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--purple-soft)">To-Do</div>
-        <div></div>
-      </div>`;
+      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')"><div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div><div class="chore-name">${todo.name}</div><div></div></div>`;
     });
   }
 
-  // Loop Individual Kid Nodes Thoroughly Into Main Track View
-  state.people.forEach(p => {
-    const activeChores = p.chores.filter(c => !isChecked(p.id, c.id));
-    const completedChores = p.chores.filter(c => isChecked(p.id, c.id));
-    const streakText = p.streak > 0 ? `<span class="p-widget-streak" style="font-size:10px; padding:2px 6px;">🔥 ${p.streak} Wk</span>` : '';
+  // 2. PRIORITY: Loop Kids side-by-side / sequentially next higher status mapping
+  const kids = state.people.filter(p => p.weeklyAllowance > 0);
+  kids.forEach(p => {
+    const active = p.chores.filter(c => !isChecked(p.id, c.id));
+    const completed = p.chores.filter(c => isChecked(p.id, c.id));
+    const streakText = p.streak > 0 ? `<span class="p-widget-streak">🔥 ${p.streak} Wk</span>` : '';
 
-    html += `<div class="list-label" style="display:flex; align-items:center; gap:8px; margin-top:16px;">
-      <span style="font-size:16px">${p.emoji}</span> 
-      <span style="color:var(--text-strong); font-weight:800;">${p.name}'s Manifest</span>
-      ${streakText}
-    </div>`;
+    html += `<div class="list-label" style="margin-top:10px;"><span style="color:var(--text-strong); font-weight:800;">${p.emoji} ${p.name}'s Loop</span>${streakText}</div>`;
+    
+    active.forEach(c => {
+      html += `<div class="chore-row" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="--person:var(--${p.id})"></div><div class="chore-name">${c.name}</div><div style="font-size:10px; color:var(--muted); font-weight:700;">${c.type==='job'?'Premium':'Core'}</div></div>`;
+    });
+    completed.forEach(c => {
+      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div><div class="chore-name">${c.name}</div><div></div></div>`;
+    });
+  });
 
-    if(p.chores.length === 0) {
-      html += `<div style="font-size:13px; color:var(--muted); padding:10px 18px;">No active track nodes assigned.</div>`;
-      return;
+  // 3. UNDERTIER: Adults Consolidated Space Efficient Cards at bottom layers
+  const adults = state.people.filter(p => p.weeklyAllowance === 0);
+  adults.forEach(p => {
+    const active = p.chores.filter(c => !isChecked(p.id, c.id));
+    if(active.length > 0) {
+      html += `<div class="list-label" style="opacity:0.6; margin-top:10px;"><span style="font-weight:700;">${p.emoji} ${p.name}'s Core Tasks</span></div>`;
+      active.forEach(c => {
+        html += `<div class="chore-row" onclick="toggleChore('${p.id}','${c.id}')" style="min-height:40px; padding:8px 12px;"><div class="chk" style="--person:var(--${p.id})"></div><div class="chore-name" style="font-size:13px">${c.name}</div><div></div></div>`;
+      });
     }
-
-    // List unchecked items first to focus attention
-    activeChores.forEach(c => {
-      html += `<div class="chore-row" onclick="toggleChore('${p.id}','${c.id}')">
-        <div class="chk" style="--person:var(--${p.id})"></div>
-        <div class="chore-name">${c.name}</div>
-        <div style="font-size:11px; color:var(--muted); font-weight:600;">${c.type==='job'?'Premium':'Core'}</div>
-        <div></div>
-      </div>`;
-    });
-
-    // List checked items secondary
-    completedChores.forEach(c => {
-      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')">
-        <div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div>
-        <div class="chore-name">${c.name}</div>
-        <div style="font-size:11px; color:var(--muted-2);">Clear</div>
-        <div></div>
-      </div>`;
-    });
   });
 
   document.getElementById('unified-master-tracks').innerHTML = html;
@@ -929,9 +765,9 @@ function renderUnifiedFrontMatrix() {
 function renderQuickStats() {
   const total = state.people.reduce((sum,p) => sum + p.chores.length, 0), done = state.people.reduce((sum,p) => sum + p.chores.filter(c => isChecked(p.id,c.id)).length, 0), earned = state.people.reduce((sum,p) => sum + earnedTotal(p.id), 0);
   document.getElementById('quick-stats').innerHTML = `
-    <div class="stat-mini"><div class="stat-m-label">System Tasks</div><div class="stat-m-val">${done}/${total}</div></div>
-    <div class="stat-mini"><div class="stat-m-label">Pending Sign</div><div class="stat-m-val">${pendingCount()}</div></div>
-    <div class="stat-mini"><div class="stat-m-label">Disbursed</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
+    <div class="stat-mini"><div class="stat-m-label">Chores</div><div class="stat-m-val">${done}/${total}</div></div>
+    <div class="stat-mini"><div class="stat-m-label">Sign</div><div class="stat-m-val">${pendingCount()}</div></div>
+    <div class="stat-mini"><div class="stat-m-label">Paid</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
 }
 
 function renderPeople() {
@@ -940,21 +776,20 @@ function renderPeople() {
 }
 
 function renderApprovals() {
-  const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>All cleared. No pending elements.</div></div>`; return; }
+  const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state">All cleared logs.</div></div>`; return; }
   container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
     const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'User'};
-    return `<div class="approval-item"><div><div style="font-size:24px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div class="appr-what">${item.type==='allowance'?'Core manifest payout check':'Premium ventures sign-off: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign Off</button></div></div>`;
+    return `<div class="approval-item"><div><div style="font-size:20px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div style="font-size:12px">${item.type==='allowance'?'Core track payout':'Premium tracking payout: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign</button></div></div>`;
   }).join('')}</div>`;
 }
 
 function renderManage() {
   document.getElementById('manage-grid').innerHTML = state.people.map(person => {
     return `<div class="card pad">
-      <div class="p-widget-name" style="font-size:18px; margin-bottom:14px;">${person.emoji} Override Parameters: ${person.name}</div>
-      <div class="field-row"><label>Core Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
-      <div class="list-label">Active Matrix Manifest</div>
-      ${person.chores.map(c => `<div class="manage-chore-row"><span>${c.name}</span><span class="mctype">${c.type==='job'?'$'+c.amt.toFixed(2):'weekly'}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
-      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Objective Text" /><div style="display:flex; gap:10px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="Value ($)" style="width:100px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Weekly</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Premium</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Inject Operational Node</button></div>
+      <div class="p-widget-name" style="font-size:16px; margin-bottom:10px;">${person.emoji} Setup: ${person.name}</div>
+      <div class="field-row"><label>Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
+      ${person.chores.map(c => `<div class="manage-chore-row"><span style="font-size:13px">${c.name}</span><span class="mctype">${c.type==='job'?'$'+c.amt.toFixed(2):'weekly'}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
+      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Text..." /><div style="display:flex; gap:6px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="$" style="width:70px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Core</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Premium</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Add</button></div>
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
@@ -969,7 +804,7 @@ function renderAll() {
 }
 
 // ══════════════════════════════════════════════
-// SWITCH INTERFACES & ROUTERS
+// ROUTING MATRIX LOGIC
 // ══════════════════════════════════════════════
 let manageUnlocked = false;
 function switchTab(name) {
@@ -981,7 +816,7 @@ function switchTab(name) {
 function toggleTheme() { state.theme = state.theme === 'classic' ? 'focus' : 'classic'; saveState(); applyTheme(); }
 function applyTheme() {
   document.body.className = state.theme !== 'classic' ? 'theme-focus' : '';
-  document.getElementById('theme-btn').textContent = state.theme === 'classic' ? 'Focus Light' : 'Kiosk Dark';
+  document.getElementById('theme-btn').textContent = state.theme === 'classic' ? 'Light' : 'Dark';
 }
 function setupCalendar() {
   document.getElementById('cal-agenda').src = GOOGLE_CAL_URL + '&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTabs=0&showTz=0&wkst=1&bgcolor=%23ffffff';
@@ -990,17 +825,14 @@ function setupCalendar() {
 function updateClock() {
   const now = new Date(), h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0');
   document.getElementById('clock').textContent = `${h%12||12}:${m}`;
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
-  const s = new Date(now); s.setDate(now.getDate()-now.getDay()); const e = new Date(s); e.setDate(s.getDate()+6);
-  const weekEl = document.getElementById('week-label'); if (weekEl) weekEl.textContent = `${months[s.getMonth()]} ${s.getDate()} – ${months[e.getMonth()]} ${e.getDate()}`;
   updateAmbientClock();
 }
 
 let pinBuffer = '', pinAction = null, pinMeta = null;
 function requirePin(action, meta) {
   pinAction = action; pinMeta = meta; pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = '';
-  document.getElementById('pin-desc').textContent = action==='reset'?'Wiping parameters requires parent authorization':'Parent security code mandatory';
   document.getElementById('pin-modal').classList.add('open');
 }
 function pinKey(k) {
