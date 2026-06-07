@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Family Dashboard</title>
+<title>Trevica Family Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -265,18 +265,175 @@ body {
 @media(max-width:640px){
   .summary-banner { grid-template-columns:repeat(2,1fr); }
 }
+
+
+/* ══════════════════════════════════════════════
+   TREVICA REFRESH — timeless, warm, kid-friendly
+   ══════════════════════════════════════════════ */
+:root {
+  --bg: #11120e;
+  --surface: rgba(30, 31, 25, 0.88);
+  --surface2: rgba(43, 45, 36, 0.9);
+  --border: rgba(238, 227, 205, 0.16);
+  --text: #f6efe3;
+  --muted: #a99f8d;
+  --subtle: #5d594c;
+  --cream: #f6efe3;
+  --paper: #efe4d0;
+  --ink: #2a241d;
+  --cedar: #7f5539;
+  --moss: #606c38;
+  --sage: #a3b18a;
+  --clay: #bc6c25;
+  --sun: #dda15e;
+  --sky: #6f9ceb;
+  --dad:   #6abf69; --dad-dim:   rgba(106,191,105,0.15);
+  --mom:   #d77a61; --mom-dim:   rgba(215,122,97,0.16);
+  --jules: #6f9ceb; --jules-dim: rgba(111,156,235,0.16);
+  --henry: #dda15e; --henry-dim: rgba(221,161,94,0.18);
+  --gold: #dda15e;
+  --green: #8fbc8f;
+  --radius: 18px;
+  --shadow: 0 18px 50px rgba(0,0,0,0.28);
+}
+
+html[data-theme="day"] {
+  --bg: #efe4d0;
+  --surface: rgba(255, 250, 239, 0.9);
+  --surface2: rgba(246, 239, 227, 0.95);
+  --border: rgba(89, 75, 55, 0.18);
+  --text: #2a241d;
+  --muted: #746955;
+  --subtle: #cdbfaa;
+  --dad:   #3f7f4a; --dad-dim:   rgba(63,127,74,0.12);
+  --mom:   #b4533f; --mom-dim:   rgba(180,83,63,0.12);
+  --jules: #3867b7; --jules-dim: rgba(56,103,183,0.12);
+  --henry: #b06f1d; --henry-dim: rgba(176,111,29,0.14);
+  --gold: #b06f1d;
+  --green: #3f7f4a;
+  --shadow: 0 16px 36px rgba(60,45,25,0.16);
+}
+
+body {
+  background:
+    radial-gradient(ellipse 42% 30% at 10% 0%, rgba(221,161,94,0.20) 0%, transparent 62%),
+    radial-gradient(ellipse 42% 32% at 86% 14%, rgba(111,156,235,0.14) 0%, transparent 62%),
+    linear-gradient(135deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 88%, #000 12%) 100%);
+  padding: 20px clamp(16px, 3vw, 34px) 36px;
+}
+
+.header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(12px);
+}
+.brand-wrap { display:flex; align-items:center; gap:13px; }
+.brand-mark {
+  width:46px; height:46px; border-radius:16px;
+  display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, var(--moss), var(--clay));
+  color:#fff; font-size:1.25rem; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
+}
+.header h1 { font-size: clamp(1.55rem, 3vw, 2.15rem); }
+.header-sub { letter-spacing:0.11em; }
+.header-actions { display:flex; align-items:center; gap:14px; }
+.theme-toggle {
+  border:1px solid var(--border); background:var(--surface2); color:var(--text);
+  border-radius:999px; padding:9px 13px; font-family:'DM Sans',sans-serif;
+  font-size:0.76rem; font-weight:700; cursor:pointer; white-space:nowrap;
+}
+.theme-toggle:hover { transform: translateY(-1px); }
+.clock-block { min-width:120px; }
+#clock { font-size: clamp(1.55rem, 3vw, 2.05rem); }
+
+.tabs { gap:8px; border-bottom:none; margin-bottom:16px; overflow-x:auto; padding-bottom:2px; }
+.tab {
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border:1px solid var(--border); border-radius:999px; bottom:0;
+  padding:9px 15px; backdrop-filter: blur(8px);
+}
+.tab.active { background:var(--surface2); border-color: color-mix(in srgb, var(--gold) 45%, var(--border)); }
+
+.dashboard-overview {
+  display:grid; grid-template-columns: 1.05fr 1.35fr 0.9fr; gap:14px; margin-bottom:14px;
+}
+@media(max-width:1050px){ .dashboard-overview { grid-template-columns:1fr; } }
+.overview-card, .family-note-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:16px;
+  box-shadow:var(--shadow); overflow:hidden; position:relative;
+}
+.overview-card::before, .family-note-card::before {
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background: radial-gradient(circle at 12% 0%, rgba(221,161,94,0.12), transparent 32%);
+}
+.card-kicker { font-size:0.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:8px; position:relative; }
+.big-day { font-family:'Fraunces',serif; font-size:2rem; line-height:1; margin-bottom:6px; position:relative; }
+.family-note { color:var(--muted); font-size:0.86rem; line-height:1.45; position:relative; }
+.mini-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:14px; position:relative; }
+.mini-metric { background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:10px; text-align:center; }
+.mini-metric strong { display:block; font-family:'Fraunces',serif; font-size:1.35rem; line-height:1; }
+.mini-metric span { display:block; color:var(--muted); font-size:0.66rem; text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+.home-calendar { padding:0; display:flex; flex-direction:column; min-height:330px; }
+.home-calendar-head { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); }
+.home-calendar iframe { width:100%; height:318px; border:0; filter:saturate(0.92); background:#fff; }
+.focus-list { display:flex; flex-direction:column; gap:8px; margin-top:12px; position:relative; }
+.focus-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 10px; background:var(--surface2); border:1px solid var(--border); border-radius:14px; font-size:0.82rem; }
+.focus-row .who { font-weight:700; }
+.focus-row .chip { color:var(--gold); font-size:0.75rem; white-space:nowrap; }
+.kid-spark { display:flex; gap:6px; margin-top:14px; font-size:1.25rem; position:relative; }
+
+.summary-banner { grid-template-columns:repeat(4,1fr); gap:12px; }
+.sum-card, .person-card, .manage-card, .cal-card, .approval-item {
+  background:var(--surface); border-color:var(--border); box-shadow:var(--shadow); backdrop-filter: blur(10px);
+}
+.sum-card { border-radius:20px; padding:14px; }
+.sum-name { color:var(--muted); }
+.sum-amt, .allowance-amt, .appr-amt { font-family:'Fraunces',serif; }
+.dash-grid { gap:14px; }
+.person-card { border-radius:22px; }
+.person-card-top { padding:15px 16px; }
+.avatar { border-radius:16px; }
+.chore-row { border:1px solid transparent; }
+.chore-row:hover { border-color:var(--border); }
+.allowance-status { border-radius:16px; }
+.prog-bar { height:6px; background:color-mix(in srgb, var(--subtle) 55%, transparent); }
+.cal-card { border-radius:24px; }
+.cal-iframe-wrap { height:520px; }
+.cal-placeholder { min-height:320px; }
+.inp { background:var(--surface2); }
+.footer-bar { border-top-color:var(--border); }
+.ghost-btn, .danger-btn, .appr-ok, .appr-deny { border-radius:999px; }
+
+@media(max-width:760px){
+  .header { align-items:flex-start; gap:12px; flex-direction:column; }
+  .header-actions { width:100%; justify-content:space-between; }
+  .summary-banner { grid-template-columns:repeat(2,1fr); }
+  .mini-metrics { grid-template-columns:repeat(3,1fr); }
+  .home-calendar iframe { height:280px; }
+}
+
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div>
-    <h1>The <em>Trevica</em> Board</h1>
-    <div class="header-sub">Chores · Allowance · Calendar</div>
+  <div class="brand-wrap">
+    <div class="brand-mark">✦</div>
+    <div>
+      <h1>The <em>Trevica</em> Board</h1>
+      <div class="header-sub">Home rhythm · Chores · Calendar · Allowance</div>
+    </div>
   </div>
-  <div class="clock-block">
-    <div id="clock">--:--</div>
-    <div id="date">--</div>
+  <div class="header-actions">
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">☀️ Day</button>
+    <div class="clock-block">
+      <div id="clock">--:--</div>
+      <div id="date">--</div>
+    </div>
   </div>
 </div>
 
@@ -289,6 +446,37 @@ body {
 
 <!-- ═══ DASHBOARD ═══ -->
 <div class="panel active" id="panel-dashboard">
+  <div class="dashboard-overview">
+    <section class="overview-card">
+      <div class="card-kicker">Today at home</div>
+      <div class="big-day" id="home-day-title">A good day to begin.</div>
+      <p class="family-note" id="home-family-note">Small wins count. Check the calendar, knock out the basics, and keep the house moving.</p>
+      <div class="mini-metrics">
+        <div class="mini-metric"><strong id="metric-done">0</strong><span>done</span></div>
+        <div class="mini-metric"><strong id="metric-left">0</strong><span>left</span></div>
+        <div class="mini-metric"><strong id="metric-pending">0</strong><span>pending</span></div>
+      </div>
+    </section>
+
+    <section class="overview-card home-calendar">
+      <div class="home-calendar-head">
+        <div>
+          <div class="card-kicker" style="margin-bottom:2px">Family calendar</div>
+          <div style="font-family:'Fraunces',serif;font-size:1.08rem">What is coming up</div>
+        </div>
+        <button class="ghost-btn" onclick="switchTab('calendar')">Open full calendar</button>
+      </div>
+      <iframe id="home-cal-iframe" src="" loading="lazy"></iframe>
+    </section>
+
+    <section class="family-note-card">
+      <div class="card-kicker">Kid-friendly focus</div>
+      <div style="font-family:'Fraunces',serif;font-size:1.25rem;position:relative">Today’s little wins</div>
+      <div class="focus-list" id="today-focus-list"></div>
+      <div class="kid-spark" aria-hidden="true">⭐ 🚀 🌿 🧺</div>
+    </section>
+  </div>
+
   <div class="summary-banner" id="summary-banner"></div>
   <div class="dash-grid" id="dash-grid"></div>
   <div class="footer-bar">
@@ -392,7 +580,7 @@ body {
 // ══════════════════════════════════════════════
 // ⚙️  CONFIG
 // ══════════════════════════════════════════════
-const GOOGLE_CAL_URL = '';   // paste Google Calendar embed src here
+const GOOGLE_CAL_URL = 'https://calendar.google.com/calendar/embed?src=family11684173322375554414%40group.calendar.google.com&ctz=America%2FDenver';   // Google Calendar embed src
 const PARENT_PIN     = '1234'; // change this to your family's PIN
 
 // Firebase cloud sync config
@@ -424,6 +612,24 @@ try {
 } catch (err) {
   console.warn('Firebase did not initialize. App will continue using localStorage only.', err);
 }
+
+
+// ══════════════════════════════════════════════
+// DAY / NIGHT MODE
+// ══════════════════════════════════════════════
+function currentTheme() {
+  return localStorage.getItem('trevica_theme') || 'night';
+}
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('trevica_theme', theme);
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = theme === 'day' ? '🌙 Night' : '☀️ Day';
+}
+function toggleTheme() {
+  applyTheme(currentTheme() === 'day' ? 'night' : 'day');
+}
+applyTheme(currentTheme());
 
 // ══════════════════════════════════════════════
 // DEFAULT PEOPLE  — edit names & weekly allowance
@@ -897,6 +1103,7 @@ function deleteChore(pid, cid) {
 // PIN
 // ══════════════════════════════════════════════
 let pinBuffer = '', pinAction = null, pinMeta = null;
+let manageUnlocked = false;
 
 function requirePin(action, meta) {
   pinAction=action; pinMeta=meta; pinBuffer='';
@@ -925,7 +1132,7 @@ function checkPin() {
     closeModal('pin-modal');
     if(pinAction==='reset')     { document.getElementById('reset-modal').classList.add('open'); }
     if(pinAction==='unapprove') { undoApproval(pinMeta); }
-    if(pinAction==='manage')    { switchTab('manage'); }
+    if(pinAction==='manage')    { manageUnlocked = true; switchTab('manage'); }
   } else {
     document.getElementById('pin-error').textContent='Incorrect PIN, try again.';
     pinBuffer=''; updatePinDots();
@@ -950,13 +1157,17 @@ function closeModal(id) { document.getElementById(id).classList.remove('open'); 
 // TABS
 // ══════════════════════════════════════════════
 function switchTab(name) {
+  if(name === 'manage' && !manageUnlocked) {
+    requirePin('manage');
+    return;
+  }
   document.querySelectorAll('.tab').forEach((t,i)=>{
     t.classList.toggle('active',['dashboard','approvals','calendar','manage'][i]===name);
   });
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
-  if(name==='manage')    { requirePin('manage'); }
   if(name==='approvals') renderApprovals();
+  if(name==='manage') renderManage();
 }
 
 // ══════════════════════════════════════════════
@@ -979,10 +1190,14 @@ function showCelebration(person, paid) {
 // CALENDAR
 // ══════════════════════════════════════════════
 function setupCalendar() {
-  if(GOOGLE_CAL_URL.trim()){
+  const url = GOOGLE_CAL_URL.trim();
+  const homeFrame = document.getElementById('home-cal-iframe');
+  if (homeFrame && url) homeFrame.src = url;
+
+  if(url){
     document.getElementById('cal-placeholder').style.display='none';
     document.getElementById('cal-iframe-wrap').style.display='block';
-    document.getElementById('cal-iframe').src=GOOGLE_CAL_URL;
+    document.getElementById('cal-iframe').src=url;
   }
 }
 
@@ -1002,8 +1217,49 @@ function updateClock() {
 // ══════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════
+
+function renderHomeOverview() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const title = document.getElementById('home-day-title');
+  if (title) title.textContent = `${days[now.getDay()]} reset`;
+
+  const allChores = state.people.flatMap(p => p.chores.map(c => ({ person:p, chore:c })));
+  const done = allChores.filter(x => isChecked(x.person.id, x.chore.id)).length;
+  const left = Math.max(allChores.length - done, 0);
+  const pending = pendingCount();
+
+  const doneEl = document.getElementById('metric-done');
+  const leftEl = document.getElementById('metric-left');
+  const pendEl = document.getElementById('metric-pending');
+  if (doneEl) doneEl.textContent = done;
+  if (leftEl) leftEl.textContent = left;
+  if (pendEl) pendEl.textContent = pending;
+
+  const note = document.getElementById('home-family-note');
+  if (note) {
+    note.textContent = pending > 0
+      ? `There ${pending === 1 ? 'is' : 'are'} ${pending} approval${pending === 1 ? '' : 's'} waiting. Quick review, then back to the day.`
+      : left === 0 && allChores.length > 0
+        ? 'Everything on the board is checked off. That is a strong family finish.'
+        : 'Check the calendar, choose the next small win, and keep the house moving without making it a whole thing.';
+  }
+
+  const focus = document.getElementById('today-focus-list');
+  if (focus) {
+    const rows = state.people.map(p => {
+      const total = p.chores.length;
+      const complete = p.chores.filter(c => isChecked(p.id, c.id)).length;
+      const remaining = Math.max(total - complete, 0);
+      const label = total === 0 ? 'clear' : remaining === 0 ? 'all done' : `${remaining} left`;
+      return `<div class="focus-row"><span><span class="who">${p.emoji} ${p.name}</span></span><span class="chip">${label}</span></div>`;
+    }).join('');
+    focus.innerHTML = rows || '<div class="focus-row"><span>No chores yet</span><span class="chip">easy day</span></div>';
+  }
+}
+
 function renderAll() {
-  renderSummary(); renderDashboard();
+  renderHomeOverview(); renderSummary(); renderDashboard();
   if(document.getElementById('panel-approvals').classList.contains('active')) renderApprovals();
   if(document.getElementById('panel-manage').classList.contains('active')) renderManage();
 }
