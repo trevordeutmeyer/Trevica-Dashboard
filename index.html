@@ -1,1 +1,939 @@
-# Trevica-Dashboard
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181c27;
+  --surface2: #1e2333;
+  --border: #2a2f42;
+  --text: #eef0f7;
+  --muted: #6b7494;
+  --subtle: #3a4060;
+  --dad:   #22c55e; --dad-dim:   rgba(34,197,94,0.12);
+  --mom:   #f43f5e; --mom-dim:   rgba(244,63,94,0.12);
+  --jules: #3b82f6; --jules-dim: rgba(59,130,246,0.12);
+  --henry: #f59e0b; --henry-dim: rgba(245,158,11,0.12);
+  --gold: #f59e0b;
+  --green: #22c55e;
+  --radius: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 15% 10%, rgba(59,130,246,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 90%, rgba(245,158,11,0.06) 0%, transparent 60%);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 18px 20px 32px;
+}
+
+/* ── HEADER ── */
+.header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+.header h1 { font-family:'Fraunces',serif; font-size:1.7rem; font-weight:300; letter-spacing:-0.02em; line-height:1; }
+.header h1 em { font-style:italic; color:var(--gold); }
+.header-sub { font-size:0.7rem; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; margin-top:4px; }
+.clock-block { text-align:right; }
+#clock { font-family:'Fraunces',serif; font-size:2.2rem; font-weight:300; letter-spacing:-0.03em; line-height:1; }
+#date { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; }
+
+/* ── TABS ── */
+.tabs { display:flex; gap:6px; margin-bottom:18px; border-bottom:1px solid var(--border); }
+.tab { padding:8px 16px; font-size:0.78rem; font-weight:500; color:var(--muted); cursor:pointer; border-radius:8px 8px 0 0; border:1px solid transparent; border-bottom:none; transition:all 0.15s; position:relative; bottom:-1px; letter-spacing:0.04em; }
+.tab:hover { color:var(--text); }
+.tab.active { color:var(--text); background:var(--surface); border-color:var(--border); border-bottom-color:var(--surface); }
+.tab .badge { display:inline-flex; align-items:center; justify-content:center; background:var(--mom); color:#fff; border-radius:99px; font-size:0.6rem; font-weight:600; width:16px; height:16px; margin-left:5px; }
+
+/* ── PANELS ── */
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* ── SUMMARY BANNER ── */
+.summary-banner { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+.sum-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:12px 14px; text-align:center; position:relative; overflow:hidden; }
+.sum-name { font-size:0.65rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:6px; }
+.sum-amt { font-family:'Fraunces',serif; font-size:1.5rem; font-weight:400; line-height:1; }
+.sum-sub { font-size:0.65rem; color:var(--muted); margin-top:3px; }
+.sum-dad   .sum-amt { color:var(--dad); }
+.sum-mom   .sum-amt { color:var(--mom); }
+.sum-jules .sum-amt { color:var(--jules); }
+.sum-henry .sum-amt { color:var(--henry); }
+.sum-paid-badge {
+  position:absolute; top:8px; right:8px;
+  background:rgba(34,197,94,0.15); color:var(--green);
+  font-size:0.6rem; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+  padding:2px 7px; border-radius:99px; border:1px solid rgba(34,197,94,0.3);
+}
+
+/* ── DASHBOARD GRID ── */
+.dash-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+@media(min-width:1100px){ .dash-grid { grid-template-columns:repeat(4,1fr); } }
+@media(max-width:640px){ .dash-grid { grid-template-columns:1fr; } }
+
+/* ── PERSON CARD ── */
+.person-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column; }
+.card-dad   { border-top:3px solid var(--dad); }
+.card-mom   { border-top:3px solid var(--mom); }
+.card-jules { border-top:3px solid var(--jules); }
+.card-henry { border-top:3px solid var(--henry); }
+
+.person-card-top { padding:14px 16px 12px; display:flex; align-items:center; gap:10px; border-bottom:1px solid var(--border); }
+.avatar { width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+.card-dad   .avatar { background:var(--dad-dim);   color:var(--dad); }
+.card-mom   .avatar { background:var(--mom-dim);   color:var(--mom); }
+.card-jules .avatar { background:var(--jules-dim); color:var(--jules); }
+.card-henry .avatar { background:var(--henry-dim); color:var(--henry); }
+.person-info { flex:1; }
+.person-name { font-family:'Fraunces',serif; font-size:1.05rem; font-weight:400; line-height:1; }
+.person-age  { font-size:0.7rem; color:var(--muted); margin-top:2px; }
+.allowance-block { text-align:right; }
+.allowance-amt { font-family:'Fraunces',serif; font-size:1.3rem; font-weight:600; line-height:1; }
+.allowance-label { font-size:0.62rem; color:var(--muted); letter-spacing:0.06em; text-transform:uppercase; margin-top:2px; }
+.card-dad   .allowance-amt { color:var(--dad); }
+.card-mom   .allowance-amt { color:var(--mom); }
+.card-jules .allowance-amt { color:var(--jules); }
+.card-henry .allowance-amt { color:var(--henry); }
+
+/* ── ALLOWANCE STATUS BAR ── */
+.allowance-status {
+  margin:10px 14px 0;
+  border-radius:10px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:0.78rem;
+  border:1px solid;
+}
+.allowance-status.locked   { background:rgba(107,116,148,0.08); border-color:var(--border); color:var(--muted); }
+.allowance-status.ready    { background:rgba(245,158,11,0.1);   border-color:rgba(245,158,11,0.35); color:var(--gold); }
+.allowance-status.pending  { background:rgba(59,130,246,0.1);   border-color:rgba(59,130,246,0.35); color:#7db5ff; }
+.allowance-status.paid     { background:rgba(34,197,94,0.1);    border-color:rgba(34,197,94,0.35);  color:var(--green); }
+.status-icon { font-size:1rem; flex-shrink:0; }
+.status-text { flex:1; line-height:1.3; }
+.status-text strong { display:block; font-size:0.75rem; margin-bottom:1px; }
+.status-text span { font-size:0.7rem; opacity:0.85; }
+.approve-btn {
+  padding:5px 12px; border-radius:99px; border:none;
+  font-family:'DM Sans',sans-serif; font-size:0.72rem; font-weight:600;
+  cursor:pointer; transition:all 0.15s; white-space:nowrap; flex-shrink:0;
+}
+.approve-btn.approve { background:var(--green); color:#000; }
+.approve-btn.approve:hover { filter:brightness(1.1); }
+.approve-btn.unapprove { background:rgba(107,116,148,0.2); color:var(--muted); }
+.approve-btn.unapprove:hover { background:rgba(107,116,148,0.35); color:var(--text); }
+
+/* ── PROGRESS BAR ── */
+.prog-wrap { padding:10px 14px; }
+.prog-bar { height:4px; background:var(--subtle); border-radius:99px; overflow:hidden; margin-bottom:4px; }
+.prog-fill { height:100%; border-radius:99px; transition:width 0.4s ease; }
+.card-dad   .prog-fill { background:var(--dad); }
+.card-mom   .prog-fill { background:var(--mom); }
+.card-jules .prog-fill { background:var(--jules); }
+.card-henry .prog-fill { background:var(--henry); }
+.prog-label { font-size:0.65rem; color:var(--muted); }
+
+/* ── CHORE BODY ── */
+.chore-body { padding:10px 12px; flex:1; }
+.section-label { font-size:0.62rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin:8px 0 5px; }
+.section-label:first-child { margin-top:2px; }
+
+.chore-row { display:flex; align-items:center; gap:8px; padding:7px 8px; border-radius:8px; cursor:pointer; transition:background 0.15s; margin-bottom:4px; user-select:none; }
+.chore-row:hover { background:var(--surface2); }
+.chore-row.done { opacity:0.4; }
+.chore-row.done .chore-name { text-decoration:line-through; }
+.chk { width:18px; height:18px; border-radius:5px; border:2px solid var(--subtle); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:0.65rem; transition:all 0.15s; }
+.card-dad   .chore-row.done .chk { background:var(--dad);   border-color:var(--dad);   color:#000; }
+.card-mom   .chore-row.done .chk { background:var(--mom);   border-color:var(--mom);   color:#fff; }
+.card-jules .chore-row.done .chk { background:var(--jules); border-color:var(--jules); color:#fff; }
+.card-henry .chore-row.done .chk { background:var(--henry); border-color:var(--henry); color:#000; }
+.chore-name { font-size:0.8rem; flex:1; }
+
+/* job amounts */
+.job-amt { font-size:0.75rem; font-weight:600; color:var(--green); background:rgba(34,197,94,0.1); padding:2px 7px; border-radius:99px; white-space:nowrap; }
+.job-amt.pending-pay { color:#7db5ff; background:rgba(59,130,246,0.12); }
+.job-amt.paid-out    { color:var(--muted); background:rgba(107,116,148,0.1); text-decoration:line-through; }
+
+/* ── APPROVALS PANEL ── */
+.approvals-empty { text-align:center; padding:40px 20px; color:var(--muted); font-size:0.85rem; }
+.approvals-empty .big { font-size:2rem; margin-bottom:8px; }
+.approval-list { display:flex; flex-direction:column; gap:10px; }
+.approval-item {
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:14px 16px; display:flex; align-items:center; gap:14px;
+}
+.appr-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+.appr-info { flex:1; }
+.appr-who { font-family:'Fraunces',serif; font-size:0.95rem; font-weight:400; }
+.appr-what { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.appr-amt  { font-family:'Fraunces',serif; font-size:1.2rem; font-weight:600; margin-right:4px; }
+.appr-btns { display:flex; gap:6px; }
+.appr-ok  { padding:6px 14px; border-radius:99px; border:none; background:var(--green); color:#000; font-family:'DM Sans',sans-serif; font-size:0.75rem; font-weight:600; cursor:pointer; transition:filter 0.15s; }
+.appr-ok:hover { filter:brightness(1.1); }
+.appr-deny { padding:6px 14px; border-radius:99px; border:1px solid var(--border); background:transparent; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:0.75rem; cursor:pointer; transition:all 0.15s; }
+.appr-deny:hover { border-color:var(--mom); color:var(--mom); }
+
+/* ── CALENDAR ── */
+.cal-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.cal-header { padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+.cal-header .label { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; }
+.cal-placeholder { padding:30px 20px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:10px; }
+.cal-placeholder h3 { font-family:'Fraunces',serif; font-weight:400; font-size:1rem; }
+.cal-placeholder p { font-size:0.78rem; color:var(--muted); max-width:360px; line-height:1.5; }
+.embed-box { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 16px; font-size:0.75rem; color:#7ca4e8; text-align:left; max-width:400px; line-height:1.7; }
+.embed-box strong { color:var(--text); display:block; margin-bottom:4px; }
+.cal-iframe-wrap { display:none; height:380px; }
+.cal-iframe-wrap iframe { width:100%; height:100%; border:none; }
+
+/* ── MANAGE ── */
+.manage-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+@media(min-width:1100px){ .manage-grid { grid-template-columns:repeat(4,1fr); } }
+@media(max-width:640px){ .manage-grid { grid-template-columns:1fr; } }
+.manage-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+.manage-top { padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+.manage-top .sm-avatar { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.85rem; flex-shrink:0; }
+.manage-top .mname { font-family:'Fraunces',serif; font-size:0.95rem; flex:1; }
+.manage-body { padding:12px 14px; }
+
+/* allowance setter */
+.allowance-setter { display:flex; align-items:center; gap:8px; margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.allowance-setter label { font-size:0.72rem; color:var(--muted); flex:1; }
+.allowance-setter .inp { width:80px; }
+
+.manage-chore-row { display:flex; align-items:center; gap:6px; padding:5px 0; border-bottom:1px solid var(--border); font-size:0.78rem; }
+.manage-chore-row:last-child { border-bottom:none; }
+.manage-chore-row .mcname { flex:1; }
+.manage-chore-row .mctype { font-size:0.65rem; color:var(--muted); background:var(--surface2); border-radius:4px; padding:1px 5px; }
+.manage-chore-row .del-btn { width:22px; height:22px; border-radius:5px; border:none; background:rgba(244,63,94,0.12); color:var(--mom); cursor:pointer; font-size:0.7rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background 0.15s; }
+.manage-chore-row .del-btn:hover { background:rgba(244,63,94,0.25); }
+
+.add-form { display:flex; flex-direction:column; gap:7px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.inp { background:var(--surface2); border:1px solid var(--border); border-radius:7px; padding:7px 10px; font-family:'DM Sans',sans-serif; font-size:0.78rem; color:var(--text); outline:none; transition:border-color 0.15s; width:100%; }
+.inp:focus { border-color:var(--subtle); }
+.inp::placeholder { color:var(--muted); }
+.add-form-row { display:flex; gap:6px; }
+.inp.amt { width:78px; flex-shrink:0; }
+.type-row { display:flex; gap:6px; }
+.type-btn { flex:1; padding:6px 4px; border-radius:7px; border:1px solid var(--border); background:transparent; font-family:'DM Sans',sans-serif; font-size:0.72rem; color:var(--muted); cursor:pointer; transition:all 0.15s; text-align:center; }
+.type-btn.selected { border-color:var(--gold); color:var(--gold); background:rgba(245,158,11,0.1); }
+.add-btn { padding:8px; border-radius:8px; border:none; font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500; cursor:pointer; transition:all 0.15s; width:100%; margin-top:2px; }
+.card-dad   .add-btn, .manage-card.card-dad   .add-btn { background:var(--dad-dim);   color:var(--dad); }
+.card-mom   .add-btn, .manage-card.card-mom   .add-btn { background:var(--mom-dim);   color:var(--mom); }
+.card-jules .add-btn, .manage-card.card-jules .add-btn { background:var(--jules-dim); color:var(--jules); }
+.card-henry .add-btn, .manage-card.card-henry .add-btn { background:var(--henry-dim); color:var(--henry); }
+.add-btn:hover { filter:brightness(1.2); }
+
+/* ── FOOTER ── */
+.footer-bar { display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); }
+.week-label { font-size:0.72rem; color:var(--muted); flex:1; }
+.ghost-btn { padding:7px 16px; border-radius:99px; border:1px solid var(--border); background:transparent; font-family:'DM Sans',sans-serif; font-size:0.75rem; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.ghost-btn:hover { border-color:var(--subtle); color:var(--text); }
+.danger-btn { padding:7px 16px; border-radius:99px; border:1px solid rgba(244,63,94,0.3); background:rgba(244,63,94,0.08); font-family:'DM Sans',sans-serif; font-size:0.75rem; color:var(--mom); cursor:pointer; transition:all 0.15s; }
+.danger-btn:hover { background:rgba(244,63,94,0.18); }
+
+/* ── MODAL ── */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px); z-index:300; align-items:center; justify-content:center; }
+.modal-bg.open { display:flex; }
+.modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; width:320px; max-width:95vw; }
+.modal h3 { font-family:'Fraunces',serif; font-weight:400; font-size:1.1rem; margin-bottom:10px; }
+.modal p { font-size:0.82rem; color:var(--muted); line-height:1.5; }
+.modal-btns { display:flex; gap:8px; margin-top:16px; }
+.modal-btns button { flex:1; }
+
+/* PIN */
+.pin-dots { display:flex; justify-content:center; gap:10px; margin:16px 0; }
+.pin-dot { width:12px; height:12px; border-radius:50%; background:var(--subtle); transition:background 0.15s; }
+.pin-dot.filled { background:var(--gold); }
+.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-width:180px; margin:0 auto; }
+.pin-key { padding:12px; border-radius:10px; border:1px solid var(--border); background:var(--surface2); font-family:'Fraunces',serif; font-size:1.1rem; color:var(--text); cursor:pointer; transition:all 0.15s; text-align:center; }
+.pin-key:hover { background:var(--subtle); }
+.pin-error { font-size:0.75rem; color:var(--mom); text-align:center; margin-top:8px; min-height:18px; }
+
+/* ── CELEBRATION ── */
+.cel-popup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.85); background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:28px 36px; text-align:center; z-index:400; box-shadow:0 24px 80px rgba(0,0,0,0.5); animation:popIn 0.3s ease forwards; }
+@keyframes popIn { to { transform:translate(-50%,-50%) scale(1); } }
+.cel-emoji { font-size:2.2rem; margin-bottom:8px; }
+.cel-title { font-family:'Fraunces',serif; font-size:1.4rem; font-weight:400; margin-bottom:4px; }
+.cel-sub   { font-size:0.8rem; color:var(--muted); }
+
+@media(max-width:640px){
+  .summary-banner { grid-template-columns:repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>The <em>Family</em> Board</h1>
+    <div class="header-sub">Chores · Allowance · Calendar</div>
+  </div>
+  <div class="clock-block">
+    <div id="clock">--:--</div>
+    <div id="date">--</div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('dashboard')">📋 This Week</div>
+  <div class="tab" onclick="switchTab('approvals')">✅ Approvals<span class="badge" id="appr-badge" style="display:none">0</span></div>
+  <div class="tab" onclick="switchTab('calendar')">📅 Calendar</div>
+  <div class="tab" onclick="switchTab('manage')">⚙️ Manage</div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="panel active" id="panel-dashboard">
+  <div class="summary-banner" id="summary-banner"></div>
+  <div class="dash-grid" id="dash-grid"></div>
+  <div class="footer-bar">
+    <div class="week-label" id="week-label"></div>
+    <button class="ghost-btn" onclick="requirePin('reset')">↺ New Week</button>
+  </div>
+</div>
+
+<!-- ═══ APPROVALS ═══ -->
+<div class="panel" id="panel-approvals">
+  <div id="approvals-container"></div>
+</div>
+
+<!-- ═══ CALENDAR ═══ -->
+<div class="panel" id="panel-calendar">
+  <div class="cal-card">
+    <div class="cal-header">
+      <div class="label">📅 Family Calendar</div>
+      <div style="font-size:0.7rem;color:var(--muted);font-style:italic">Google Calendar · live</div>
+    </div>
+    <div class="cal-placeholder" id="cal-placeholder">
+      <div style="font-size:2rem">📅</div>
+      <h3>Connect your Google Calendar</h3>
+      <p>Paste your embed URL into the <code style="background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:0.75rem">GOOGLE_CAL_URL</code> variable at the top of the script.</p>
+      <div class="embed-box">
+        <strong>How to get your embed URL:</strong>
+        1. Google Calendar → Settings ⚙️<br>
+        2. Click your calendar → "Integrate calendar"<br>
+        3. Copy the iframe <code>src</code> URL<br>
+        4. Paste it into <code>GOOGLE_CAL_URL</code> in this file
+      </div>
+    </div>
+    <div class="cal-iframe-wrap" id="cal-iframe-wrap">
+      <iframe id="cal-iframe" src=""></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MANAGE ═══ -->
+<div class="panel" id="panel-manage">
+  <div class="manage-grid" id="manage-grid"></div>
+  <div class="footer-bar">
+    <div class="week-label">Weekly chores earn the full allowance when all are complete. Jobs pay individually upon approval.</div>
+    <button class="danger-btn" onclick="requirePin('reset')">↺ Start New Week</button>
+  </div>
+</div>
+
+<!-- CELEBRATION -->
+<div class="cel-popup" id="cel-popup">
+  <div class="cel-emoji" id="cel-emoji">🎉</div>
+  <div class="cel-title" id="cel-title">All done!</div>
+  <div class="cel-sub"  id="cel-sub"></div>
+</div>
+
+<!-- PIN MODAL -->
+<div class="modal-bg" id="pin-modal">
+  <div class="modal" style="text-align:center">
+    <h3>Parent PIN</h3>
+    <p id="pin-desc" style="font-size:0.78rem;color:var(--muted)">Enter your 4-digit PIN to continue.</p>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-pad">
+      <div class="pin-key" onclick="pinKey('1')">1</div>
+      <div class="pin-key" onclick="pinKey('2')">2</div>
+      <div class="pin-key" onclick="pinKey('3')">3</div>
+      <div class="pin-key" onclick="pinKey('4')">4</div>
+      <div class="pin-key" onclick="pinKey('5')">5</div>
+      <div class="pin-key" onclick="pinKey('6')">6</div>
+      <div class="pin-key" onclick="pinKey('7')">7</div>
+      <div class="pin-key" onclick="pinKey('8')">8</div>
+      <div class="pin-key" onclick="pinKey('9')">9</div>
+      <div class="pin-key" onclick="pinKey('cancel')" style="font-size:0.75rem;color:var(--muted)">✕</div>
+      <div class="pin-key" onclick="pinKey('0')">0</div>
+      <div class="pin-key" onclick="pinKey('back')" style="font-size:0.85rem">⌫</div>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div class="modal-bg" id="reset-modal">
+  <div class="modal">
+    <h3>Start a new week?</h3>
+    <p>This clears all checkmarks and resets earnings. Weekly chores stay on the list. One-time jobs are removed.</p>
+    <div class="modal-btns">
+      <button class="ghost-btn" onclick="closeModal('reset-modal')">Cancel</button>
+      <button class="danger-btn" onclick="doReset()">Yes, new week</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// ⚙️  CONFIG
+// ══════════════════════════════════════════════
+const GOOGLE_CAL_URL = '';   // paste Google Calendar embed src here
+const PARENT_PIN     = '1234'; // change this to your family's PIN
+
+// ══════════════════════════════════════════════
+// DEFAULT PEOPLE  — edit names & weekly allowance
+// ══════════════════════════════════════════════
+const DEFAULT_PEOPLE = [
+  {
+    id:'dad', name:'Dad', emoji:'👨', cls:'card-dad',
+    weeklyAllowance: 0,
+    chores:[
+      { id:'d1', name:'Take out trash',      type:'weekly' },
+      { id:'d2', name:'Mow the lawn',        type:'weekly' },
+      { id:'d3', name:'Dishes after dinner', type:'weekly' },
+    ]
+  },
+  {
+    id:'mom', name:'Jessica', emoji:'👩', cls:'card-mom',
+    weeklyAllowance: 0,
+    chores:[
+      { id:'m1', name:'Grocery run',      type:'weekly' },
+      { id:'m2', name:'Laundry',          type:'weekly' },
+      { id:'m3', name:'Water the plants', type:'weekly' },
+    ]
+  },
+  {
+    id:'jules', name:'Jules', emoji:'⭐', cls:'card-jules', age:'Age 9',
+    weeklyAllowance: 5.00,
+    chores:[
+      { id:'j1', name:'Make bed',       type:'weekly' },
+      { id:'j2', name:'Feed the pet',   type:'weekly' },
+      { id:'j3', name:'Set the table',  type:'weekly' },
+      { id:'j4', name:'Clean room',     type:'weekly' },
+      { id:'j5', name:'Homework done',  type:'weekly' },
+    ]
+  },
+  {
+    id:'henry', name:'Henry', emoji:'🚀', cls:'card-henry', age:'Age 11',
+    weeklyAllowance: 7.00,
+    chores:[
+      { id:'h1', name:'Make bed',           type:'weekly' },
+      { id:'h2', name:'Empty dishwasher',   type:'weekly' },
+      { id:'h3', name:'Vacuum living room', type:'weekly' },
+      { id:'h4', name:'Take out recycling', type:'weekly' },
+      { id:'h5', name:'Homework done',      type:'weekly' },
+    ]
+  },
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+function getWeekKey() {
+  const d = new Date(), jan1 = new Date(d.getFullYear(),0,1);
+  return `w${d.getFullYear()}_${Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7)}`;
+}
+
+function freshState() {
+  return {
+    people:   JSON.parse(JSON.stringify(DEFAULT_PEOPLE)),
+    checked:  {},      // { personId: [choreId, ...] }
+    approved: {},      // { personId: { allowance: bool, jobs: {choreId: bool} } }
+    pending:  [],      // [{ type:'allowance'|'job', personId, choreId?, amt, id }]
+    weekKey:  getWeekKey(),
+  };
+}
+
+function loadState() {
+  try { const r=localStorage.getItem('fb_v3'); if(r) return JSON.parse(r); } catch {}
+  return freshState();
+}
+function saveState() {
+  try { localStorage.setItem('fb_v3', JSON.stringify(state)); } catch {}
+}
+
+let state = loadState();
+
+// Auto new-week
+if (state.weekKey !== getWeekKey()) {
+  const kept = state.people.map(p => ({...p, chores: p.chores.filter(c=>c.type==='weekly')}));
+  state = { ...freshState(), people: kept };
+  saveState();
+}
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+function uid() { return Math.random().toString(36).substr(2,9); }
+function isChecked(pid, cid)  { return (state.checked[pid]||[]).includes(cid); }
+function isApproved(pid)      { return state.approved[pid]?.allowance === true; }
+function isJobApproved(pid,cid){ return state.approved[pid]?.jobs?.[cid] === true; }
+function fmt(n) { return n===0?'—':'$'+n.toFixed(2); }
+
+function allWeeklyDone(pid) {
+  const p = state.people.find(x=>x.id===pid);
+  return p && p.chores.filter(c=>c.type==='weekly').every(c=>isChecked(pid,c.id));
+}
+
+function earnedTotal(pid) {
+  const p = state.people.find(x=>x.id===pid);
+  if (!p) return 0;
+  let total = 0;
+  if (isApproved(pid)) total += p.weeklyAllowance;
+  p.chores.filter(c=>c.type==='job').forEach(c => {
+    if (isJobApproved(pid, c.id)) total += c.amt;
+  });
+  return total;
+}
+
+function pendingCount() { return state.pending.length; }
+
+// ══════════════════════════════════════════════
+// TOGGLE CHORE
+// ══════════════════════════════════════════════
+function toggleChore(pid, cid) {
+  // Can't un-check if allowance already approved
+  if (isApproved(pid)) {
+    const p = state.people.find(x=>x.id===pid);
+    const chore = p.chores.find(c=>c.id===cid);
+    if (chore?.type === 'weekly') return; // locked after approval
+  }
+
+  if (!state.checked[pid]) state.checked[pid] = [];
+  const idx = state.checked[pid].indexOf(cid);
+  if (idx===-1) state.checked[pid].push(cid);
+  else state.checked[pid].splice(idx,1);
+  saveState();
+
+  // Check if all weekly just completed — submit for approval
+  const p = state.people.find(x=>x.id===pid);
+  if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
+    // Check not already pending
+    const alreadyPending = state.pending.some(x=>x.type==='allowance'&&x.personId===pid);
+    if (!alreadyPending) {
+      state.pending.push({ id:uid(), type:'allowance', personId:pid, amt:p.weeklyAllowance });
+      saveState();
+      showCelebration(p, false);
+    }
+  }
+
+  renderAll();
+  updateBadge();
+}
+
+function requestJobApproval(pid, cid) {
+  const p = state.people.find(x=>x.id===pid);
+  const c = p.chores.find(x=>x.id===cid);
+  if (!c || isJobApproved(pid,cid)) return;
+  const alreadyPending = state.pending.some(x=>x.type==='job'&&x.personId===pid&&x.choreId===cid);
+  if (alreadyPending) return;
+  state.pending.push({ id:uid(), type:'job', personId:pid, choreId:cid, amt:c.amt, name:c.name });
+  saveState();
+  renderAll();
+  updateBadge();
+}
+
+// ══════════════════════════════════════════════
+// APPROVALS
+// ══════════════════════════════════════════════
+function approveItem(itemId) {
+  const item = state.pending.find(x=>x.id===itemId);
+  if (!item) return;
+  if (!state.approved[item.personId]) state.approved[item.personId] = { jobs:{} };
+  if (item.type==='allowance') {
+    state.approved[item.personId].allowance = true;
+    const p = state.people.find(x=>x.id===item.personId);
+    showCelebration(p, true);
+  } else {
+    if (!state.approved[item.personId].jobs) state.approved[item.personId].jobs = {};
+    state.approved[item.personId].jobs[item.choreId] = true;
+  }
+  state.pending = state.pending.filter(x=>x.id!==itemId);
+  saveState();
+  renderAll();
+  updateBadge();
+}
+
+function denyItem(itemId) {
+  const item = state.pending.find(x=>x.id===itemId);
+  if (!item) return;
+  // Uncheck the relevant chores
+  if (item.type==='allowance') {
+    state.checked[item.personId] = [];
+  } else if (item.choreId) {
+    if (state.checked[item.personId])
+      state.checked[item.personId] = state.checked[item.personId].filter(x=>x!==item.choreId);
+  }
+  state.pending = state.pending.filter(x=>x.id!==itemId);
+  saveState();
+  renderAll();
+  updateBadge();
+}
+
+function updateBadge() {
+  const n = pendingCount();
+  const b = document.getElementById('appr-badge');
+  b.style.display = n > 0 ? 'inline-flex' : 'none';
+  b.textContent = n;
+}
+
+// ══════════════════════════════════════════════
+// RENDER DASHBOARD
+// ══════════════════════════════════════════════
+function renderDashboard() {
+  const grid = document.getElementById('dash-grid');
+  grid.innerHTML = '';
+  state.people.forEach(person => {
+    const weekly   = person.chores.filter(c=>c.type==='weekly');
+    const jobs     = person.chores.filter(c=>c.type==='job');
+    const weekDone = weekly.filter(c=>isChecked(person.id,c.id)).length;
+    const allDone  = allWeeklyDone(person.id);
+    const approved = isApproved(person.id);
+    const pendingAllowance = state.pending.some(x=>x.type==='allowance'&&x.personId===person.id);
+    const total    = person.chores.length;
+    const done     = person.chores.filter(c=>isChecked(person.id,c.id)).length;
+    const pct      = total>0 ? Math.round((done/total)*100) : 0;
+    const earned   = earnedTotal(person.id);
+
+    // Status bar
+    let statusHtml = '';
+    if (person.weeklyAllowance > 0) {
+      if (approved) {
+        statusHtml = `<div class="allowance-status paid">
+          <div class="status-icon">💰</div>
+          <div class="status-text"><strong>Allowance Paid!</strong><span>${fmt(person.weeklyAllowance)} approved by parent</span></div>
+          <button class="approve-btn unapprove" onclick="requirePin('unapprove','${person.id}')">Undo</button>
+        </div>`;
+      } else if (pendingAllowance) {
+        statusHtml = `<div class="allowance-status pending">
+          <div class="status-icon">⏳</div>
+          <div class="status-text"><strong>Waiting for Approval</strong><span>${fmt(person.weeklyAllowance)} · parent review needed</span></div>
+        </div>`;
+      } else if (allDone) {
+        statusHtml = `<div class="allowance-status ready">
+          <div class="status-icon">🌟</div>
+          <div class="status-text"><strong>All Done — Ready for Approval!</strong><span>${fmt(person.weeklyAllowance)} waiting</span></div>
+        </div>`;
+      } else {
+        statusHtml = `<div class="allowance-status locked">
+          <div class="status-icon">🔒</div>
+          <div class="status-text"><strong>Complete all chores to earn</strong><span>${fmt(person.weeklyAllowance)} · ${weekDone}/${weekly.length} done</span></div>
+        </div>`;
+      }
+    }
+
+    const card = document.createElement('div');
+    card.className = `person-card ${person.cls}`;
+    card.innerHTML = `
+      <div class="person-card-top">
+        <div class="avatar">${person.emoji}</div>
+        <div class="person-info">
+          <div class="person-name">${person.name}</div>
+          ${person.age?`<div class="person-age">${person.age}</div>`:''}
+        </div>
+        <div class="allowance-block">
+          <div class="allowance-amt">${earned>0?'$'+earned.toFixed(2):'—'}</div>
+          <div class="allowance-label">${person.weeklyAllowance>0?'of '+fmt(person.weeklyAllowance):'earned'}</div>
+        </div>
+      </div>
+      ${statusHtml}
+      <div class="chore-body">
+        ${weekly.length>0?'<div class="section-label">Weekly Chores</div>':''}
+        ${weekly.map(c=>{
+          const done = isChecked(person.id,c.id);
+          const locked = approved && done;
+          return `<div class="chore-row ${done?'done':''}" onclick="${locked?'':'toggleChore(\''+person.id+'\',\''+c.id+'\')'}">
+            <div class="chk">${done?'✓':''}</div>
+            <div class="chore-name">${c.name}</div>
+          </div>`;
+        }).join('')}
+        ${jobs.length>0?'<div class="section-label">Jobs</div>':''}
+        ${jobs.map(c=>{
+          const checked  = isChecked(person.id,c.id);
+          const jpending = state.pending.some(x=>x.type==='job'&&x.personId===person.id&&x.choreId===c.id);
+          const japproved= isJobApproved(person.id,c.id);
+          let amtLabel;
+          if (japproved)      amtLabel=`<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>`;
+          else if (jpending)  amtLabel=`<span class="job-amt pending-pay">pending</span>`;
+          else                amtLabel=`<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
+          const clickFn = checked && !jpending && !japproved
+            ? `requestJobApproval('${person.id}','${c.id}')`
+            : (!checked ? `toggleChore('${person.id}','${c.id}')` : '');
+          return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}">
+            <div class="chk">${checked?'✓':''}</div>
+            <div class="chore-name">${c.name}</div>
+            ${amtLabel}
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+        <div class="prog-label">${done} of ${total} complete</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+// RENDER SUMMARY BANNER
+// ══════════════════════════════════════════════
+function renderSummary() {
+  document.getElementById('summary-banner').innerHTML = state.people.map(p => {
+    const earned   = earnedTotal(p.id);
+    const approved = isApproved(p.id);
+    const allDone  = allWeeklyDone(p.id);
+    const weekly   = p.chores.filter(c=>c.type==='weekly');
+    const done     = p.chores.filter(c=>isChecked(p.id,c.id)).length;
+    let sub = `${done}/${p.chores.length} done`;
+    if (p.weeklyAllowance>0) sub += ` · up to ${fmt(p.weeklyAllowance)}`;
+    return `<div class="sum-card sum-${p.id}">
+      ${approved?'<div class="sum-paid-badge">Paid ✓</div>':''}
+      <div class="sum-name">${p.emoji} ${p.name}</div>
+      <div class="sum-amt">${earned>0?'$'+earned.toFixed(2):'—'}</div>
+      <div class="sum-sub">${sub}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// RENDER APPROVALS
+// ══════════════════════════════════════════════
+function renderApprovals() {
+  const container = document.getElementById('approvals-container');
+  if (state.pending.length === 0) {
+    container.innerHTML = `<div class="approvals-empty"><div class="big">✅</div>No pending approvals — all clear!</div>`;
+    return;
+  }
+  container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
+    const p = state.people.find(x=>x.id===item.personId);
+    const isAllowance = item.type==='allowance';
+    const desc = isAllowance
+      ? `Completed all weekly chores — requesting ${fmt(item.amt)} allowance`
+      : `Completed job "${item.name}" — requesting ${fmt(item.amt)}`;
+    return `<div class="approval-item">
+      <div class="appr-avatar ${p.cls}">${p.emoji}</div>
+      <div class="appr-info">
+        <div class="appr-who">${p.name}</div>
+        <div class="appr-what">${desc}</div>
+      </div>
+      <div class="appr-amt" style="color:${isAllowance?'var(--gold)':'var(--green)'}">${fmt(item.amt)}</div>
+      <div class="appr-btns">
+        <button class="appr-ok"   onclick="approveItem('${item.id}')">Approve</button>
+        <button class="appr-deny" onclick="denyItem('${item.id}')">Deny</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ══════════════════════════════════════════════
+// RENDER MANAGE
+// ══════════════════════════════════════════════
+function renderManage() {
+  const grid = document.getElementById('manage-grid');
+  grid.innerHTML = '';
+  state.people.forEach(person => {
+    const weekly = person.chores.filter(c=>c.type==='weekly');
+    const jobs   = person.chores.filter(c=>c.type==='job');
+    const card   = document.createElement('div');
+    card.className = `manage-card ${person.cls}`;
+    card.innerHTML = `
+      <div class="manage-top">
+        <div class="sm-avatar avatar">${person.emoji}</div>
+        <div class="mname">${person.name}</div>
+      </div>
+      <div class="manage-body">
+        <div class="allowance-setter">
+          <label>Weekly allowance (all chores = this amount)</label>
+          <input class="inp" id="wa-${person.id}" type="number" min="0" step="0.50"
+            value="${person.weeklyAllowance.toFixed(2)}"
+            onchange="updateAllowance('${person.id}',this.value)" />
+        </div>
+        ${weekly.length>0?'<div class="section-label">Weekly Chores</div>':''}
+        ${weekly.map(c=>`<div class="manage-chore-row">
+          <span class="mcname">${c.name}</span>
+          <span class="mctype">weekly</span>
+          <button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">✕</button>
+        </div>`).join('')}
+        ${jobs.length>0?'<div class="section-label">One-Time Jobs</div>':''}
+        ${jobs.map(c=>`<div class="manage-chore-row">
+          <span class="mcname">${c.name}</span>
+          <span class="mctype" style="color:var(--green)">$${c.amt.toFixed(2)}</span>
+          <button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">✕</button>
+        </div>`).join('')}
+        <div class="add-form">
+          <div class="section-label" style="margin-top:0">Add New</div>
+          <input class="inp" id="inp-name-${person.id}" placeholder="Chore or job name" />
+          <div class="add-form-row">
+            <input class="inp amt" id="inp-amt-${person.id}" placeholder="$" type="number" min="0" step="0.50" />
+            <div style="flex:1"><div class="type-row">
+              <button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">🔁 Weekly</button>
+              <button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">⚡ Job</button>
+            </div></div>
+          </div>
+          <button class="add-btn" onclick="addChore('${person.id}')">+ Add</button>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function updateAllowance(pid, val) {
+  const p = state.people.find(x=>x.id===pid);
+  p.weeklyAllowance = parseFloat(val)||0;
+  saveState(); renderSummary(); renderDashboard();
+}
+function selectType(pid,type) {
+  document.getElementById(`btn-weekly-${pid}`).classList.toggle('selected',type==='weekly');
+  document.getElementById(`btn-job-${pid}`).classList.toggle('selected',type==='job');
+}
+function getSelectedType(pid) {
+  return document.getElementById(`btn-job-${pid}`).classList.contains('selected')?'job':'weekly';
+}
+function addChore(pid) {
+  const nameEl=document.getElementById(`inp-name-${pid}`);
+  const amtEl =document.getElementById(`inp-amt-${pid}`);
+  const name=nameEl.value.trim(); if(!name){nameEl.focus();return;}
+  const type=getSelectedType(pid);
+  const amt = type==='job' ? (parseFloat(amtEl.value)||0) : 0;
+  state.people.find(x=>x.id===pid).chores.push({id:uid(),name,amt,type});
+  saveState(); renderManage(); renderDashboard(); renderSummary();
+}
+function deleteChore(pid, cid) {
+  const p=state.people.find(x=>x.id===pid);
+  p.chores=p.chores.filter(c=>c.id!==cid);
+  if(state.checked[pid]) state.checked[pid]=state.checked[pid].filter(x=>x!==cid);
+  state.pending=state.pending.filter(x=>!(x.personId===pid&&x.choreId===cid));
+  saveState(); renderManage(); renderDashboard(); renderSummary(); updateBadge();
+}
+
+// ══════════════════════════════════════════════
+// PIN
+// ══════════════════════════════════════════════
+let pinBuffer = '', pinAction = null, pinMeta = null;
+
+function requirePin(action, meta) {
+  pinAction=action; pinMeta=meta; pinBuffer='';
+  updatePinDots();
+  document.getElementById('pin-error').textContent='';
+  const descs = {
+    reset:'Enter your PIN to start a new week.',
+    unapprove:'Enter your PIN to undo this approval.',
+    manage:'Enter your PIN to manage chores.',
+  };
+  document.getElementById('pin-desc').textContent = descs[action]||'Enter your PIN.';
+  document.getElementById('pin-modal').classList.add('open');
+}
+function pinKey(k) {
+  if(k==='cancel'){ closeModal('pin-modal'); return; }
+  if(k==='back'){ pinBuffer=pinBuffer.slice(0,-1); updatePinDots(); return; }
+  if(pinBuffer.length>=4) return;
+  pinBuffer+=k; updatePinDots();
+  if(pinBuffer.length===4) setTimeout(checkPin,120);
+}
+function updatePinDots() {
+  for(let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.toggle('filled',i<pinBuffer.length);
+}
+function checkPin() {
+  if(pinBuffer===PARENT_PIN){
+    closeModal('pin-modal');
+    if(pinAction==='reset')     { document.getElementById('reset-modal').classList.add('open'); }
+    if(pinAction==='unapprove') { undoApproval(pinMeta); }
+    if(pinAction==='manage')    { switchTab('manage'); }
+  } else {
+    document.getElementById('pin-error').textContent='Incorrect PIN, try again.';
+    pinBuffer=''; updatePinDots();
+  }
+}
+function undoApproval(pid) {
+  if(state.approved[pid]) state.approved[pid].allowance=false;
+  saveState(); renderAll();
+}
+
+// ══════════════════════════════════════════════
+// RESET
+// ══════════════════════════════════════════════
+function doReset() {
+  const kept = state.people.map(p=>({...p, chores:p.chores.filter(c=>c.type==='weekly')}));
+  state = { ...freshState(), people:kept };
+  saveState(); closeModal('reset-modal'); renderAll(); updateBadge();
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ══════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active',['dashboard','approvals','calendar','manage'][i]===name);
+  });
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(name==='manage')    { requirePin('manage'); }
+  if(name==='approvals') renderApprovals();
+}
+
+// ══════════════════════════════════════════════
+// CELEBRATION
+// ══════════════════════════════════════════════
+function showCelebration(person, paid) {
+  const pop=document.getElementById('cel-popup');
+  document.getElementById('cel-emoji').textContent = person.id==='jules'?'⭐':person.id==='henry'?'🚀':'🎉';
+  document.getElementById('cel-title').textContent = paid
+    ? `${person.name} got paid! 💰`
+    : `${person.name} finished all chores!`;
+  document.getElementById('cel-sub').textContent = paid
+    ? `${fmt(person.weeklyAllowance)} approved — great work this week!`
+    : `Waiting for parent approval to receive ${fmt(person.weeklyAllowance)}`;
+  pop.style.display='block';
+  setTimeout(()=>pop.style.display='none', 3500);
+}
+
+// ══════════════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════════════
+function setupCalendar() {
+  if(GOOGLE_CAL_URL.trim()){
+    document.getElementById('cal-placeholder').style.display='none';
+    document.getElementById('cal-iframe-wrap').style.display='block';
+    document.getElementById('cal-iframe').src=GOOGLE_CAL_URL;
+  }
+}
+
+// ══════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════
+function updateClock() {
+  const now=new Date(), h=now.getHours(), m=String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('clock').textContent=`${h%12||12}:${m} ${h>=12?'pm':'am'}`;
+  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('date').textContent=`${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+  const el=document.getElementById('week-label');
+  if(el){ const s=new Date(now); s.setDate(now.getDate()-now.getDay()); const e=new Date(s); e.setDate(s.getDate()+6); el.textContent=`Week of ${months[s.getMonth()]} ${s.getDate()} – ${e.getDate()}`; }
+}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+function renderAll() {
+  renderSummary(); renderDashboard();
+  if(document.getElementById('panel-approvals').classList.contains('active')) renderApprovals();
+  if(document.getElementById('panel-manage').classList.contains('active')) renderManage();
+}
+
+updateClock(); setInterval(updateClock,15000);
+renderAll(); updateBadge(); setupCalendar();
+</script>
+</body>
+</html>
