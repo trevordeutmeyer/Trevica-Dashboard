@@ -13,7 +13,7 @@
 :root {
   --bg: #f8fafc;
   --app: #ffffff;
-  --card: #ffffff;
+  --card: rgba(255, 255, 255, 0.85);
   --card-soft: #f1f5f9;
   --text: #334155;
   --text-strong: #0f172a;
@@ -31,8 +31,8 @@
   --red-soft: #fee2e2;
   --purple: #7c3aed;
   --purple-soft: #f3e8fd;
-  --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 8px -1px rgba(15, 23, 42, 0.02);
-  --shadow-soft: 0 20px 40px -5px rgba(15, 23, 42, 0.06);
+  --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05), 0 8px 16px -6px rgba(15, 23, 42, 0.05);
+  --shadow-soft: 0 25px 50px -12px rgba(15, 23, 42, 0.08);
   --radius: 24px;
   --radius-sm: 16px;
   --dad: #16a34a;
@@ -43,16 +43,16 @@
 }
 
 body.theme-focus {
-  --bg: #0b0f19;
-  --app: #111827;
-  --card: rgba(31, 41, 55, 0.7);
-  --card-soft: rgba(55, 65, 81, 0.5);
-  --text: #9ca3af;
-  --text-strong: #f9fafb;
-  --muted: #6b7280;
-  --muted-2: #4b5563;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-soft: rgba(255, 255, 255, 0.03);
+  --bg: #090d16;
+  --app: #0f172a;
+  --card: rgba(30, 41, 59, 0.7);
+  --card-soft: rgba(51, 65, 85, 0.4);
+  --text: #94a3b8;
+  --text-strong: #f8fafc;
+  --muted: #64748b;
+  --muted-2: #475569;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.04);
   --blue: #38bdf8;
   --blue-soft: rgba(56, 189, 248, 0.15);
   --green: #4ade80;
@@ -63,10 +63,9 @@ body.theme-focus {
   --red-soft: rgba(248, 113, 113, 0.15);
   --purple: #c084fc;
   --purple-soft: rgba(192, 132, 252, 0.15);
-  --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-  --shadow-soft: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
-  /* Premium inverted filter mapping to make white calendar frames pitch dark */
-  --cal-filter: invert(0.88) hue-rotate(180deg) contrast(1.1);
+  --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-soft: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
+  --cal-filter: invert(0.9) hue-rotate(180deg) contrast(1.2);
 }
 
 * { box-sizing: border-box; touch-action: manipulation; }
@@ -84,34 +83,34 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: #030712;
+  background: #020617;
   z-index: 9999;
   color: #ffffff;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(30px);
 }
-#ambient-time { font-size: clamp(80px, 12vw, 140px); font-weight: 800; letter-spacing: -0.05em; color: #ffffff; }
-#ambient-date { font-size: clamp(20px, 3vw, 32px); color: #94a3b8; font-weight: 500; margin-top: 10px; }
-#ambient-prompt { margin-top: 60px; font-size: 13px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+#ambient-time { font-size: clamp(90px, 15vw, 160px); font-weight: 800; letter-spacing: -0.06em; color: #ffffff; text-shadow: 0 0 40px rgba(255,255,255,0.1); }
+#ambient-date { font-size: clamp(22px, 3.5vw, 36px); color: #64748b; font-weight: 600; margin-top: 10px; }
+#ambient-prompt { margin-top: 80px; font-size: 13px; color: #334155; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700; }
 
 .app-shell {
   max-width: 1440px;
   min-height: 100vh;
   margin: 0 auto;
   background: var(--app);
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--app) 80%, transparent);
+  background: color-mix(in srgb, var(--app) 75%, transparent);
   backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border);
-  padding: 24px 10px 20px;
+  padding: 26px 12px 22px;
 }
 
 .topbar-row {
@@ -128,23 +127,24 @@ body {
   color: var(--muted);
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
   text-transform: uppercase;
   margin-bottom: 8px;
 }
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 99px;
   background: var(--green);
-  box-shadow: 0 0 12px var(--green);
+  box-shadow: 0 0 14px var(--green);
+  transition: all 0.3s ease;
 }
-.status-dot.offline { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+.status-dot.offline { background: var(--amber); box-shadow: 0 0 14px var(--amber); }
 
 h1 {
   margin: 0;
   color: var(--text-strong);
-  font-size: clamp(28px, 3.5vw, 40px);
+  font-size: clamp(30px, 3.8vw, 44px);
   letter-spacing: -0.04em;
   font-weight: 800;
 }
@@ -152,62 +152,64 @@ h1 {
 .time-block { text-align: right; }
 #clock {
   color: var(--text-strong);
-  font-size: clamp(32px, 4vw, 48px);
+  font-size: clamp(36px, 4.5vw, 54px);
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.04em;
 }
-#date { color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 4px; }
+#date { color: var(--muted); font-size: 14px; font-weight: 600; margin-top: 4px; }
 
 .nav-row {
   display: flex;
-  gap: 10px;
-  margin-top: 24px;
+  gap: 12px;
+  margin-top: 26px;
 }
 .nav-tab {
   appearance: none;
   border: 1px solid var(--border);
   background: var(--card-soft);
   color: var(--text);
-  border-radius: 14px;
-  padding: 12px 24px;
-  font-size: 14px;
+  border-radius: 16px;
+  padding: 14px 26px;
+  font-size: 15px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.nav-tab:hover { background: var(--card); color: var(--text-strong); }
-.nav-tab.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
-.theme-toggle { margin-left: auto; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 18px; font-weight: 700; color: var(--text); }
+.nav-tab:hover { background: var(--card); color: var(--text-strong); transform: translateY(-1px); }
+.nav-tab:active { transform: scale(0.97); }
+.nav-tab.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); box-shadow: 0 4px 12px color-mix(in srgb, var(--blue) 15%, transparent); }
+.theme-toggle { margin-left: auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px 20px; font-weight: 700; color: var(--text); }
 
 .badge {
-  min-width: 20px;
-  height: 20px;
+  min-width: 22px;
+  height: 22px;
   border-radius: 99px;
   background: var(--red);
   color: white;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
-.content { padding: 24px 10px 40px; }
+.content { padding: 26px 12px 48px; }
 .panel { display: none; }
 .panel.active { display: block; }
 
-/* RE-ENGINEERED 3-COLUMN MASTER LAYOUT */
+/* RE-ENGINEERED 3-COLUMN MASTER GRID LAYOUT */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 26px;
 }
 
 @media (min-width: 1024px) {
   .dashboard-grid {
-    grid-template-columns: minmax(400px, 1.1fr) minmax(380px, 1fr) minmax(320px, 0.9fr);
+    grid-template-columns: minmax(420px, 1.1fr) minmax(400px, 1fr) minmax(340px, 0.9fr);
   }
 }
 
@@ -217,21 +219,22 @@ h1 {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
+  backdrop-filter: blur(16px);
 }
-.card.pad { padding: 24px; }
+.card.pad { padding: 26px; }
 
 .card-header-main {
-  padding: 20px 24px;
+  padding: 22px 26px;
   border-bottom: 1px solid var(--border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.card-main-title { font-size: 18px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; }
+.card-main-title { font-size: 19px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; }
 
-/* SMART GOOGLE CALENDAR WRAPPER */
+/* CALENDAR CONFIGURATION LAYER */
 .calendar-frame-wrap {
-  height: 540px;
+  height: 560px;
   background: var(--app);
   overflow: hidden;
   position: relative;
@@ -240,138 +243,161 @@ h1 {
   width: 100%;
   height: 100%;
   border: 0;
-  filter: var(--cal-filter); /* Seamless theme inversion magic */
-  transition: filter 0.3s ease;
+  filter: var(--cal-filter);
+  transition: filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.calendar-frame-wrap.full { height: 750px; }
+.calendar-frame-wrap.full { height: 780px; }
 
-/* PREMIUM KIOSK BUTTONS & CHORE LISTS */
+/* INTERACTION & RESPONSIVE CHORE DESIGN */
 .chore-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
   border-radius: var(--radius-sm);
-  padding: 16px;
-  min-height: 64px;
+  padding: 16px 18px;
+  min-height: 66px;
   background: var(--card-soft);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.chore-row:hover { border-color: var(--border); transform: translateY(-2px); background: var(--card); }
-.chore-row.done { opacity: 0.5; }
+.chore-row:hover { border-color: var(--border); transform: translateY(-2px) scale(1.01); background: var(--card); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.chore-row:active { transform: scale(0.98); }
+.chore-row.done { opacity: 0.45; }
 .chore-row.done .chore-name { text-decoration: line-through; }
 
 .chk {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
   border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   color: white;
-  transition: all 0.15s ease;
+  background: rgba(0,0,0,0.03);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
+.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); transform: scale(1.05); }
 .chore-name { font-size: 15px; font-weight: 600; color: var(--text-strong); }
 
-/* PERSON SUB-CARDS IN CORE PANEL */
+/* PROGRESS WIDGET BLOCKS */
 .person-widget {
   background: var(--card-soft);
   border-radius: var(--radius-sm);
-  padding: 16px;
-  margin-bottom: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
   border: 1px solid var(--border-soft);
+  transition: all 0.2s ease;
 }
-.person-widget-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px;}
-.p-widget-avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--person-soft); color: var(--person); display:flex; align-items:center; justify-content:center; font-size:20px; }
-.p-widget-name { font-weight: 800; color: var(--text-strong); font-size: 16px; }
-.p-widget-streak { font-size: 11px; background: var(--amber-soft); color: var(--amber); padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-left: auto; }
+.person-widget:hover { transform: translateX(2px); border-color: var(--border); }
+.person-widget-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px;}
+.p-widget-avatar { width: 44px; height: 44px; border-radius: 14px; background: var(--person-soft); color: var(--person); display:flex; align-items:center; justify-content:center; font-size:22px; }
+.p-widget-name { font-weight: 800; color: var(--text-strong); font-size: 17px; }
 
-/* STATS */
-.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
-.stat-mini { background: var(--card-soft); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center;}
-.stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
-.stat-m-val { font-size: 24px; font-weight: 800; color: var(--text-strong); margin-top: 4px; }
+/* STREAK REWARDS LAYER */
+.p-widget-streak { 
+  font-size: 11px; 
+  background: linear-gradient(135deg, #fef3c7, #fde68a); 
+  color: #b45309; 
+  padding: 4px 10px; 
+  border-radius: 8px; 
+  font-weight: 800; 
+  margin-left: auto;
+  box-shadow: 0 2px 6px rgba(180, 83, 9, 0.15);
+  animation: pulseStreak 2s infinite ease-in-out;
+}
+body.theme-focus .p-widget-streak {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(251, 191, 36, 0.4));
+  color: #fbbf24;
+}
+@keyframes pulseStreak { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+
+/* METRICS & APP WIDGET CORES */
+.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.stat-mini { background: var(--card-soft); padding: 16px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01); }
+.stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; }
+.stat-m-val { font-size: 26px; font-weight: 800; color: var(--text-strong); margin-top: 4px; letter-spacing: -0.02em; }
 
 /* DINNER MODULE GLOW DESIGN */
 .dinner-premium-box {
   background: linear-gradient(135deg, var(--purple-soft), transparent);
-  border: 1px solid color-mix(in srgb, var(--purple) 20%, var(--border));
-  padding: 20px;
+  border: 1px solid color-mix(in srgb, var(--purple) 25%, var(--border));
+  padding: 22px;
   border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-  position: relative;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 20px -5px color-mix(in srgb, var(--purple) 8%, transparent);
 }
-.dinner-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.1em; margin-bottom: 6px;}
-.dinner-text { font-size: 18px; font-weight: 700; color: var(--text-strong); }
+.dinner-title { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.12em; margin-bottom: 8px;}
+.dinner-text { font-size: 19px; font-weight: 700; color: var(--text-strong); }
 
-/* FOOTERS AND CONTROL PILLS */
+/* INTERACTIVE ENGINE PILLS */
 .pill-btn {
-  border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700;
+  border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 14px; padding: 12px 20px; font-size: 14px; font-weight: 700; transition: all 0.2s ease;
 }
-.pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
+.pill-btn:hover { transform: translateY(-1px); background: var(--card-soft); }
+.pill-btn:active { transform: scale(0.97); }
+.pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); box-shadow: 0 4px 12px color-mix(in srgb, var(--blue) 20%, transparent); }
 .pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
 .pill-btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
 
-.section-title-row { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; margin-bottom: 14px; }
-.section-title { font-size: 20px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.03em; }
+.section-title-row { display: flex; align-items: center; justify-content: space-between; margin-top: 26px; margin-bottom: 16px; }
+.section-title { font-size: 22px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.03em; }
 
-.person-grid-chores { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.person-grid-chores { display: grid; grid-template-columns: 1fr; gap: 24px; }
 @media(min-width: 768px) { .person-grid-chores { grid-template-columns: repeat(2, 1fr); } }
 
-.approval-list { display: grid; gap: 14px; }
-.approval-item { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
-.manage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.approval-list { display: grid; gap: 16px; }
+.approval-item { background: var(--card); border: 1px solid var(--border); padding: 22px; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; box-shadow: var(--shadow); }
+.manage-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
 @media(min-width: 768px) { .manage-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .field-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft); margin-bottom: 14px; }
-.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 12px; font-size: 14px; outline: none; width: 100%; }
+.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 12px 14px; font-size: 15px; outline: none; width: 100%; transition: border 0.2s; }
 .inp:focus { border-color: var(--blue); }
-.add-form { margin-top: 16px; background: var(--card-soft); padding: 14px; border-radius: var(--radius-sm); display: grid; gap: 10px; }
+.add-form { margin-top: 18px; background: var(--card-soft); padding: 16px; border-radius: var(--radius-sm); display: grid; gap: 12px; }
 .type-row { display: flex; gap: 10px; }
-.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 700; }
+.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 11px; border-radius: 12px; font-weight: 700; }
 .type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
-.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 10px; padding: 12px; font-weight: 700; }
-.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; }
-.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
+.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 12px; padding: 14px; font-weight: 700; }
+.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 34px; height: 34px; border-radius: 10px; font-weight: 700; }
+.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-soft); }
 
-.modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); backdrop-filter: blur(12px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.65); backdrop-filter: blur(16px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
 .modal-bg.open { display:flex; }
-.modal { background:var(--card); border:1px solid var(--border); border-radius:28px; padding:32px; width:380px; max-width:100%; box-shadow: var(--shadow-soft); text-align: center; }
-.pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
-.pin-dot { width:16px; height:16px; border-radius:99px; background:var(--border); }
-.pin-dot.filled { background:var(--blue); box-shadow: 0 0 10px var(--blue); }
-.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:240px; margin:0 auto; }
-.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; user-select:none; }
-.pin-error { color: var(--red); font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 600; }
+.modal { background:var(--card); border:1px solid var(--border); border-radius:32px; padding:36px; width:400px; max-width:100%; box-shadow: var(--shadow-soft); text-align: center; }
+.pin-dots { display:flex; justify-content:center; gap:16px; margin:26px 0; }
+.pin-dot { width:18px; height:18px; border-radius:99px; background:var(--border); transition: all 0.15s ease; }
+.pin-dot.filled { background:var(--blue); box-shadow: 0 0 12px var(--blue); transform: scale(1.1); }
+.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; max-width:260px; margin:0 auto; }
+.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:18px; padding:18px; font-size:24px; font-weight:700; user-select:none; transition: background 0.1s; cursor: pointer; }
+.pin-key:active { background: var(--border); }
+.pin-error { color: var(--red); font-size: 15px; margin-top: 14px; min-height: 22px; font-weight: 600; }
 
-.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 16px 32px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 14px; }
+.toast { display:none; position: fixed; left: 50%; bottom: 36px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 18px 36px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 15px; }
 .toast.show { display:block; animation: toastIn .25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-@keyframes toastIn { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
-.progress-inline-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 6px; }
-.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.4s ease; }
+.progress-inline-bar { height: 8px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 8px; }
+.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 </style>
 </head>
 <body class="theme-focus">
 
-<!-- Standby Screen Mode -->
+<!-- Kiosk Standby Screen saver -->
 <div id="ambient-overlay" onclick="wakeKiosk()">
   <div id="ambient-time">--:--</div>
   <div id="ambient-date">---</div>
-  <div id="ambient-prompt">👋 Tap screen to interact</div>
+  <div id="ambient-prompt">👋 Tap display screen to wake</div>
 </div>
 
 <div class="app-shell">
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Connecting</span></div>
+        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Connecting Matrix...</span></div>
         <h1>Trevica Dashboard</h1>
       </div>
       <div class="time-block">
@@ -391,11 +417,11 @@ h1 {
 
   <main class="content">
     
-    <!-- RE-ENGINEERED HOME PANEL -->
+    <!-- MASTER DASHBOARD PANEL -->
     <section class="panel active" id="panel-home">
       <div class="dashboard-grid">
         
-        <!-- Column 1: Native Inverted Calendar Embed Widget -->
+        <!-- Column 1: Native Inverted Calendar -->
         <div class="card">
           <div class="card-header-main">
             <div>
@@ -409,27 +435,27 @@ h1 {
           </div>
         </div>
 
-        <!-- Column 2: Modern Family Chore Hub & Streak View -->
+        <!-- Column 2: Family Goal Progress & Streaks -->
         <div class="card pad">
-          <div class="section-title-row" style="margin-top:0; margin-bottom:16px;">
+          <div class="section-title-row" style="margin-top:0; margin-bottom:18px;">
             <div class="card-main-title">Family Goals</div>
-            <div id="week-label" style="font-size:12px; color:var(--muted)">Week Loading</div>
+            <div id="week-label" style="font-size:12px; color:var(--muted)">Cycle Loading</div>
           </div>
           <div id="home-people"></div>
         </div>
 
-        <!-- Column 3: Stats, Focus, and Meal Modules -->
+        <!-- Column 3: Stats, Focus, and Dinner Manifests -->
         <div class="side-stack">
-          <!-- Dynamic Dinner Box -->
+          <!-- Live Dinner Widget Container -->
           <div class="card dinner-premium-box" id="home-dinner-card" style="display:none;">
-            <div class="dinner-title">🍽️ Tonight's Dinner Plan</div>
+            <div class="dinner-title">🍽️ On The Menu Tonight</div>
             <div id="home-dinner-text" class="dinner-text"></div>
           </div>
 
           <div class="quick-stats-stack" id="quick-stats"></div>
 
           <div class="card pad">
-            <div class="card-main-title" style="margin-bottom:16px;">Today's Focus Task</div>
+            <div class="card-main-title" style="margin-bottom:16px;">Today's Focus Tasks</div>
             <div id="focus-list"></div>
           </div>
         </div>
@@ -437,21 +463,21 @@ h1 {
       </div>
     </section>
 
-    <!-- CHORES DETAILED PANEL -->
+    <!-- DETAILED CHORES PANEL -->
     <section class="panel" id="panel-chores">
       <div class="person-grid-chores" id="chores-people"></div>
       <div class="footer-actions">
-        <span>Weekly chores unlock allowances automatically once fully checked. One-time jobs await parent sign-off.</span>
+        <span>Weekly allowance modules require total manifest verification. Premium ventures process immediately.</span>
         <button class="pill-btn danger" onclick="requirePin('reset')">Reset Week</button>
       </div>
     </section>
 
-    <!-- APPROVAL PANEL -->
+    <!-- PENDING APPROVAL PANEL -->
     <section class="panel" id="panel-approvals">
       <div id="approvals-container"></div>
     </section>
 
-    <!-- FULL CALENDAR VIEW PANEL -->
+    <!-- FULL VIEW CALENDAR PANEL -->
     <section class="panel" id="panel-calendar">
       <div class="card">
         <div class="calendar-frame-wrap full">
@@ -460,15 +486,15 @@ h1 {
       </div>
     </section>
 
-    <!-- PARENT MANAGEMENT AREA -->
+    <!-- MANAGEMENT CONTROL MATRIX -->
     <section class="panel" id="panel-manage">
       <div class="card pad" style="margin-bottom: 24px;">
-        <div class="card-main-title" style="margin-bottom:14px">System Control Matrix</div>
+        <div class="card-main-title" style="margin-bottom:14px">System Module Configurations</div>
         <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer;">
-          <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:22px; height:22px;"> Enable Kitchen Dinner Menu Widget
+          <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:22px; height:22px;"> Activate Dinner Display Module
         </label>
         <div id="manage-dinner-box" style="margin-top:16px; display:none;">
-          <input type="text" id="dinner-input" class="inp" placeholder="Type menu item (e.g., Lasagna & Garlic Bread 🥖)" style="max-width:400px; display:inline-block; margin-right:10px;" />
+          <input type="text" id="dinner-input" class="inp" placeholder="Type family meal (e.g., Smoked Pulled Pork Tacos 🌮)" style="max-width:420px; display:inline-block; margin-right:12px;" />
           <button class="pill-btn primary" onclick="saveDinnerMenu()">Publish Menu</button>
         </div>
       </div>
@@ -478,11 +504,11 @@ h1 {
   </main>
 </div>
 
-<!-- KEYPAD PIN SYSTEM MODAL -->
+<!-- SECURE CORE PIN ACCESS SYSTEM MODAL -->
 <div class="modal-bg" id="pin-modal">
   <div class="modal">
     <h3 style="margin:0 0 6px; font-size:22px; color:var(--text-strong)">Parent Authorization</h3>
-    <p id="pin-desc" style="margin:0; font-size:14px; color:var(--muted)">Enter Pin Security Code</p>
+    <p id="pin-desc" style="margin:0; font-size:14px; color:var(--muted)">Security clearance mandatory</p>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
@@ -498,8 +524,8 @@ h1 {
 
 <div class="modal-bg" id="reset-modal">
   <div class="modal">
-    <h3 style="color:var(--text-strong)">Clear System Matrix?</h3>
-    <p style="color:var(--muted)">This action resets all checkmarks and clears current allowance boards for a brand new cycle.</p>
+    <h3 style="color:var(--text-strong)">Initiate New Week?</h3>
+    <p style="color:var(--muted)">Wipes completion logs. Retains core tracks, deletes one-time tasks.</p>
     <div class="modal-btns">
       <button class="pill-btn" onclick="closeModal('reset-modal')">Abort</button>
       <button class="pill-btn danger" onclick="doReset()">Confirm Reset</button>
@@ -509,9 +535,12 @@ h1 {
 
 <div class="toast" id="toast"></div>
 
+<!-- CORE FIREBASE LIBRARY ATTACHMENTS (FIXES CLOUD DEPLOYMENT STALLS) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
 // ══════════════════════════════════════════════
-// ENGINE ARCHITECTURE VARIABLES
+// CORE CONFIGURATIONS
 // ══════════════════════════════════════════════
 const GOOGLE_CAL_URL = 'https://calendar.google.com/calendar/embed?src=family11684173322375554414%40group.calendar.google.com&ctz=America%2FDenver';
 const PARENT_PIN = '1234';
@@ -526,8 +555,38 @@ const firebaseConfig = {
   appId: "1:231538201509:web:e8ca93e484efc1750f8e4c"
 };
 
-const soundCheck = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
-const soundApprove = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
+// ══════════════════════════════════════════════
+// DYNAMIC AUDIO SYNTHESIS MATRIX (DOPAMINE FX)
+// ══════════════════════════════════════════════
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playAudioTone(freq, type, duration, vol) {
+  try {
+    const osc = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  } catch(e) { console.log("Audio waiting for user touch gesture"); }
+}
+
+function playSuccessChime() {
+  // Radiant double arcade chime
+  playAudioTone(523.25, 'sine', 0.15, 0.15); // C5
+  setTimeout(() => playAudioTone(659.25, 'sine', 0.3, 0.15), 80); // E5
+}
+
+function playApprovalCascade() {
+  // Multi-tone chord payout cascade
+  playAudioTone(587.33, 'triangle', 0.1, 0.1);
+  setTimeout(() => playAudioTone(698.46, 'triangle', 0.1, 0.1), 60);
+  setTimeout(() => playAudioTone(880.00, 'triangle', 0.1, 0.1), 120);
+  setTimeout(() => playAudioTone(1046.50, 'triangle', 0.4, 0.15), 180);
+}
 
 let stateRef = null;
 let firebaseOnline = false;
@@ -540,7 +599,7 @@ try {
   stateRef = firebase.database().ref('familyDashboard/state');
   firebaseOnline = true;
 } catch (err) {
-  console.warn('Firebase connection bypassed. Local persistence engine online.', err);
+  console.warn('Firebase routing failure. Defaulting local fallback mode.', err);
 }
 
 const DEFAULT_PEOPLE = [
@@ -606,12 +665,12 @@ function normalizeState(input) {
   return normalized;
 }
 function loadState() {
-  try { const r = localStorage.getItem('fb_v5'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem('fb_v6'); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
 function saveState() {
   state = normalizeState(state);
-  try { localStorage.setItem('fb_v5', JSON.stringify(state)); } catch {}
+  try { localStorage.setItem('fb_v6', JSON.stringify(state)); } catch {}
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
@@ -625,7 +684,7 @@ let state = loadState();
 state = normalizeState(state);
 
 // ══════════════════════════════════════════════
-// MONITOR RESILIENCE LOOPS & SCREENSAVERS
+// SCREENSAVER STANDBY CONTROLS
 // ══════════════════════════════════════════════
 let ambientTimer;
 function resetAmbientTimer() {
@@ -636,7 +695,7 @@ function resetAmbientTimer() {
       document.getElementById('ambient-overlay').style.display = 'flex';
       updateAmbientClock();
     }
-  }, 5 * 60 * 1000); // 5 Minutes
+  }, 5 * 60 * 1000);
 }
 function wakeKiosk() {
   document.getElementById('ambient-overlay').style.display = 'none';
@@ -646,8 +705,7 @@ function updateAmbientClock() {
   if (document.getElementById('ambient-overlay').style.display === 'flex') {
     const now = new Date(), h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0');
     document.getElementById('ambient-time').textContent = `${h%12||12}:${m}`;
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     document.getElementById('ambient-date').textContent = `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
   }
 }
@@ -666,8 +724,7 @@ function allWeeklyDone(pid) {
   return weekly.length > 0 && weekly.every(c => isChecked(pid, c.id));
 }
 function earnedTotal(pid) {
-  const p = state.people.find(x => x.id === pid);
-  if (!p) return 0;
+  const p = state.people.find(x => x.id === pid); if (!p) return 0;
   let total = isApproved(pid) ? p.weeklyAllowance : 0;
   p.chores.filter(c => c.type === 'job').forEach(c => { if (isJobApproved(pid,c.id)) total += Number(c.amt) || 0; });
   return total;
@@ -691,7 +748,7 @@ function showToast(msg) {
 }
 
 // ══════════════════════════════════════════════
-// ENGINE DATA OPERATIONS
+// DATA LOGIC IMPLEMENTATIONS
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
   if (isApproved(pid)) {
@@ -701,7 +758,9 @@ function toggleChore(pid,cid) {
   if (!state.checked[pid]) state.checked[pid] = [];
   const idx = state.checked[pid].indexOf(cid);
   if (idx === -1) {
-    state.checked[pid].push(cid); try { soundCheck.play(); }catch(e){}
+    state.checked[pid].push(cid); 
+    playSuccessChime(); // Dopamine Sound FX Burst
+    confetti({ particleCount: 30, spread: 40, origin: { y: 0.8 } }); // Micro Confetti Pop
   } else {
     state.checked[pid].splice(idx,1);
   }
@@ -710,15 +769,16 @@ function toggleChore(pid,cid) {
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
     if (!state.pending.some(x => x.type === 'allowance' && x.personId === pid)) {
       state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
-      showToast(`${p.name} completed the payload! 🎉`);
-      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+      showToast(`${p.name} completed the goal! 🎉`);
+      // Mega Confetti Blast Reward Loop
+      confetti({ particleCount: 175, spread: 90, origin: { y: 0.6 } });
     }
   }
   saveState(); renderAll(); updateBadge();
 }
 
 function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll(); }
-function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Broad-casted! 🍳'); }
+function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu updated! 🥐'); }
 
 function requestJobApproval(pid,cid) {
   const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid);
@@ -738,9 +798,9 @@ function approveItem(itemId) {
   } else {
     state.approved[item.personId].jobs[item.choreId] = true;
   }
-  try { soundApprove.play(); } catch(e){}
+  playApprovalCascade(); // Reward Cascade Synth Trigger
   state.pending = state.pending.filter(x => x.id !== itemId);
-  saveState(); renderAll(); updateBadge(); showToast('Payload approved.');
+  saveState(); renderAll(); updateBadge(); showToast('Approved!');
 }
 
 function denyItem(itemId) {
@@ -778,7 +838,7 @@ function doReset() {
 }
 
 // ══════════════════════════════════════════════
-// RENDER MODULES
+// RENDER DRIVERS
 // ══════════════════════════════════════════════
 function renderPersonCard(person, compact=false) {
   const weekly = person.chores.filter(c => c.type === 'weekly'), jobs = person.chores.filter(c => c.type === 'job');
@@ -788,23 +848,22 @@ function renderPersonCard(person, compact=false) {
   if (compact) {
     return `<div class="person-widget" style="--person: var(--${person.id}); --person-soft: var(--${person.id}-soft)">
       <div class="person-widget-header">
-        <div class="p-widget-avatar">${person.emoji}</div>
+        <div class="p-widget-avatar" style="background:var(--${person.id}-soft); color:var(--${person.id})">${person.emoji}</div>
         <div>
           <div class="p-widget-name">${person.name}</div>
-          <div style="font-size:12px; color:var(--muted)">${prog.done}/${prog.total} Goals Hit · Earned: ${fmt(earned)}</div>
+          <div style="font-size:12px; color:var(--muted)">${prog.done}/${prog.total} Manifest · Accumulation: ${fmt(earned)}</div>
         </div>
         ${streakText}
       </div>
-      <div class="progress-inline-bar"><div class="progress-inline-fill" style="width:${prog.pct}%"></div></div>
+      <div class="progress-inline-bar"><div class="progress-inline-fill" style="background:var(--${person.id}); width:${prog.pct}%"></div></div>
     </div>`;
   }
 
-  // Large Extended Mode Panel
   let statusHtml = '';
   if (person.weeklyAllowance > 0) {
-    if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Disbursed</strong><span>Allowance fully authorized.</span></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Rollback</button></div>`;
-    else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Awaiting Signature</strong><span>Ready for parental review.</span></div></div>`;
-    else if (allWeeklyDone(person.id)) statusHtml = `<div class="status-card ready"><div class="status-icon">★</div><div class="status-main"><strong>Ready</strong><span>Core weekly chores completed.</span></div></div>`;
+    if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Disbursed</strong><span>Allowance verified on cloud node.</span></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Rollback</button></div>`;
+    else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Awaiting Signature</strong><span>Clearance pending.</span></div></div>`;
+    else if (allWeeklyDone(person.id)) statusHtml = `<div class="status-card ready"><div class="status-icon">★</div><div class="status-main"><strong>Ready</strong><span>Manifest track fully green.</span></div></div>`;
   }
 
   const weeklyHtml = `${weekly.map(c => {
@@ -814,7 +873,7 @@ function renderPersonCard(person, compact=false) {
 
   const jobsHtml = `${jobs.map(c => {
     const checked = isChecked(person.id,c.id), jpending = state.pending.some(x => x.type === 'job' && x.personId === person.id && x.choreId === c.id), japproved = isJobApproved(person.id,c.id);
-    let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">Pending</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
+    let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">Verification</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
     const clickFn = checked && !jpending && !japproved ? `requestJobApproval('${person.id}','${c.id}')` : (!checked ? `toggleChore('${person.id}','${c.id}')` : '');
     return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}</div>`;
   }).join('')}`;
@@ -822,11 +881,11 @@ function renderPersonCard(person, compact=false) {
   return `<div class="card pad" style="border-top: 4px solid var(--${person.id})">
     <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
       <div class="avatar" style="font-size:32px">${person.emoji}</div>
-      <div><div class="p-widget-name" style="font-size:20px">${person.name}</div><div style="font-size:12px; color:var(--muted)">Base Allowance: ${fmt(person.weeklyAllowance)} ${person.age?'· '+person.age:''}</div></div>
-      <div style="margin-left:auto; text-align:right"><div style="font-size:24px; font-weight:800; color:var(--text-strong)">${fmt(earned)}</div><div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Earned Balance</div></div>
+      <div><div class="p-widget-name" style="font-size:20px">${person.name}</div><div style="font-size:12px; color:var(--muted)">Tracking Node ${person.age?'· '+person.age:''}</div></div>
+      <div style="margin-left:auto; text-align:right"><div style="font-size:24px; font-weight:800; color:var(--text-strong)">${fmt(earned)}</div><div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Verified Payout</div></div>
     </div>
     ${statusHtml}
-    <div class="list-label">Core Track</div>${weeklyHtml}
+    <div class="list-label">Core Matrix</div>${weeklyHtml}
     ${jobs.length ? '<div class="list-label" style="margin-top:14px">Premium Ventures</div>' : ''}${jobsHtml}
   </div>`;
 }
@@ -836,15 +895,15 @@ function renderQuickStats() {
   document.getElementById('quick-stats').innerHTML = `
     <div class="stat-mini"><div class="stat-m-label">Chores</div><div class="stat-m-val">${done}/${total}</div></div>
     <div class="stat-mini"><div class="stat-m-label">Pending</div><div class="stat-m-val">${pendingCount()}</div></div>
-    <div class="stat-mini"><div class="stat-m-label">Disbursed</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
+    <div class="stat-mini"><div class="stat-m-label">Approved</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
 }
 
 function renderFocusList() {
   const lines = state.people.filter(p => p.weeklyAllowance > 0).map(p => {
     const next = p.chores.filter(c => c.type === 'weekly').find(c => !isChecked(p.id,c.id));
-    return `<div class="chore-row" style="cursor:default; min-height:50px; padding:8px 12px; margin-bottom:6px;"><div class="chore-name" style="font-size:14px">${p.name}: <span style="font-weight:400; color:var(--text)">${next ? next.name : 'All sets clear ✓'}</span></div></div>`;
+    return `<div class="chore-row" style="cursor:default; min-height:50px; padding:8px 12px; margin-bottom:6px;"><div class="chore-name" style="font-size:14px">${p.name}: <span style="font-weight:400; color:var(--text)">${next ? next.name : 'Clear ✓'}</span></div></div>`;
   }).join('');
-  document.getElementById('focus-list').innerHTML = lines || '<div class="empty-state">No track lines active.</div>';
+  document.getElementById('focus-list').innerHTML = lines || '<div class="empty-state">No tracks running.</div>';
 }
 
 function renderPeople() {
@@ -854,18 +913,18 @@ function renderPeople() {
 
 function renderApprovals() {
   const container = document.getElementById('approvals-container');
-  if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>No payloads awaiting parent signature.</div></div>`; return; }
+  if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>No payloads awaiting parent log.</div></div>`; return; }
   container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
     const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'User'};
-    return `<div class="approval-item"><div><div style="font-size:24px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div class="appr-what">${item.type==='allowance'?'Core completion authorization payout':'Premium objective tracking payout: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign Off</button></div></div>`;
+    return `<div class="approval-item"><div><div style="font-size:24px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div class="appr-what">${item.type==='allowance'?'Core allowance manifest payout verification':'Premium manifest item verification: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign Off</button></div></div>`;
   }).join('')}</div>`;
 }
 
 function renderManage() {
   document.getElementById('manage-grid').innerHTML = state.people.map(person => {
     return `<div class="card pad">
-      <div class="p-widget-name" style="font-size:18px; margin-bottom:14px;">${person.emoji} Adjust Parameters: ${person.name}</div>
-      <div class="field-row"><label>Core Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
+      <div class="p-widget-name" style="font-size:18px; margin-bottom:14px;">${person.emoji} Parameter Setup: ${person.name}</div>
+      <div class="field-row"><label>Base Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
       <div class="list-label">Operational Manifest</div>
       ${person.chores.map(c => `<div class="manage-chore-row"><span>${c.name}</span><span class="mctype">${c.type==='job'?'$'+c.amt.toFixed(2):'weekly'}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
       <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Objective Title" /><div style="display:flex; gap:10px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="Value ($)" style="width:100px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Weekly</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Premium</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Inject Objective</button></div>
@@ -886,7 +945,7 @@ function renderAll() {
 }
 
 // ══════════════════════════════════════════════
-// SWITCH INTERFACES & SECURE ENTRY
+// APPLICATION CONTROLLERS
 // ══════════════════════════════════════════════
 let manageUnlocked = false;
 function switchTab(name) {
@@ -917,7 +976,7 @@ function updateClock() {
 let pinBuffer = '', pinAction = null, pinMeta = null;
 function requirePin(action, meta) {
   pinAction = action; pinMeta = meta; pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = '';
-  document.getElementById('pin-desc').textContent = action==='reset'?'Security code required to wipe logs':'Security authentication required';
+  document.getElementById('pin-desc').textContent = action==='reset'?'Wiping system manifests requires parental clearance':'Security authentication required';
   document.getElementById('pin-modal').classList.add('open');
 }
 function pinKey(k) {
@@ -934,11 +993,12 @@ function checkPin() {
     if (pinAction === 'unapprove') undoApproval(pinMeta);
     if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); }
   } else {
-    document.getElementById('pin-error').textContent = 'Security authorization failed.'; pinBuffer = ''; updatePinDots();
+    document.getElementById('pin-error').textContent = 'Clearance denied.'; pinBuffer = ''; updatePinDots();
   }
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
+// FIREBASE LIVE REALTIME DATABASE INITIALIZATION LISTENER
 function startCloudSync() {
   if (!stateRef) { applySyncStatus('local'); return; }
   stateRef.on('value', snapshot => {
@@ -947,7 +1007,7 @@ function startCloudSync() {
   }, () => applySyncStatus('local'));
 }
 
-// INITIALIZE RUNTIME
+// BOOT ENGINE RUNTIMES
 setupCalendar(); updateClock(); setInterval(updateClock, 15000); renderAll(); startCloudSync(); resetAmbientTimer();
 </script>
 </body>
