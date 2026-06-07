@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Canvas Confetti Library for Celebrations -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 :root {
   --bg: #f1f3f4;
@@ -29,10 +31,10 @@
   --red-soft: #fce8e6;
   --purple: #9334e6;
   --purple-soft: #f3e8fd;
-  --shadow: 0 1px 2px rgba(60,64,67,.12), 0 1px 3px rgba(60,64,67,.18);
-  --shadow-soft: 0 10px 30px rgba(60,64,67,.08);
-  --radius: 18px;
-  --radius-sm: 12px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+  --shadow-soft: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  --radius: 20px;
+  --radius-sm: 14px;
   --dad: #188038;
   --mom: #d93025;
   --jules: #1a73e8;
@@ -40,32 +42,32 @@
 }
 
 body.theme-focus {
-  --bg: #e8edf3;
-  --app: #f8fafc;
-  --card: #ffffff;
-  --card-soft: #eef3f8;
-  --text: #26313f;
-  --text-strong: #101828;
-  --muted: #667085;
-  --muted-2: #7a8699;
-  --border: #d0d7e2;
-  --border-soft: #e4e9f1;
-  --blue: #2563eb;
-  --blue-soft: #dbeafe;
-  --green: #15803d;
-  --green-soft: #dcfce7;
-  --amber: #d97706;
-  --amber-soft: #fef3c7;
-  --red: #dc2626;
-  --red-soft: #fee2e2;
-  --purple: #7c3aed;
-  --purple-soft: #ede9fe;
-  --shadow: 0 1px 2px rgba(15,23,42,.08), 0 12px 30px rgba(15,23,42,.08);
-  --shadow-soft: 0 18px 45px rgba(15,23,42,.10);
+  --bg: #0f172a;
+  --app: #1e293b;
+  --card: #334155;
+  --card-soft: #475569;
+  --text: #cbd5e1;
+  --text-strong: #f8fafc;
+  --muted: #94a3b8;
+  --muted-2: #64748b;
+  --border: #475569;
+  --border-soft: #334155;
+  --blue: #38bdf8;
+  --blue-soft: #1e3a8a;
+  --green: #4ade80;
+  --green-soft: #14532d;
+  --amber: #fbbf24;
+  --amber-soft: #78350f;
+  --red: #f87171;
+  --red-soft: #7f1d1d;
+  --purple: #c084fc;
+  --purple-soft: #581c87;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
+  --shadow-soft: 0 20px 25px -5px rgba(0,0,0,0.4);
 }
 
-* { box-sizing: border-box; }
-html, body { min-height: 100%; }
+* { box-sizing: border-box; touch-action: manipulation; }
+html, body { min-height: 100%; transition: background-color 0.3s, color 0.3s; }
 body {
   margin: 0;
   font-family: Roboto, Arial, sans-serif;
@@ -74,24 +76,43 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 button, input, select { font-family: inherit; }
-button { cursor: pointer; }
+button { cursor: pointer; transition: all 0.2s ease; }
+button:active { transform: scale(0.97); }
 
 .app-shell {
-  max-width: 980px;
+  max-width: 1100px;
   min-height: 100vh;
   margin: 0 auto;
   background: var(--app);
-  box-shadow: 0 0 0 1px rgba(60,64,67,.04);
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  transition: opacity 0.5s ease, filter 0.5s ease;
 }
+
+/* Ambient Saver Overlay */
+#ambient-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #090d16;
+  z-index: 9999;
+  color: #ffffff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Roboto, sans-serif;
+}
+#ambient-time { font-size: 110px; font-weight: 700; letter-spacing: -0.05em; color: #f8fafc; }
+#ambient-date { font-size: 28px; color: #94a3b8; margin-top: 10px; }
+#ambient-prompt { margin-top: 50px; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
 
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--app) 94%, transparent);
-  backdrop-filter: blur(18px);
+  background: color-mix(in srgb, var(--app) 85%, transparent);
+  backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border-soft);
-  padding: 18px 22px 14px;
+  padding: 22px 24px 16px;
 }
 
 .topbar-row {
@@ -114,18 +135,18 @@ button { cursor: pointer; }
   margin-bottom: 6px;
 }
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 99px;
   background: var(--green);
-  box-shadow: 0 0 0 4px var(--green-soft);
+  box-shadow: 0 0 10px var(--green);
 }
-.status-dot.offline { background: var(--amber); box-shadow: 0 0 0 4px var(--amber-soft); }
+.status-dot.offline { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
 
 h1 {
   margin: 0;
   color: var(--text-strong);
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(32px, 4.5vw, 46px);
   line-height: 1.03;
   letter-spacing: -0.045em;
   font-weight: 700;
@@ -134,57 +155,59 @@ h1 {
 .time-block { text-align: right; flex: 0 0 auto; }
 #clock {
   color: var(--text-strong);
-  font-size: clamp(28px, 5vw, 48px);
-  font-weight: 500;
+  font-size: clamp(32px, 5.5vw, 54px);
+  font-weight: 700;
   line-height: 1;
   letter-spacing: -0.05em;
 }
-#date { color: var(--muted); font-size: 13px; font-weight: 500; margin-top: 6px; }
+#date { color: var(--muted); font-size: 14px; font-weight: 500; margin-top: 6px; }
 
 .nav-row {
   display: flex;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 10px;
+  margin-top: 20px;
   overflow-x: auto;
-  padding-bottom: 2px;
+  padding-bottom: 4px;
 }
 .nav-tab {
   appearance: none;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid var(--border-soft);
+  background: var(--card-soft);
   color: var(--muted);
   border-radius: 999px;
-  padding: 9px 13px;
-  font-size: 14px;
+  padding: 12px 20px;
+  font-size: 15px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   white-space: nowrap;
 }
-.nav-tab:hover { background: var(--card-soft); color: var(--text); }
-.nav-tab.active { background: var(--blue-soft); color: var(--blue); border-color: color-mix(in srgb, var(--blue) 18%, transparent); }
+.nav-tab:hover { background: var(--card); color: var(--text-strong); }
+.nav-tab.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
 .badge {
-  min-width: 19px;
-  height: 19px;
+  min-width: 22px;
+  height: 22px;
   border-radius: 999px;
   background: var(--red);
   color: white;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 700;
   padding: 0 6px;
 }
 
-.content { padding: 18px 22px 34px; }
+.content { padding: 24px 24px 40px; }
 .panel { display: none; }
-.panel.active { display: block; }
+.panel.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
+  gap: 20px;
 }
 
 .card {
@@ -194,17 +217,17 @@ h1 {
   box-shadow: var(--shadow);
   overflow: hidden;
 }
-.card.pad { padding: 18px; }
+.card.pad { padding: 20px; }
 .card-title-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 16px 18px 13px;
+  padding: 18px 20px;
   border-bottom: 1px solid var(--border-soft);
 }
 .card-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-strong);
   letter-spacing: -0.01em;
@@ -212,14 +235,54 @@ h1 {
   align-items: center;
   gap: 9px;
 }
-.card-subtitle { font-size: 12px; color: var(--muted); font-weight: 500; }
+.card-subtitle { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+/* Expanded touch target list items */
+.chore-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  min-height: 58px;
+  background: var(--card-soft);
+  margin-bottom: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.chore-row:hover { border-color: var(--border); background: var(--card); }
+.chore-row.done { opacity: 0.65; }
+.chore-row.done .chore-name { text-decoration: line-through; color: var(--muted); }
+
+.chk {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: white;
+  background: var(--app);
+  transition: all 0.15s ease;
+}
+.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
+
+/* Dinner Dashboard Widget Style */
+.dinner-widget {
+  background: linear-gradient(135deg, var(--purple-soft), var(--card));
+  border: 1px solid color-mix(in srgb, var(--purple) 30%, var(--border-soft));
+}
 
 .calendar-shell { background: var(--card); }
 .calendar-frame-wrap {
-  height: 410px;
+  height: 440px;
   background: #fff;
+  position: relative;
 }
-.calendar-frame-wrap.full { height: 760px; }
+.calendar-frame-wrap.full { height: 780px; }
 .calendar-frame-wrap iframe {
   width: 100%;
   height: 100%;
@@ -230,22 +293,22 @@ h1 {
 .quick-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 .stat {
   background: var(--card);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-sm);
-  padding: 13px 14px;
-  min-height: 88px;
+  padding: 16px;
+  min-height: 100px;
   box-shadow: var(--shadow);
 }
-.stat-label { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
-.stat-value { color: var(--text-strong); font-size: 30px; font-weight: 700; letter-spacing: -0.04em; margin-top: 7px; }
-.stat-note { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.stat-label { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+.stat-value { color: var(--text-strong); font-size: 32px; font-weight: 700; letter-spacing: -0.04em; margin-top: 6px; }
+.stat-note { color: var(--muted); font-size: 12px; margin-top: 4px; }
 
-.section-stack { display: grid; gap: 14px; margin-top: 14px; }
-.person-stack { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.section-stack { display: grid; gap: 16px; margin-top: 20px; }
+.person-stack { display: grid; grid-template-columns: 1fr; gap: 16px; }
 
 .person-card {
   background: var(--card);
@@ -263,159 +326,143 @@ h1 {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 12px;
-  padding: 16px 16px 12px;
+  gap: 14px;
+  padding: 20px 20px 14px;
 }
 .avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 26px;
   background: var(--person-soft);
   color: var(--person);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
 }
-.person-name { font-size: 18px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.02em; }
-.person-age { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.person-name { font-size: 20px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.02em; }
+.person-age { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.streak-badge { display: inline-flex; align-items: center; background: var(--amber-soft); color: var(--amber); font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
 .earned { text-align: right; }
-.earned-amt { color: var(--person); font-size: 26px; font-weight: 700; letter-spacing: -0.04em; }
+.earned-amt { color: var(--person); font-size: 28px; font-weight: 700; letter-spacing: -0.04em; }
 .earned-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
 
-.progress-wrap { padding: 0 16px 12px; }
-.progress-bar { height: 8px; background: var(--card-soft); border-radius: 99px; overflow: hidden; border: 1px solid var(--border-soft); }
-.progress-fill { height: 100%; width: 0%; border-radius: 99px; background: var(--person); transition: width .2s ease; }
-.progress-label { color: var(--muted); font-size: 12px; margin-top: 7px; display: flex; justify-content: space-between; gap: 12px; }
+.progress-wrap { padding: 0 20px 14px; }
+.progress-bar { height: 10px; background: var(--card-soft); border-radius: 99px; overflow: hidden; border: 1px solid var(--border-soft); }
+.progress-fill { height: 100%; width: 0%; border-radius: 99px; background: var(--person); transition: width .4s cubic-bezier(0.4, 0, 0.2, 1); }
+.progress-label { color: var(--muted); font-size: 13px; margin-top: 8px; display: flex; justify-content: space-between; gap: 12px; }
 
 .status-card {
-  margin: 0 16px 12px;
-  border-radius: 14px;
+  margin: 0 20px 14px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border-soft);
-  padding: 12px 13px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   background: var(--card-soft);
 }
-.status-card.ready { background: var(--amber-soft); border-color: color-mix(in srgb, var(--amber) 25%, var(--border-soft)); }
-.status-card.pending { background: var(--blue-soft); border-color: color-mix(in srgb, var(--blue) 25%, var(--border-soft)); }
-.status-card.paid { background: var(--green-soft); border-color: color-mix(in srgb, var(--green) 25%, var(--border-soft)); }
-.status-icon { font-size: 18px; }
+.status-card.ready { background: var(--amber-soft); border-color: var(--amber); }
+.status-card.pending { background: var(--blue-soft); border-color: var(--blue); }
+.status-card.paid { background: var(--green-soft); border-color: var(--green); }
+.status-icon { font-size: 22px; }
 .status-main { flex: 1; min-width: 0; }
-.status-main strong { display: block; color: var(--text-strong); font-size: 13px; }
+.status-main strong { display: block; color: var(--text-strong); font-size: 14px; }
 .status-main span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+
 .pill-btn {
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
   border-radius: 999px;
-  padding: 7px 12px;
-  font-size: 12px;
+  padding: 10px 18px;
+  font-size: 13px;
   font-weight: 700;
 }
 .pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
-.pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: color-mix(in srgb, var(--red) 20%, var(--border)); }
-.pill-btn.ghost { background: transparent; color: var(--muted); }
+.pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
+.pill-btn.ghost { background: transparent; color: var(--muted); border-color: transparent; }
+.pill-btn.ghost:hover { background: var(--card-soft); }
 
-.chore-list { padding: 0 12px 13px; }
-.list-label { color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 10px 4px 6px; }
-.chore-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 10px;
-  border-radius: 12px;
-  padding: 10px 9px;
-  min-height: 44px;
-}
-.chore-row:hover { background: var(--card-soft); }
-.chore-row.done { color: var(--muted-2); }
-.chore-row.done .chore-name { text-decoration: line-through; }
-.chk {
-  width: 22px;
-  height: 22px;
-  border-radius: 8px;
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  color: white;
-  background: transparent;
-}
-.chore-row.done .chk { background: var(--person); border-color: var(--person); }
-.chore-name { font-size: 15px; color: inherit; }
+.chore-list { padding: 0 16px 16px; }
+.list-label { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 12px 6px 8px; }
+
 .job-amt {
   color: var(--green);
   background: var(--green-soft);
   border-radius: 999px;
-  padding: 5px 9px;
-  font-size: 12px;
+  padding: 6px 12px;
+  font-size: 13px;
   font-weight: 700;
 }
 .job-amt.pending-pay { color: var(--blue); background: var(--blue-soft); }
 .job-amt.paid-out { color: var(--muted); background: var(--card-soft); text-decoration: line-through; }
 
-.approval-list { display: grid; gap: 10px; }
+.approval-list { display: grid; gap: 12px; }
 .approval-item {
   background: var(--card);
   border: 1px solid var(--border-soft);
   box-shadow: var(--shadow);
   border-radius: var(--radius);
-  padding: 14px;
+  padding: 18px;
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
 }
-.appr-who { color: var(--text-strong); font-size: 16px; font-weight: 700; }
-.appr-what { color: var(--muted); font-size: 13px; margin-top: 3px; }
-.appr-amt { color: var(--text-strong); font-size: 24px; font-weight: 700; letter-spacing: -0.04em; text-align: right; }
-.appr-actions { grid-column: 1 / -1; display: flex; gap: 8px; justify-content: flex-end; }
-.empty-state { color: var(--muted); text-align: center; padding: 42px 18px; font-weight: 500; }
-.empty-state .big { font-size: 38px; margin-bottom: 8px; }
+.appr-who { color: var(--text-strong); font-size: 17px; font-weight: 700; }
+.appr-what { color: var(--muted); font-size: 14px; margin-top: 3px; }
+.appr-amt { color: var(--text-strong); font-size: 26px; font-weight: 700; letter-spacing: -0.04em; text-align: right; }
+.appr-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
 
-.manage-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.empty-state { color: var(--muted); text-align: center; padding: 48px 20px; font-weight: 500; }
+.empty-state .big { font-size: 42px; margin-bottom: 10px; }
+
+.manage-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 .manage-card { background: var(--card); border: 1px solid var(--border-soft); box-shadow: var(--shadow); border-radius: var(--radius); overflow: hidden; }
-.manage-head { display: flex; align-items: center; gap: 11px; padding: 15px 16px; border-bottom: 1px solid var(--border-soft); }
-.manage-name { font-weight: 700; color: var(--text-strong); font-size: 17px; }
-.manage-body { padding: 14px 16px 16px; }
-.field-row { display: grid; grid-template-columns: 1fr 108px; gap: 10px; align-items: center; padding-bottom: 13px; border-bottom: 1px solid var(--border-soft); margin-bottom: 12px; }
-.field-row label { color: var(--muted); font-size: 13px; font-weight: 500; }
-.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 10px; padding: 10px 11px; font-size: 14px; outline: none; width: 100%; }
+.manage-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border-soft); }
+.manage-name { font-weight: 700; color: var(--text-strong); font-size: 18px; }
+.manage-body { padding: 16px 20px 20px; }
+.field-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft); margin-bottom: 14px; }
+.field-row label { color: var(--muted); font-size: 14px; font-weight: 500; }
+.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 11px 14px; font-size: 15px; outline: none; width: 100%; }
 .inp:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
-.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border-soft); }
+
+.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
 .manage-chore-row:last-child { border-bottom: 0; }
-.mcname { font-size: 14px; }
-.mctype { color: var(--muted); font-size: 12px; font-weight: 700; background: var(--card-soft); border-radius: 999px; padding: 4px 8px; }
-.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 28px; height: 28px; border-radius: 9px; font-weight: 700; }
-.add-form { margin-top: 14px; display: grid; gap: 8px; background: var(--card-soft); border: 1px solid var(--border-soft); border-radius: 14px; padding: 12px; }
-.add-row { display: grid; grid-template-columns: 92px 1fr; gap: 8px; }
-.type-row { display: flex; gap: 8px; }
-.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); border-radius: 10px; padding: 9px 8px; font-weight: 700; }
-.type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: color-mix(in srgb, var(--blue) 25%, var(--border)); }
-.add-btn { border: none; background: var(--text-strong); color: white; border-radius: 11px; padding: 11px; font-weight: 700; }
+.mcname { font-size: 15px; }
+.mctype { color: var(--muted); font-size: 12px; font-weight: 700; background: var(--card-soft); border-radius: 999px; padding: 4px 10px; }
+.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 10px; font-weight: 700; font-size: 16px; }
 
-.footer-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 14px; color: var(--muted); font-size: 13px; }
+.add-form { margin-top: 16px; display: grid; gap: 10px; background: var(--card-soft); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 14px; }
+.add-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; }
+.type-row { display: flex; gap: 10px; }
+.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); border-radius: 10px; padding: 10px; font-weight: 700; }
+.type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 12px; padding: 12px; font-weight: 700; font-size: 14px; }
 
-.modal-bg { display:none; position:fixed; inset:0; background:rgba(32,33,36,.48); backdrop-filter: blur(5px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
+.footer-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; color: var(--muted); font-size: 14px; line-height: 1.4; }
+
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter: blur(8px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
 .modal-bg.open { display:flex; }
-.modal { background:var(--card); color:var(--text); border:1px solid var(--border-soft); border-radius:22px; padding:24px; width:340px; max-width:100%; box-shadow: var(--shadow-soft); }
-.modal h3 { margin:0 0 8px; font-size:22px; color: var(--text-strong); letter-spacing:-.03em; }
-.modal p { margin:0; color:var(--muted); line-height:1.45; font-size:14px; }
-.modal-btns { display:flex; gap:10px; margin-top:18px; }
+.modal { background:var(--card); color:var(--text); border:1px solid var(--border-soft); border-radius:24px; padding:28px; width:360px; max-width:100%; box-shadow: var(--shadow-soft); }
+.modal h3 { margin:0 0 10px; font-size:24px; color: var(--text-strong); letter-spacing:-.03em; }
+.modal p { margin:0; color:var(--muted); line-height:1.5; font-size:15px; }
+.modal-btns { display:flex; gap:12px; margin-top:20px; }
 .modal-btns button { flex:1; }
-.pin-dots { display:flex; justify-content:center; gap:10px; margin:20px 0; }
-.pin-dot { width:13px; height:13px; border-radius:999px; background:var(--border); }
-.pin-dot.filled { background:var(--blue); }
-.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; max-width:210px; margin:0 auto; }
-.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:14px; padding:14px; font-size:20px; font-weight:700; text-align:center; }
-.pin-error { min-height: 20px; color: var(--red); text-align: center; margin-top: 10px; font-size: 13px; }
 
-.toast { display:none; position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: white; border-radius: 18px; padding: 14px 18px; box-shadow: var(--shadow-soft); min-width: 250px; text-align: center; }
-.toast.show { display:block; animation: toastIn .18s ease; }
-@keyframes toastIn { from { transform: translate(-50%, 10px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
+.pin-dot { width:15px; height:15px; border-radius:999px; background:var(--border); }
+.pin-dot.filled { background:var(--blue); box-shadow: 0 0 8px var(--blue); }
+.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:240px; margin:0 auto; }
+.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; text-align:center; user-select: none; }
+.pin-key:active { background: var(--border-soft); }
+.pin-error { min-height: 22px; color: var(--red); text-align: center; margin-top: 12px; font-size: 14px; font-weight: 500; }
+
+.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 999px; padding: 16px 28px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 15px; text-align: center; white-space: nowrap; }
+.toast.show { display:block; animation: toastIn .2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes toastIn { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
 .theme-toggle {
   display: inline-flex;
@@ -425,33 +472,40 @@ h1 {
   background: var(--card);
   color: var(--text);
   border-radius: 999px;
-  padding: 8px 11px;
-  font-size: 13px;
+  padding: 10px 16px;
+  font-size: 14px;
   font-weight: 700;
 }
 
 @media (min-width: 860px) {
-  .hero-grid { grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); align-items: start; }
-  .side-stack { display: grid; gap: 14px; }
+  .hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr); align-items: start; }
+  .side-stack { display: grid; gap: 20px; }
   .quick-stats { grid-template-columns: 1fr; }
   .person-stack { grid-template-columns: repeat(2, 1fr); }
   .manage-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 640px) {
-  .topbar { padding: 15px 14px 12px; }
-  .content { padding: 14px; }
+  .topbar { padding: 18px 16px 14px; }
+  .content { padding: 16px; }
   .topbar-row { align-items: flex-start; }
   .time-block { display: none; }
   .quick-stats { grid-template-columns: 1fr; }
-  .calendar-frame-wrap { height: 390px; }
-  .calendar-frame-wrap.full { height: 650px; }
+  .calendar-frame-wrap { height: 400px; }
+  .calendar-frame-wrap.full { height: 680px; }
   .approval-item { grid-template-columns: auto 1fr; }
   .appr-amt { grid-column: 2; text-align:left; }
 }
 </style>
 </head>
 <body class="theme-focus">
+<!-- Kiosk Standby Screen -->
+<div id="ambient-overlay" onclick="wakeKiosk()">
+  <div id="ambient-time">12:00</div>
+  <div id="ambient-date">Monday, January 1</div>
+  <div id="ambient-prompt">👋 Tap anywhere to wake screen</div>
+</div>
+
 <div class="app-shell">
   <header class="topbar">
     <div class="topbar-row">
@@ -491,6 +545,12 @@ h1 {
         </div>
 
         <div class="side-stack">
+          <!-- Live Dinner Widget -->
+          <div class="card pad dinner-widget" id="home-dinner-card" style="display:none;">
+            <div class="card-title" style="color:var(--text-strong)">🍽️ On the Menu Tonight</div>
+            <div id="home-dinner-text" style="font-size:20px; font-weight:700; margin-top:10px; color:var(--text-strong)"></div>
+          </div>
+          
           <div class="quick-stats" id="quick-stats"></div>
           <div class="card pad">
             <div class="card-title" style="margin-bottom:12px">Today’s focus</div>
@@ -538,6 +598,23 @@ h1 {
     </section>
 
     <section class="panel" id="panel-manage">
+      <!-- Top Level App Feature Toggles -->
+      <div class="card pad" style="margin-bottom: 20px;">
+        <div class="card-title" style="margin-bottom:14px">System Features</div>
+        <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+          <label style="display:inline-flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
+            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:20px; height:20px;"> Enable Shared Dinner Menu Plan
+          </label>
+        </div>
+        <div id="manage-dinner-box" style="margin-top:16px; display:none; background:var(--card-soft); padding:14px; border-radius:12px;">
+          <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--muted)">WHAT'S FOR DINNER TONIGHT?</label>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="dinner-input" class="inp" placeholder="e.g., Homemade Tacos 🌮" />
+            <button class="pill-btn primary" onclick="saveDinnerMenu()">Update Menu</button>
+          </div>
+        </div>
+      </div>
+
       <div class="manage-grid" id="manage-grid"></div>
       <div class="footer-actions">
         <span>Parent area. Changes save to the shared dashboard.</span>
@@ -596,6 +673,10 @@ const firebaseConfig = {
   appId: "1:231538201509:web:e8ca93e484efc1750f8e4c"
 };
 
+// Satisfying sound effects using clear standard web oscillator chimes
+const soundCheck = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
+const soundApprove = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
+
 let stateRef = null;
 let firebaseOnline = false;
 let isLoadingFromCloud = false;
@@ -611,27 +692,27 @@ try {
 }
 
 // ══════════════════════════════════════════════
-// DEFAULT PEOPLE
+// DEFAULT PEOPLE & DATA STRUCTURES
 // ══════════════════════════════════════════════
 const DEFAULT_PEOPLE = [
-  { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, chores:[
+  { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, streak:0, chores:[
     { id:'d1', name:'Take out trash', type:'weekly' },
     { id:'d2', name:'Mow the lawn', type:'weekly' },
     { id:'d3', name:'Dishes after dinner', type:'weekly' },
   ]},
-  { id:'mom', name:'Jessica', emoji:'👩', cls:'card-mom', weeklyAllowance:0, chores:[
+  { id:'mom', name:'Jessica', emoji:'👩', cls:'card-mom', weeklyAllowance:0, streak:0, chores:[
     { id:'m1', name:'Grocery run', type:'weekly' },
     { id:'m2', name:'Laundry', type:'weekly' },
     { id:'m3', name:'Water the plants', type:'weekly' },
   ]},
-  { id:'jules', name:'Jules', emoji:'⭐', cls:'card-jules', age:'Age 9', weeklyAllowance:5.00, chores:[
+  { id:'jules', name:'Jules', emoji:'⭐', cls:'card-jules', age:'Age 9', weeklyAllowance:5.00, streak:3, chores:[
     { id:'j1', name:'Make bed', type:'weekly' },
     { id:'j2', name:'Feed the pet', type:'weekly' },
     { id:'j3', name:'Set the table', type:'weekly' },
     { id:'j4', name:'Clean room', type:'weekly' },
     { id:'j5', name:'Homework done', type:'weekly' },
   ]},
-  { id:'henry', name:'Henry', emoji:'🚀', cls:'card-henry', age:'Age 11', weeklyAllowance:7.00, chores:[
+  { id:'henry', name:'Henry', emoji:'🚀', cls:'card-henry', age:'Age 11', weeklyAllowance:7.00, streak:5, chores:[
     { id:'h1', name:'Make bed', type:'weekly' },
     { id:'h2', name:'Empty dishwasher', type:'weekly' },
     { id:'h3', name:'Vacuum living room', type:'weekly' },
@@ -641,7 +722,7 @@ const DEFAULT_PEOPLE = [
 ];
 
 // ══════════════════════════════════════════════
-// STATE
+// STATE MANAGEMENT
 // ══════════════════════════════════════════════
 function getWeekKey() {
   const d = new Date(), jan1 = new Date(d.getFullYear(),0,1);
@@ -649,7 +730,16 @@ function getWeekKey() {
 }
 function deepCopy(v) { return JSON.parse(JSON.stringify(v)); }
 function freshState() {
-  return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], weekKey:getWeekKey(), theme:'focus' };
+  return { 
+    people: deepCopy(DEFAULT_PEOPLE), 
+    checked:{}, 
+    approved:{}, 
+    pending:[], 
+    weekKey:getWeekKey(), 
+    theme:'focus',
+    dinnerEnabled: false,
+    dinnerMenu: ''
+  };
 }
 function normalizeState(input) {
   const base = freshState();
@@ -660,7 +750,9 @@ function normalizeState(input) {
     approved: s.approved && typeof s.approved === 'object' && !Array.isArray(s.approved) ? s.approved : {},
     pending: Array.isArray(s.pending) ? s.pending : [],
     weekKey: typeof s.weekKey === 'string' ? s.weekKey : getWeekKey(),
-    theme: s.theme === 'classic' ? 'classic' : 'focus'
+    theme: s.theme === 'classic' ? 'classic' : 'focus',
+    dinnerEnabled: typeof s.dinnerEnabled === 'boolean' ? s.dinnerEnabled : base.dinnerEnabled,
+    dinnerMenu: typeof s.dinnerMenu === 'string' ? s.dinnerMenu : base.dinnerMenu
   };
   normalized.people = normalized.people.map((p, index) => ({
     id: p.id || base.people[index]?.id || uid(),
@@ -669,6 +761,7 @@ function normalizeState(input) {
     cls: p.cls || base.people[index]?.cls || 'card-dad',
     age: p.age || '',
     weeklyAllowance: Number(p.weeklyAllowance) || 0,
+    streak: Number(p.streak) || 0,
     chores: Array.isArray(p.chores) ? p.chores.map(c => ({
       id: c.id || uid(), name: c.name || 'Untitled', type: c.type === 'job' ? 'job' : 'weekly', amt: Number(c.amt) || 0
     })) : []
@@ -676,12 +769,12 @@ function normalizeState(input) {
   return normalized;
 }
 function loadState() {
-  try { const r = localStorage.getItem('fb_v3'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem('fb_v4'); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
 function saveState() {
   state = normalizeState(state);
-  try { localStorage.setItem('fb_v3', JSON.stringify(state)); } catch {}
+  try { localStorage.setItem('fb_v4', JSON.stringify(state)); } catch {}
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
@@ -696,15 +789,40 @@ function saveState() {
 let state = loadState();
 state = normalizeState(state);
 
-if (state.weekKey !== getWeekKey()) {
-  const kept = state.people.map(p => ({...p, chores: p.chores.filter(c => c.type === 'weekly')}));
-  state = {...freshState(), people: kept, theme: state.theme || 'focus'};
-  saveState();
+// ══════════════════════════════════════════════
+// HELPERS & AMBIENT MODE
+// ══════════════════════════════════════════════
+let ambientTimer;
+function resetAmbientTimer() {
+  clearTimeout(ambientTimer);
+  ambientTimer = setTimeout(() => {
+    const now = new Date();
+    const hrs = now.getHours();
+    // Engage ambient screensaver mode if inactive for 5 minutes between 7 PM and 7 AM
+    if (hrs >= 19 || hrs < 7) {
+      document.getElementById('ambient-overlay').style.display = 'flex';
+      updateAmbientClock();
+    }
+  }, 5 * 60 * 1000); 
+}
+function wakeKiosk() {
+  document.getElementById('ambient-overlay').style.display = 'none';
+  resetAmbientTimer();
+}
+function updateAmbientClock() {
+  if (document.getElementById('ambient-overlay').style.display === 'flex') {
+    const now = new Date(), h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('ambient-time').textContent = `${h%12||12}:${m}`;
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    document.getElementById('ambient-date').textContent = `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
+  }
 }
 
-// ══════════════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════════════
+// Global visual interaction wrappers
+window.addEventListener('click', resetAmbientTimer);
+window.addEventListener('touchstart', resetAmbientTimer);
+
 function uid() { return Math.random().toString(36).substr(2,9); }
 function isChecked(pid,cid) { return (state.checked[pid] || []).includes(cid); }
 function isApproved(pid) { return state.approved[pid]?.allowance === true; }
@@ -746,7 +864,7 @@ function showToast(message) {
 }
 
 // ══════════════════════════════════════════════
-// ACTIONS
+// ACTIONS & APPS MODULE IMPLEMENTATIONS
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
   if (isApproved(pid)) {
@@ -756,18 +874,41 @@ function toggleChore(pid,cid) {
   }
   if (!state.checked[pid]) state.checked[pid] = [];
   const idx = state.checked[pid].indexOf(cid);
-  if (idx === -1) state.checked[pid].push(cid); else state.checked[pid].splice(idx,1);
+  
+  if (idx === -1) {
+    state.checked[pid].push(cid);
+    try { soundCheck.play(); } catch(e){}
+  } else {
+    state.checked[pid].splice(idx,1);
+  }
 
   const p = state.people.find(x => x.id === pid);
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
     const alreadyPending = state.pending.some(x => x.type === 'allowance' && x.personId === pid);
     if (!alreadyPending) {
       state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
-      showToast(`${p.name} finished weekly chores. Approval needed.`);
+      showToast(`${p.name} finished weekly chores! 🚀`);
+      // Celebratory Confetti Burst for hitting target
+      confetti({ particleCount: 140, spread: 70, origin: { y: 0.6 } });
     }
   }
   saveState(); renderAll(); updateBadge();
 }
+
+function toggleDinnerMenu(isEnabled) {
+  state.dinnerEnabled = isEnabled;
+  saveState();
+  renderAll();
+}
+
+function saveDinnerMenu() {
+  const input = document.getElementById('dinner-input');
+  state.dinnerMenu = input.value.trim();
+  saveState();
+  renderAll();
+  showToast('Dinner menu plan updated! 🌮');
+}
+
 function requestJobApproval(pid,cid) {
   const p = state.people.find(x => x.id === pid);
   const c = p?.chores.find(x => x.id === cid);
@@ -783,10 +924,18 @@ function approveItem(itemId) {
   if (!item) return;
   if (!state.approved[item.personId]) state.approved[item.personId] = { jobs:{} };
   if (!state.approved[item.personId].jobs) state.approved[item.personId].jobs = {};
-  if (item.type === 'allowance') state.approved[item.personId].allowance = true;
-  else state.approved[item.personId].jobs[item.choreId] = true;
+  
+  if (item.type === 'allowance') {
+    state.approved[item.personId].allowance = true;
+    const p = state.people.find(x => x.id === item.personId);
+    if (p) p.streak = (p.streak || 0) + 1; // Increment core performance streak
+  } else {
+    state.approved[item.personId].jobs[item.choreId] = true;
+  }
+  
+  try { soundApprove.play(); } catch(e){}
   state.pending = state.pending.filter(x => x.id !== itemId);
-  saveState(); renderAll(); updateBadge(); showToast('Approved. Nice work.');
+  saveState(); renderAll(); updateBadge(); showToast('Approved. Nice work!');
 }
 function denyItem(itemId) {
   const item = state.pending.find(x => x.id === itemId);
@@ -824,17 +973,21 @@ function deleteChore(pid,cid) {
   saveState(); renderAll(); updateBadge();
 }
 function undoApproval(pid) {
-  if (state.approved[pid]) state.approved[pid].allowance = false;
+  if (state.approved[pid]) {
+    state.approved[pid].allowance = false;
+    const p = state.people.find(x => x.id === pid);
+    if (p && p.streak > 0) p.streak = p.streak - 1;
+  }
   saveState(); renderAll();
 }
 function doReset() {
   const kept = state.people.map(p => ({...p, chores:p.chores.filter(c => c.type === 'weekly')}));
-  state = {...freshState(), people: kept, theme: state.theme || 'focus'};
+  state = {...freshState(), people: kept, theme: state.theme || 'focus', dinnerEnabled: state.dinnerEnabled, dinnerMenu: state.dinnerMenu};
   saveState(); closeModal('reset-modal'); renderAll(); updateBadge();
 }
 
 // ══════════════════════════════════════════════
-// RENDER
+// RENDER VIEWS
 // ══════════════════════════════════════════════
 function renderPersonCard(person, compact=false) {
   const weekly = person.chores.filter(c => c.type === 'weekly');
@@ -844,6 +997,7 @@ function renderPersonCard(person, compact=false) {
   const pendingAllowance = state.pending.some(x => x.type === 'allowance' && x.personId === person.id);
   const weekDone = weekly.filter(c => isChecked(person.id,c.id)).length;
   const earned = earnedTotal(person.id);
+  const streakText = person.streak > 0 ? `<span class="streak-badge">🔥 ${person.streak} wk streak</span>` : '';
 
   let statusHtml = '';
   if (person.weeklyAllowance > 0) {
@@ -856,7 +1010,7 @@ function renderPersonCard(person, compact=false) {
   const weeklyHtml = compact ? '' : `${weekly.length ? '<div class="list-label">Weekly chores</div>' : ''}${weekly.map(c => {
     const done = isChecked(person.id,c.id);
     const locked = approved && done;
-    return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div></div>`;
+    return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk" style="--person:var(--${person.id})">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div></div>`;
   }).join('')}`;
 
   const jobsHtml = compact ? '' : `${jobs.length ? '<div class="list-label">One-time jobs</div>' : ''}${jobs.map(c => {
@@ -865,13 +1019,13 @@ function renderPersonCard(person, compact=false) {
     const japproved = isJobApproved(person.id,c.id);
     let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">pending</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
     const clickFn = checked && !jpending && !japproved ? `requestJobApproval('${person.id}','${c.id}')` : (!checked ? `toggleChore('${person.id}','${c.id}')` : '');
-    return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}</div>`;
+    return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}</div>`;
   }).join('')}`;
 
   return `<article class="person-card ${person.cls}">
     <div class="person-top">
       <div class="avatar">${person.emoji}</div>
-      <div><div class="person-name">${person.name}</div>${person.age ? `<div class="person-age">${person.age}</div>` : ''}</div>
+      <div><div class="person-name">${person.name}${streakText}</div>${person.age ? `<div class="person-age">${person.age}</div>` : ''}</div>
       <div class="earned"><div class="earned-amt">${earned > 0 ? '$'+earned.toFixed(2) : '—'}</div><div class="earned-label">earned</div></div>
     </div>
     <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div><div class="progress-label"><span>${prog.done} of ${prog.total} complete</span><span>${prog.pct}%</span></div></div>
@@ -895,7 +1049,7 @@ function renderFocusList() {
     const weekly = p.chores.filter(c => c.type === 'weekly');
     const next = weekly.find(c => !isChecked(p.id,c.id));
     const text = next ? `${p.name}: ${next.name}` : `${p.name}: weekly chores complete`;
-    return `<div class="chore-row" style="cursor:default"><div class="avatar" style="width:34px;height:34px;border-radius:12px;font-size:17px">${p.emoji}</div><div class="chore-name">${text}</div><div>${next ? '' : '★'}</div></div>`;
+    return `<div class="chore-row" style="cursor:default; margin-bottom: 6px; min-height:48px; padding:8px 12px;"><div class="avatar" style="width:36px;height:36px;border-radius:10px;font-size:18px">${p.emoji}</div><div class="chore-name" style="font-size:14px;">${text}</div><div>${next ? '' : '★'}</div></div>`;
   }).join('');
   document.getElementById('focus-list').innerHTML = lines || '<div class="empty-state">No focus items yet.</div>';
 }
@@ -929,6 +1083,11 @@ function renderManage() {
       <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Chore or job name" /><div class="add-row"><input class="inp" id="inp-amt-${person.id}" placeholder="$" type="number" min="0" step="0.50" /><div class="type-row"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Weekly</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Job</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Add item</button></div>
     </div></div>`;
   }).join('');
+  
+  // Set explicit states for dinner controls inside configurations panel
+  document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled;
+  document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none';
+  document.getElementById('dinner-input').value = state.dinnerMenu;
 }
 function updateBadge() {
   const n = pendingCount();
@@ -939,10 +1098,19 @@ function updateBadge() {
 function renderAll() {
   state = normalizeState(state);
   renderQuickStats(); renderFocusList(); renderPeople(); renderApprovals(); renderManage(); updateBadge(); applyTheme();
+  
+  // Conditionally process ambient interface features
+  const dinnerWidget = document.getElementById('home-dinner-card');
+  if(state.dinnerEnabled && state.dinnerMenu) {
+    dinnerWidget.style.display = 'block';
+    document.getElementById('home-dinner-text').textContent = state.dinnerMenu;
+  } else {
+    dinnerWidget.style.display = 'none';
+  }
 }
 
 // ══════════════════════════════════════════════
-// UI CONTROL
+// UI NAVIGATION & INTERACTIVE ENGINE
 // ══════════════════════════════════════════════
 let manageUnlocked = false;
 function switchTab(name) {
@@ -979,9 +1147,10 @@ function updateClock() {
   const s = new Date(now); s.setDate(now.getDate()-now.getDay()); const e = new Date(s); e.setDate(s.getDate()+6);
   const weekEl = document.getElementById('week-label');
   if (weekEl) weekEl.textContent = `Week of ${months[s.getMonth()]} ${s.getDate()} – ${months[e.getMonth()]} ${e.getDate()}`;
+  updateAmbientClock();
 }
 
-// PIN / MODALS
+// PIN SYSTEM CONTROLLER
 let pinBuffer = '', pinAction = null, pinMeta = null;
 function requirePin(action, meta) {
   pinAction = action; pinMeta = meta; pinBuffer = ''; updatePinDots();
@@ -1010,7 +1179,7 @@ function checkPin() {
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// FIREBASE LISTENER
+// FIREBASE SYNC ENGINE
 function startCloudSync() {
   if (!stateRef) { applySyncStatus('local'); return; }
   stateRef.on('value', snapshot => {
@@ -1024,7 +1193,7 @@ function startCloudSync() {
       hasLoadedCloudOnce = true;
       isLoadingFromCloud = true;
       state = normalizeState(cloudState);
-      try { localStorage.setItem('fb_v3', JSON.stringify(state)); } catch {}
+      try { localStorage.setItem('fb_v4', JSON.stringify(state)); } catch {}
       renderAll();
       isLoadingFromCloud = false;
       applySyncStatus('synced');
@@ -1035,11 +1204,12 @@ function startCloudSync() {
   });
 }
 
-// INIT
+// RUN INITIALIZATIONS
 setupCalendar();
 updateClock(); setInterval(updateClock, 15000);
 renderAll();
 startCloudSync();
+resetAmbientTimer();
 </script>
 </body>
 </html>
