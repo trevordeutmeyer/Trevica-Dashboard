@@ -13,13 +13,13 @@
 :root {
   --bg: #030712;
   --app: #0b0f19;
-  --card: rgba(22, 30, 49, 0.8);
+  --card: rgba(22, 30, 49, 0.85);
   --card-soft: rgba(30, 41, 59, 0.5);
   --text: #94a3b8;
   --text-strong: #f8fafc;
   --muted: #475569;
-  --border: rgba(255, 255, 255, 0.06);
-  --border-soft: rgba(255, 255, 255, 0.02);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.03);
   --blue: #38bdf8;
   --blue-soft: rgba(56, 189, 248, 0.15);
   --green: #4ade80;
@@ -44,7 +44,7 @@
 html, body { height: 100vh; overflow: hidden; margin: 0; background: var(--bg); }
 body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); -webkit-font-smoothing: antialiased; }
 
-/* Fixed Screen Framework (Absolutely No Page Scrolling) */
+/* Main Full-Screen Layout Wrapper (Eliminates Scrollbars) */
 .app-shell {
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   padding: 0 16px;
 }
 
-/* Compressed Header Area */
+/* Header Area */
 .topbar {
   padding: 16px 12px 12px;
   border-bottom: 1px solid var(--border);
@@ -75,7 +75,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 #clock { color: var(--text-strong); font-size: 28px; font-weight: 800; line-height: 1; }
 #date { color: var(--text); font-size: 12px; font-weight: 600; margin-top: 2px; }
 
-/* SMART DYNAMIC ANNOUNCEMENT BANNER */
+/* Dynamic Announcement Bar */
 .smart-banner {
   flex-shrink: 0;
   margin: 12px 12px 0;
@@ -89,152 +89,153 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   font-size: 16px;
   font-weight: 700;
   color: var(--text-strong);
-  transition: all 0.4s ease;
 }
 .smart-banner.alert-active {
   background: linear-gradient(90deg, var(--purple-soft), rgba(124, 58, 237, 0.4));
   border-color: var(--purple);
   box-shadow: 0 0 20px rgba(192, 132, 252, 0.2);
-  animation: bannerPulse 2s infinite ease-in-out;
 }
-@keyframes bannerPulse { 0%, 100% { opacity: 0.95; } 50% { opacity: 1; } }
 
 .content { flex: 1; min-height: 0; padding: 16px 12px 24px; position: relative; }
 .panel { display: none; height: 100%; }
 .panel.active { display: flex; flex-direction: column; }
 
-/* THE WALK-BY VIEW MASTER LAYOUT MATRIX */
+/* Split Screen Content Matrix */
 .today-master-layout {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   height: 100%;
   gap: 16px;
 }
-
-/* Full Width Compressed Horizon Calendar Strip */
-.horizon-calendar-card {
-  height: 150px;
-  flex-shrink: 0;
+@media (min-width: 1024px) {
+  .today-master-layout { grid-template-columns: 0.85fr 1.15fr; }
 }
-.calendar-frame-wrap { width: 100%; height: 100%; position: relative; border-radius: var(--radius); overflow: hidden; }
+
+/* Left Column: Calendar Box */
+.calendar-card-box { display: flex; flex-direction: column; height: 100%; }
+.calendar-frame-wrap { flex: 1; min-height: 0; background: var(--app); position: relative; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
 .calendar-frame-wrap iframe { width: 100%; height: 100%; border: 0; filter: var(--cal-filter); }
 
-/* Grid of Individual Glanceable Station Cards */
-.family-stations-grid {
-  flex: 1;
-  min-height: 0;
+/* Right Column: Interactive Core Feed */
+.main-tracking-core { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.scroll-payload-box { flex: 1; min-height: 0; overflow-y: auto; padding-right: 6px; }
+
+/* Large High-Contrast Row Elements */
+.chore-row {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-}
-
-.station-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: var(--shadow);
-  border-top: 5px solid var(--accent-color);
-  transition: transform 0.2s ease;
-}
-.station-card:hover { transform: translateY(-2px); }
-
-.station-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.station-user { display: flex; align-items: center; gap: 12px; }
-.station-avatar { font-size: 32px; }
-.station-name { font-size: 22px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; }
-.station-streak { font-size: 12px; background: rgba(249, 115, 22, 0.15); color: #ff9800; padding: 4px 10px; border-radius: 8px; font-weight: 800; }
-
-/* Large Touch/Glance Target Active Items */
-.active-target-box {
-  background: var(--card-soft);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  border: 1px solid var(--border-soft);
-  display: flex;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  min-height: 60px;
+  background: var(--card-soft);
+  margin-bottom: 8px;
+  border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.active-target-box:hover { background: rgba(255,255,255,0.02); border-color: var(--border); transform: scale(1.01); }
-.active-target-box:active { transform: scale(0.98); }
+.chore-row:hover { border-color: var(--border); transform: translateY(-2px); background: var(--card); }
+.chore-row:active { transform: scale(0.98); }
+.chore-row.done { opacity: 0.35; }
+.chore-row.done .chore-name { text-decoration: line-through; }
 
-.target-check-bubble {
-  width: 32px; height: 32px; border-radius: 10px; border: 2.5px solid var(--border);
-  display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; flex-shrink: 0;
+.chk {
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: white;
+  background: rgba(0,0,0,0.02);
 }
-.target-title-text { font-size: 18px; font-weight: 700; color: var(--text-strong); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
+.chore-name { font-size: 16px; font-weight: 700; color: var(--text-strong); }
 
-/* Global Stats Footer Bar */
-.footer-stats-strip {
-  height: 60px; flex-shrink: 0; display: flex; gap: 12px;
-}
-.stat-strip-box { flex: 1; background: var(--card-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; gap: 12px; }
-.stat-strip-label { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text); letter-spacing: 0.05em; }
-.stat-strip-value { font-size: 20px; font-weight: 800; color: var(--text-strong); }
+.list-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; padding: 12px 4px 6px; display: flex; align-items: center; justify-content: space-between; }
+.p-widget-streak { font-size: 11px; background: linear-gradient(135deg, #ff9800, #ff5722); color: #ffffff; padding: 3px 10px; border-radius: 8px; font-weight: 800; box-shadow: 0 4px 10px rgba(255, 87, 34, 0.2); }
 
-/* Traditional Tab Views with Custom Inner Scrolls */
-.panel-scroll-frame { flex: 1; min-height: 0; overflow-y: auto; padding-right: 4px; }
-.chores-layout-box { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+/* Quick Summary Statistics Header Strip */
+.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; flex-shrink: 0; }
+.stat-mini { background: var(--card-soft); padding: 12px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
+.stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+.stat-m-val { font-size: 22px; font-weight: 800; color: var(--text-strong); margin-top: 2px; }
 
-/* FLOATING FAST INTERACTION ATTACHMENTS */
+/* Floating Plus Pop-up Setup */
 .floating-action-node {
   position: absolute; right: 20px; bottom: 20px; width: 56px; height: 56px; border-radius: 99px;
   background: var(--blue); color: white; border: none; font-size: 26px; font-weight: 700;
   box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3); z-index: 100;
 }
 .overlay-glass-container {
-  display: none; position: fixed; inset: 0; background: rgba(2, 4, 8, 0.5);
+  display: none; position: fixed; inset: 0; background: rgba(2, 4, 8, 0.65);
   backdrop-filter: blur(20px); z-index: 999; align-items: center; justify-content: center; padding: 20px;
 }
 .overlay-glass-container.open { display: flex; }
+.overlay-card { background: var(--card); border: 1px solid var(--border); padding: 24px; border-radius: var(--radius); width: 100%; max-width: 420px; box-shadow: var(--shadow); }
 
-/* THE HISTORY LOG ENGINE PANEL LAYOUT */
-.history-manifest-card {
-  background: var(--card-soft);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 18px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.history-timestamp { font-size: 12px; color: var(--text); font-weight: 600; }
+/* Panel Scroll Containers */
+.panel-scroll-frame { flex: 1; min-height: 0; overflow-y: auto; padding-right: 4px; }
+.chores-layout-box { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media(min-width: 768px) { .chores-layout-box { grid-template-columns: repeat(2, 1fr); } }
 
-.pill-btn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 18px; font-size: 13px; font-weight: 700; transition: all 0.2s; }
+.approval-list { display: grid; gap: 12px; }
+.approval-item { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
+.history-manifest-card { background: var(--card-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 18px; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+.manage-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media(min-width: 768px) { .manage-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.field-row { display: grid; grid-template-columns: 1fr 110px; gap: 12px; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--border-soft); margin-bottom: 12px; }
+.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 12px; font-size: 15px; outline: none; width: 100%; }
+.add-form { margin-top: 14px; background: var(--card-soft); padding: 12px; border-radius: var(--radius-sm); display: grid; gap: 10px; }
+.type-row { display: flex; gap: 10px; }
+.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 700; font-size: 13px; }
+.type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 10px; padding: 12px; font-weight: 700; }
+.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; }
+.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
+
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); backdrop-filter: blur(16px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
+.modal-bg.open { display:flex; }
+.modal { background:var(--card); border:1px solid var(--border); border-radius: 28px; padding:32px; width:380px; text-align: center; }
+.pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
+.pin-dot { width:16px; height:16px; border-radius:99px; background:var(--border); }
+.pin-dot.filled { background:var(--blue); box-shadow: 0 0 10px var(--blue); }
+.pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:240px; margin:0 auto; }
+.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; }
+.pin-error { color: var(--red); font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 600; }
+
+.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 16px 32px; box-shadow: var(--shadow); font-weight: 700; font-size: 14px; }
+.toast.show { display:block; animation: toastIn 0.2s ease; }
+.badge { min-width: 18px; height: 18px; border-radius: 99px; background: var(--red); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; }
+.pill-btn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 18px; font-size: 13px; font-weight: 700; }
 .pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
 .pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
-.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 14px 28px; box-shadow: var(--shadow); font-weight: 700; font-size: 14px; }
-.toast.show { display:block; animation: toastIn 0.2s ease; }
-@keyframes toastIn { from { transform: translate(-50__, 15px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+.footer-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-shrink: 0; }
+.job-amt { color: var(--green); background: var(--green-soft); border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 700; }
+.job-amt.pending-pay { color: var(--blue); background: var(--blue-soft); }
+.job-amt.paid-out { color: var(--text); background: var(--card-soft); text-decoration: line-through; }
 </style>
 </head>
 <body>
-
-<!-- Standby Screensaver Frame -->
-<div id="ambient-overlay" onclick="wakeKiosk()">
-  <div id="ambient-time">--:--</div>
-  <div id="ambient-date">---</div>
-</div>
 
 <div class="app-shell">
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Matrix Syncing</span></div>
+        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">System Active</span></div>
         <h1 class="main-title-headline">Deutmeyer Family Dashboard</h1>
       </div>
       
+      <!-- Premium Integrated Center Dock -->
       <div class="dock-container" aria-label="Console navigation">
         <button class="nav-tab active" onclick="switchTab('home')">Today</button>
         <button class="nav-tab" onclick="switchTab('chores')">All Chores</button>
         <button class="nav-tab" onclick="switchTab('approvals')">Approvals <span class="badge" id="appr-badge" style="display:none">0</span></button>
-        <button class="nav-tab" onclick="switchTab('history')">History Logs</button>
+        <button class="nav-tab" onclick="switchTab('history')">History Log</button>
         <button class="nav-tab" onclick="switchTab('manage')">Manage</button>
       </div>
 
@@ -245,102 +246,112 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     </div>
   </header>
 
-  <!-- DYNAMIC HOUSEHOLD BROADCAST LAYER -->
+  <!-- Announcement Strip Layer -->
   <div class="smart-banner" id="system-announcement-banner">
-    ✨ Welcome to the Deutmeyer Command Hub
+    Deutmeyer Household Hub Loading...
   </div>
 
   <main class="content">
     
-    <!-- CONSOLIDATED ZERO-SCROLL MAIN PROFILE PANEL -->
+    <!-- MASTER HUB TODAY PANEL VIEW -->
     <section class="panel active" id="panel-home">
       <div class="today-master-layout">
         
-        <!-- Horizon Row 1: Low-Impact High-Glance Calendar Segment -->
-        <div class="card horizon-calendar-card">
+        <!-- Left: Optimized Calendar Frame -->
+        <div class="calendar-card-box">
           <div class="calendar-frame-wrap">
             <iframe id="cal-agenda" src="" loading="lazy"></iframe>
           </div>
         </div>
 
-        <!-- Horizon Row 2: Four Grid Station Activity Pods -->
-        <div class="family-stations-grid" id="home-stations-grid"></div>
+        <!-- Right: Combined Action Streams Box -->
+        <div class="main-tracking-core">
+          
+          <div style="display:flex; gap:12px; align-items:center; flex-shrink:0;">
+            <div class="quick-stats-stack" id="quick-stats" style="flex:1.2; margin-bottom:0;"></div>
+            <div class="card" id="home-dinner-card" style="display:none; flex:0.8; padding:10px 14px; background:linear-gradient(135deg, var(--purple-soft), transparent); border-color:var(--purple);">
+              <div class="dinner-title">🍽️ Tonight's Dinner Plan</div>
+              <div id="home-dinner-text" style="font-size:14px; font-weight:700; color:var(--text-strong)"></div>
+            </div>
+          </div>
 
-        <!-- Horizon Row 3: Live Matrix Metric Tracker Banner Strip -->
-        <div class="footer-stats-strip">
-          <div class="stat-strip-box"><span class="stat-strip-label">Global Matrix Chores</span><span class="stat-strip-value" id="stats-total-value">--/--</span></div>
-          <div class="stat-strip-box" id="home-dinner-banner" style="display:none;"><span class="stat-strip-label" style="color:var(--purple)">🍽️ Menu Output</span><span class="stat-strip-value" id="stats-dinner-value" style="font-size:15px"></span></div>
-          <div class="stat-strip-box"><span class="stat-strip-label">Sign-offs Pending</span><span class="stat-strip-value" id="stats-pending-value">--</span></div>
+          <!-- Master Unified Multi-Feed Sheet List -->
+          <div class="scroll-payload-box" id="unified-master-tracks"></div>
+          
         </div>
-
       </div>
 
-      <!-- Quick Fast Action Modals Injection Triggers -->
+      <!-- Quick Task On-The-Fly Trigger Button -->
       <button class="floating-action-node" onclick="openFastTaskOverlay()">+</button>
     </section>
 
-    <!-- TRADITIONAL MANIFEST DATABASES -->
+    <!-- EXPANDED DETAILED ALL CHORES VIEW -->
     <section class="panel" id="panel-chores">
       <div class="panel-scroll-frame">
         <div class="chores-layout-box" id="chores-people-container"></div>
       </div>
     </section>
 
+    <!-- PARENT PENDING REVIEW BOARD -->
     <section class="panel" id="panel-approvals">
       <div class="panel-scroll-frame" id="approvals-container"></div>
     </section>
 
-    <!-- LIVE HISTORY RUNTIME MANIFEST TRACK LOGS -->
+    <!-- LIVE HISTORY RUNTIME ACTION LOG DISPLAY -->
     <section class="panel" id="panel-history">
       <div class="panel-scroll-frame">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Weekly Verification History Trail</div>
-          <button class="pill-btn danger" onclick="clearHistoryLogs()">Purge Logs</button>
+          <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Completions History Activity Trail</div>
+          <button class="pill-btn danger" onclick="clearHistoryLogs()">Clear Log History</button>
         </div>
         <div id="history-logs-container"></div>
       </div>
     </section>
 
+    <!-- SYSTEM OVERRIDES MANAGEMENT LAYER -->
     <section class="panel" id="panel-manage">
       <div class="panel-scroll-frame">
         <div class="card pad" style="margin-bottom:16px;">
+          <div class="card-main-title" style="margin-bottom:10px">Dashboard Customizations</div>
           <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer; font-size:14px; color:var(--text-strong)">
-            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:18px; height:18px;"> Enable Active Kitchen Dinner Feed
+            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:18px; height:18px;"> Enable Active Kitchen Dinner Widget
           </label>
           <div id="manage-dinner-box" style="margin-top:12px; display:none;">
-            <input type="text" id="dinner-input" class="inp" placeholder="Type family meal output..." style="max-width:300px; display:inline-block; margin-right:10px;" />
-            <button class="pill-btn primary" onclick="saveDinnerMenu()">Publish Broadcast</button>
+            <input type="text" id="dinner-input" class="inp" placeholder="Type menu layout..." style="max-width:320px; display:inline-block; margin-right:10px;" />
+            <button class="pill-btn primary" onclick="saveDinnerMenu()">Publish Plan</button>
           </div>
         </div>
         <div class="manage-grid" id="manage-grid"></div>
-        <div style="margin-top:20px; text-align:right;"><button class="pill-btn danger" onclick="requirePin('reset')">Reset Complete System Week</button></div>
+        <div style="margin-top:24px; text-align:right;"><button class="pill-btn danger" onclick="requirePin('reset')">Start Brand New Week Loop</button></div>
       </div>
     </section>
 
   </main>
 </div>
 
-<!-- Fast Interactive Fly-in Overlay System -->
+<!-- On-The-Fly Pop-up Injection Menu Tray -->
 <div class="overlay-glass-container" id="fast-task-overlay" onclick="closeFastTaskOverlay(event)">
   <div class="overlay-card">
-    <h3 style="margin:0 0 14px; font-size:18px; color:var(--text-strong)">⚡ On-The-Fly System Injection</h3>
-    <input type="text" id="front-task-input" class="inp" placeholder="Task description name..." style="margin-bottom:12px;" />
+    <h3 style="margin:0 0 14px; font-size:18px; color:var(--text-strong)">⚡ Fast Task Injection</h3>
+    <input type="text" id="front-task-input" class="inp" placeholder="Type item text name..." style="margin-bottom:12px;" />
     <select id="front-assignee-select" class="inp" style="margin-bottom:16px; font-weight:700;">
-      <option value="jules">⭐ Target Member: Jules</option>
-      <option value="henry">🚀 Target Member: Henry</option>
-      <option value="dad">👨 Target Member: Dad</option>
-      <option value="mom">👩 Target Member: Jessica</option>
+      <option value="global_todo">📌 Shared Shared Family List</option>
+      <option value="jules">⭐ Kid Track: Jules</option>
+      <option value="henry">🚀 Kid Track: Henry</option>
+      <option value="dad">👨 Adult Track: Dad</option>
+      <option value="mom">👩 Adult Track: Jessica</option>
     </select>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
-      <button class="pill-btn" onclick="document.getElementById('fast-task-overlay').classList.remove('open')">Abort</button>
-      <button class="pill-btn primary" onclick="injectTaskOnTheFly()">Inject Command</button>
+      <button class="pill-btn" onclick="document.getElementById('fast-task-overlay').classList.remove('open')">Cancel</button>
+      <button class="pill-btn primary" onclick="injectTaskOnTheFly()">Add Item</button>
     </div>
   </div>
 </div>
 
+<!-- Secure Parental Override PIN System Overlay -->
 <div class="modal-bg" id="pin-modal">
   <div class="modal">
-    <h3 style="margin:0 0 8px; color:var(--text-strong)">Parent PIN Clearance</h3>
+    <h3 style="margin:0 0 6px; color:var(--text-strong)">Parent Security Code</h3>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
@@ -356,21 +367,22 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 <div class="modal-bg" id="reset-modal">
   <div class="modal">
-    <h3 style="color:var(--text-strong)">Execute Universal System Purge?</h3>
+    <h3 style="color:var(--text-strong)">Purge Universal Weekly Metrics?</h3>
     <div class="modal-btns" style="display:flex; gap:10px; margin-top:14px;">
-      <button class="pill-btn" onclick="closeModal('reset-modal')">Abort</button>
-      <button class="pill-btn danger" onclick="doReset()">Confirm Wiping</button>
+      <button class="pill-btn" onclick="closeModal('reset-modal')">Cancel</button>
+      <button class="pill-btn danger" onclick="doReset()">Confirm Reset</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<!-- CLOUD ROUTER FRAMEWORKS COMPAT CORE ATTACHMENTS -->
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
 // ══════════════════════════════════════════════
-// CORE CONFIG RUNTIMES
+// ARCHITECTURE RUNTIME ENGINES
 // ══════════════════════════════════════════════
 const GOOGLE_CAL_URL = 'https://calendar.google.com/calendar/embed?src=family11684173322375554414%40group.calendar.google.com&ctz=America%2FDenver';
 const PARENT_PIN = '1234';
@@ -385,7 +397,7 @@ const firebaseConfig = {
   appId: "1:231538201509:web:e8ca93e484efc1750f8e4c"
 };
 
-// Audio Synthesis Oscillator Chime Loops
+// Oscillator Audio Synthesizer Chip Controls (Tac Rewards)
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 function playTone(f, t, d, v) {
   try {
@@ -403,7 +415,7 @@ let stateRef = null; let firebaseOnline = false; let isLoadingFromCloud = false;
 
 try {
   firebase.initializeApp(firebaseConfig); stateRef = firebase.database().ref('familyDashboard/state'); firebaseOnline = true;
-} catch (err) { console.warn('Bypassed cloud syncing node.', err); }
+} catch (err) { console.warn('Bypassed sync integration framework.', err); }
 
 const DEFAULT_PEOPLE = [
   { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, streak:0, chores:[
@@ -434,30 +446,29 @@ const DEFAULT_PEOPLE = [
 
 function getWeekKey() { const d = new Date(), j1 = new Date(d.getFullYear(),0,1); return `w${d.getFullYear()}_${Math.ceil(((d-j1)/86400000+j1.getDay()+1)/7)}`; }
 function deepCopy(v) { return JSON.parse(JSON.stringify(v)); }
-function freshState() { return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], logs:[], weekKey:getWeekKey(), theme:'focus', dinnerEnabled: false, dinnerMenu: '' }; }
+function freshState() { return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], logs:[], globalTodos:[], weekKey:getWeekKey(), dinnerEnabled: false, dinnerMenu: '' }; }
 
 function normalizeState(input) {
   const base = freshState(); const s = (input && typeof input === 'object') ? input : {};
-  const normalized = {
+  return {
     people: Array.isArray(s.people) && s.people.length ? s.people : base.people,
     checked: s.checked && typeof s.checked === 'object' && !Array.isArray(s.checked) ? s.checked : {},
     approved: s.approved && typeof s.approved === 'object' && !Array.isArray(s.approved) ? s.approved : {},
     pending: Array.isArray(s.pending) ? s.pending : [],
     logs: Array.isArray(s.logs) ? s.logs : [],
+    globalTodos: Array.isArray(s.globalTodos) ? s.globalTodos : [],
     weekKey: typeof s.weekKey === 'string' ? s.weekKey : getWeekKey(),
-    theme: 'focus',
     dinnerEnabled: typeof s.dinnerEnabled === 'boolean' ? s.dinnerEnabled : base.dinnerEnabled,
     dinnerMenu: typeof s.dinnerMenu === 'string' ? s.dinnerMenu : base.dinnerMenu
   };
-  return normalized;
 }
 
 function loadState() {
-  try { const r = localStorage.getItem('fb_v10'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem('fb_v11'); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
 function saveState() {
-  state = normalizeState(state); try { localStorage.setItem('fb_v10', JSON.stringify(state)); } catch {}
+  state = normalizeState(state); try { localStorage.setItem('fb_v11', JSON.stringify(state)); } catch {}
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
@@ -469,73 +480,59 @@ function saveState() {
 let state = loadState(); state = normalizeState(state);
 
 // ══════════════════════════════════════════════
-// BANNER SYSTEMS & STANDBY SCREENSAVERS
+// ALERTS BANNER PROCESSING
 // ══════════════════════════════════════════════
 function processSystemBanners() {
   const banner = document.getElementById('system-announcement-banner'); if(!banner) return;
   const now = new Date(), hrs = now.getHours(), mins = now.getMinutes();
   
-  // Daily Movie Reminder Triggers at 7:35 PM - 8:05 PM
   if ((hrs === 19 && mins >= 35) || (hrs === 20 && mins <= 5)) {
     let delta = 80 - mins; if(hrs===20) delta = 5 - mins;
     banner.className = "smart-banner alert-active";
-    banner.innerHTML = `🎬 <b>DEUTMEYER ALERT:</b> Family Movie Time starts in ${delta > 0 ? delta : 0} minutes! Assemble at couch.`;
+    banner.innerHTML = `🎬 <b>ALERT:</b> Family Movie Time begins in ${delta > 0 ? delta : 0} minutes! Clear your items.`;
   } else if (state.dinnerEnabled && state.dinnerMenu) {
-    banner.className = "smart-banner";
-    banner.innerHTML = `🍽️ <b>Tonight's Menu Matrix:</b> ${state.dinnerMenu}`;
+    banner.className = "smart-banner"; banner.innerHTML = `🍽️ <b>Tonight's Dinner:</b> ${state.dinnerMenu}`;
   } else {
-    banner.className = "smart-banner";
-    banner.innerHTML = `✨ <b>Deutmeyer Command Core</b> · Keep your tracks green and building streaks!`;
+    banner.className = "smart-banner"; banner.innerHTML = `✨ <b>Deutmeyer Command Core</b> · Welcome home.`;
   }
 }
-setInterval(processSystemBanners, 20000);
-
-let ambientTimer;
-function resetAmbientTimer() {
-  clearTimeout(ambientTimer);
-  ambientTimer = setTimeout(() => {
-    if (new Date().getHours() >= 20 || new Date().getHours() < 7) {
-      document.getElementById('ambient-overlay').style.display = 'flex';
-    }
-  }, 5 * 60 * 1000);
-}
-function wakeKiosk() { document.getElementById('ambient-overlay').style.display = 'none'; resetAmbientTimer(); }
-window.addEventListener('click', resetAmbientTimer); window.addEventListener('touchstart', resetAmbientTimer);
+setInterval(processSystemBanners, 15000);
 
 function uid() { return Math.random().toString(36).substr(2,9); }
 function isChecked(pid,cid) { return (state.checked[pid] || []).includes(cid); }
 function isApproved(pid) { return state.approved[pid]?.allowance === true; }
 function isJobApproved(pid,cid) { return state.approved[pid]?.jobs?.[cid] === true; }
 function personProgress(p) { const total = p.chores.length; const done = p.chores.filter(c => isChecked(p.id, c.id)).length; return { total, done, pct: total ? Math.round(done / total * 100) : 0 }; }
+function pendingCount() { return state.pending.length; }
 function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot'), label = document.getElementById('sync-label'); if(!dot || !label) return;
   dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' ? ' offline' : '');
-  label.textContent = mode === 'synced' ? 'Live Mesh' : mode === 'saving' ? 'Pushing...' : 'Local Link';
+  label.textContent = mode === 'synced' ? 'System Live' : mode === 'saving' ? 'Syncing...' : 'Local File Mesh';
 }
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2800); }
 function pushLogTrail(msg) { const now = new Date(); state.logs.unshift({ id: uid(), time: now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), msg }); if(state.logs.length > 40) state.logs.pop(); }
+function allWeeklyDone(pid) { const p = state.people.find(x => x.id === pid); const weekly = p ? p.chores.filter(c => c.type === 'weekly') : []; return weekly.length > 0 && weekly.every(c => isChecked(pid, c.id)); }
+function earnedTotal(pid) { const p = state.people.find(x => x.id === pid); if (!p) return 0; let total = isApproved(pid) ? p.weeklyAllowance : 0; p.chores.filter(c => c.type === 'job').forEach(c => { if (isJobApproved(pid,c.id)) total += Number(c.amt) || 0; }); return total; }
 
 // ══════════════════════════════════════════════
-// DYNAMIC RUNTIME DATA ENGINES
+// ENGINE MUTATION PIPELINES
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
-  if (isApproved(pid)) {
-    const p = state.people.find(x => x.id === pid); if (p?.chores.find(c => c.id === cid)?.type === 'weekly') return;
-  }
+  if (isApproved(pid)) { const p = state.people.find(x => x.id === pid); if (p?.chores.find(c => c.id === cid)?.type === 'weekly') return; }
   if (!state.checked[pid]) state.checked[pid] = []; const idx = state.checked[pid].indexOf(cid);
   const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid);
   
   if (idx === -1) {
-    state.checked[pid].push(cid); chimeCheck(); confetti({ particleCount: 30, spread: 40, origin: { y: 0.85 } });
+    state.checked[pid].push(cid); chimeCheck(); confetti({ particleCount: 35, spread: 45, origin: { y: 0.85 } });
     pushLogTrail(`${p.name} completed: ${c.name}`);
   } else {
-    state.checked[pid].splice(idx,1); pushLogTrail(`${p.name} unchecked: ${c.name}`);
+    state.checked[pid].splice(idx,1); pushLogTrail(`${p.name} uncompleted: ${c.name}`);
   }
 
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
     if (!state.pending.some(x => x.type === 'allowance' && x.personId === pid)) {
       state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
-      showToast(`${p.name} cleared the board! 🎉`); confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
+      showToast(`${p.name} finished core goals! 🎉`); confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
     }
   }
   saveState(); renderAll();
@@ -547,21 +544,33 @@ function closeFastTaskOverlay(e) { if(e.target.id === 'fast-task-overlay') e.tar
 function injectTaskOnTheFly() {
   const input = document.getElementById('front-task-input'), targetSel = document.getElementById('front-assignee-select');
   const value = input.value.trim(); if(!value) return; const target = targetSel.value;
-  const p = state.people.find(x => x.id === target);
-  if(p) { p.chores.push({ id: uid(), name: value, type: 'weekly', amt: 0 }); pushLogTrail(`Fast Task assigned to ${p.name}: ${value}`); }
+  if(target === 'global_todo') {
+    state.globalTodos.push({ id: uid(), name: value, done: false }); pushLogTrail(`Shared Family Task added: ${value}`);
+  } else {
+    const p = state.people.find(x => x.id === target);
+    if(p) { p.chores.push({ id: uid(), name: value, type: 'weekly', amt: 0 }); pushLogTrail(`Fast Task assigned to ${p.name}: ${value}`); }
+  }
   input.value = ''; document.getElementById('fast-task-overlay').classList.remove('open'); saveState(); renderAll();
 }
 
+function toggleGlobalTodo(id) {
+  const todo = state.globalTodos.find(x => x.id === id);
+  if(todo) {
+    todo.done = !todo.done; if(todo.done) { chimeCheck(); confetti({ particleCount: 30, spread: 40, origin: { y: 0.85 } }); }
+    pushLogTrail(`Shared Family Task status flipped: ${todo.name}`); saveState(); renderAll();
+  }
+}
+function clearFinishedTodos() { state.globalTodos = state.globalTodos.filter(x => !x.done); saveState(); renderAll(); }
 function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll(); }
-function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Broad-casted!'); }
+function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Broadcast Dispatched!'); }
 function clearHistoryLogs() { state.logs = []; saveState(); renderAll(); }
 
 function approveItem(itemId) {
   const item = state.pending.find(x => x.id === itemId); if (!item) return;
   if (!state.approved[item.personId]) state.approved[item.personId] = { jobs:{} };
   const p = state.people.find(x => x.id === item.personId);
-  if (item.type === 'allowance') { state.approved[item.personId].allowance = true; if(p) p.streak++; pushLogTrail(`Parent signed allowance track for ${p.name}`); }
-  else { state.approved[item.personId].jobs[item.choreId] = true; pushLogTrail(`Parent verified single premium job for ${p.name}`); }
+  if (item.type === 'allowance') { state.approved[item.personId].allowance = true; if(p) p.streak++; pushLogTrail(`Parent signed allowance loop for ${p.name}`); }
+  else { state.approved[item.personId].jobs[item.choreId] = true; pushLogTrail(`Parent checked off premium venture item for ${p.name}`); }
   chimeCascade(); state.pending = state.pending.filter(x => x.id !== itemId); saveState(); renderAll();
 }
 function denyItem(itemId) {
@@ -587,47 +596,60 @@ function deleteChore(pid,cid) {
 function undoApproval(pid) { if (state.approved[pid]) { state.approved[pid].allowance = false; const p = state.people.find(x => x.id === pid); if(p && p.streak > 0) p.streak--; } saveState(); renderAll(); }
 function doReset() {
   const kept = state.people.map(p => ({...p, chores:p.chores.filter(c => c.type === 'weekly')}));
-  state = {...freshState(), people: kept, theme: 'focus', dinnerEnabled: state.dinnerEnabled, dinnerMenu: state.dinnerMenu};
-  pushLogTrail(`Universal weekly manifest loop reset executed.`); saveState(); closeModal('reset-modal'); renderAll();
+  state = {...freshState(), people: kept, logs: state.logs, dinnerEnabled: state.dinnerEnabled, dinnerMenu: state.dinnerMenu};
+  pushLogTrail(`Universal system loop reset executed.`); saveState(); closeModal('reset-modal'); renderAll();
 }
 
 // ══════════════════════════════════════════════
-// THE GLANCE DISTANCE RADICAL RENDER BLOCKS
+// THE WALK-BY VIEW MASTER UNIFIED BUILDER
 // ══════════════════════════════════════════════
-function renderGlanceStationCards() {
-  const container = document.getElementById('home-stations-grid'); if(!container) return;
+function renderUnifiedFrontMatrix() {
+  let html = '';
   
-  container.innerHTML = state.people.map(p => {
-    const activeList = p.chores.filter(c => !isChecked(p.id, c.id));
-    const nextTaskName = activeList.length > 0 ? activeList[0].name : 'All Tracks Green! ★';
+  // 1. Render Shared Family Tasks
+  if(state.globalTodos && state.globalTodos.length > 0) {
+    html += `<div class="list-label" style="color:var(--purple);"><span>📌 Shared Family Tasks</span><button class="pill-btn ghost" onclick="clearFinishedTodos()" style="font-size:10px; padding:2px 6px;">Clear Checked</button></div>`;
+    state.globalTodos.forEach(todo => {
+      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')"><div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div><div class="chore-name">${todo.name}</div><div></div></div>`;
+    });
+  }
+
+  // 2. Loop Individual Profiles (Priority Children -> Sub Adults Grid Mapping)
+  state.people.forEach(p => {
+    const active = p.chores.filter(c => !isChecked(p.id, c.id));
+    const completed = p.chores.filter(c => isChecked(p.id, c.id));
     const prog = personProgress(p);
     const approved = isApproved(p.id);
-    const pending = state.pending.some(x => x.type === 'allowance' && x.personId === p.id);
-    const streakHtml = p.streak > 0 ? `<span class="station-streak">🔥 ${p.streak} Wk</span>` : '';
-    
-    let clickExecution = activeList.length > 0 ? `toggleChore('${p.id}','${activeList[0].id}')` : '';
-    let cardStatusClass = approved ? 'chore-row done' : (pending ? 'chore-row done' : '');
-    let boxStatusCheckMark = approved ? '✓' : (pending ? '•' : '');
+    const streakText = p.streak > 0 ? `<span class="p-widget-streak">🔥 ${p.streak} Wk Streak</span>` : '';
 
-    return `<div class="station-card" style="--accent-color: var(--${p.id});">
-      <div class="station-top-row">
-        <div class="station-user"><span class="station-avatar">${p.emoji}</span><span class="station-name">${p.name}</span></div>
-        ${streakHtml}
-      </div>
-      
-      <!-- Big Bold Touch Block Target for Walking Past Screen -->
-      <div class="${cardStatusClass || 'active-target-box'}" onclick="${clickExecution}">
-        <div class="target-check-bubble" style="${approved || pending ? 'background:var(--'+p.id+'); border-color:var(--'+p.id+')':''}">${boxStatusCheckMark}</div>
-        <div class="target-title-text">${nextTaskName}</div>
-      </div>
-
-      <div class="progress-inline-bar"><div class="progress-inline-fill" style="background:var(--${p.id}); width:${prog.pct}%"></div></div>
-      <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:var(--text); margin-top:4px;">
-        <span>Progress Manifest: ${prog.done}/${prog.total}</span>
-        <span>${prog.pct}%</span>
-      </div>
+    html += `<div class="list-label" style="margin-top:14px; border-bottom: 1px solid var(--border-soft); padding-bottom:4px;">
+      <span style="color:var(--text-strong); font-size:16px; font-weight:800;">${p.emoji} ${p.name}'s Manifest (${prog.done}/${p.chores.length})</span>
+      ${streakText}
     </div>`;
-  }).join('');
+
+    if(p.chores.length === 0) {
+      html += `<div style="font-size:13px; color:var(--text); padding:8px 14px;">No operational assignments active.</div>`;
+      return;
+    }
+
+    // List remaining obligations first
+    active.forEach(c => {
+      const isJob = c.type === 'job';
+      const actionFn = isJob ? `requestJobApproval('${p.id}','${c.id}')` : `toggleChore('${p.id}','${c.id}')`;
+      html += `<div class="chore-row" onclick="${actionFn}"><div class="chk" style="--person:var(--${p.id})"></div><div class="chore-name">${c.name}</div><div style="font-size:12px; font-weight:700; color:var(--text)">${isJob ? '$'+c.amt.toFixed(2):'Core'}</div></div>`;
+    });
+
+    // List cleared operations second
+    completed.forEach(c => {
+      const isJob = c.type === 'job';
+      const jpending = state.pending.some(x => x.type === 'job' && x.personId === p.id && x.choreId === c.id);
+      const japproved = isJobApproved(p.id, c.id);
+      let statusLabel = isJob ? (japproved ? 'Paid' : (jpending ? 'Pending' : 'Done')) : 'Done';
+      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div><div class="chore-name">${c.name}</div><div style="font-size:12px; color:var(--text)">${statusLabel}</div></div>`;
+    });
+  });
+
+  document.getElementById('unified-master-tracks').innerHTML = html;
 }
 
 function renderDetailedChoreManifestPage() {
@@ -635,16 +657,11 @@ function renderDetailedChoreManifestPage() {
     const earned = earnedTotal(p.id);
     return `<div class="card pad" style="border-top:4px solid var(--${p.id})">
       <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-        <span style="font-size:24px">${p.emoji}</span><span style="font-size:18px; font-weight:800; color:var(--text-strong)">${p.name} Track</span>
+        <span style="font-size:24px">${p.emoji}</span><span style="font-size:18px; font-weight:800; color:var(--text-strong)">${p.name}</span>
         <span style="margin-left:auto; font-size:16px; font-weight:800; color:var(--text-strong)">$${earned.toFixed(2)}</span>
       </div>
       ${p.chores.map(c => {
-        const done = isChecked(p.id, c.id);
-        return `<div class="chore-row ${done?'done':''}" onclick="toggleChore('${p.id}','${c.id}')">
-          <div class="chk" style="${done?'background:var(--'+p.id+'); border-color:var(--'+p.id+')':''}">${done?'✓':''}</div>
-          <div class="chore-name">${c.name}</div>
-          <div style="font-size:11px; color:var(--text)">${c.type==='job'?'Premium':'Core'}</div>
-        </div>`;
+        const done = isChecked(p.id, c.id); return `<div class="chore-row ${done?'done':''}" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="${done?'background:var(--'+p.id+'); border-color:var(--'+p.id+')':''}">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div style="font-size:11px; color:var(--text)">${c.type==='job'?'Premium':'Core'}</div></div>`;
       }).join('')}
     </div>`;
   }).join('');
@@ -653,14 +670,14 @@ function renderDetailedChoreManifestPage() {
 function renderHistoryLogsView() {
   const container = document.getElementById('history-logs-container'); if(!container) return;
   if(state.logs.length === 0) { container.innerHTML = `<div class="empty-state">No execution trails stored in buffer.</div>`; return; }
-  container.innerHTML = state.logs.map(l => `<div class="history-manifest-card"><span style="font-size:14px; color:var(--text-strong); font-weight:600;">${l.msg}</span><span class="history-timestamp">${l.time}</span></div>`).join('');
+  container.innerHTML = state.logs.map(l => `<div class="history-manifest-card"><span style="font-size:14px; color:var(--text-strong); font-weight:600;">${l.msg}</span><span style="font-size:12px; color:var(--text); font-weight:600;">${l.time}</span></div>`).join('');
 }
 
 function renderApprovalsView() {
   const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="empty-state">Matrix Clear. No logs pending verification.</div>`; return; }
   container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
     const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'User'};
-    return `<div class="approval-item"><span style="font-size:22px">${p.emoji}</span><div><div style="font-weight:800; color:var(--text-strong)">${p.name}</div><div style="font-size:12px">${item.type==='allowance'?'Core completion disburse request':'Premium task clear verification'}</div></div><div style="margin-left:auto; display:flex; gap:8px;"><button class="pill-btn danger" onclick="denyItem('${item.id}')">Deny</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Approve</button></div></div>`;
+    return `<div class="approval-item"><span style="font-size:22px">${p.emoji}</span><div><div style="font-weight:800; color:var(--text-strong)">${p.name}</div><div style="font-size:12px">${item.type==='allowance'?'Core allowance disbursal checkout':'Premium task completion sign-off'}</div></div><div style="margin-left:auto; display:flex; gap:8px;"><button class="pill-btn danger" onclick="denyItem('${item.id}')">Deny</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Approve</button></div></div>`;
   }).join('')}</div>`;
 }
 
@@ -679,15 +696,14 @@ function renderManageView() {
 function updateSystemCounters() {
   const total = state.people.reduce((sum,p) => sum + p.chores.length, 0), done = state.people.reduce((sum,p) => sum + p.chores.filter(c => isChecked(p.id,c.id)).length, 0);
   const apprBadge = document.getElementById('appr-badge'); if(apprBadge) { apprBadge.style.display = pendingCount() > 0 ? 'inline-flex' : 'none'; apprBadge.textContent = pendingCount(); }
-  document.getElementById('stats-total-value').textContent = `${done}/${total}`;
-  document.getElementById('stats-pending-value').textContent = pendingCount();
+  document.getElementById('stats-total-value').textContent = `${done}/${total}`; document.getElementById('stats-pending-value').textContent = pendingCount();
   
-  const dinnerBanner = document.getElementById('home-dinner-banner');
-  if(state.dinnerEnabled && state.dinnerMenu) { dinnerBanner.style.display = 'flex'; document.getElementById('stats-dinner-value').textContent = state.dinnerMenu; } else { dinnerBanner.style.display = 'none'; }
+  const dinnerBanner = document.getElementById('home-dinner-card');
+  if(state.dinnerEnabled && state.dinnerMenu) { dinnerBanner.style.display = 'block'; document.getElementById('home-dinner-text').textContent = state.dinnerMenu; } else { dinnerCard.style.display = 'none'; }
 }
 
 function renderAll() {
-  state = normalizeState(state); renderGlanceStationCards(); renderDetailedChoreManifestPage(); renderHistoryLogsView(); renderApprovalsView(); renderManageView(); updateSystemCounters(); processSystemBanners();
+  state = normalizeState(state); renderUnifiedFrontMatrix(); renderDetailedChoreManifestPage(); renderHistoryLogsView(); renderApprovalsView(); renderManageView(); updateSystemCounters(); processSystemBanners();
 }
 
 // ══════════════════════════════════════════════
@@ -698,15 +714,13 @@ function switchTab(name) {
   if (name === 'manage' && !manageUnlocked) { requirePin('manage'); return; }
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', ['home','chores','approvals','history','manage'][i] === name));
   document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
-  if (name === 'home') renderGlanceStationCards(); if (name === 'chores') renderDetailedChoreManifestPage(); if (name === 'history') renderHistoryLogsView(); if (name === 'approvals') renderApprovalsView(); if (name === 'manage') renderManageView();
+  if (name === 'home') renderUnifiedFrontMatrix(); if (name === 'chores') renderDetailedChoreManifestPage(); if (name === 'history') renderHistoryLogsView(); if (name === 'approvals') renderApprovalsView(); if (name === 'manage') renderManageView();
 }
-function setupCalendar() {
-  document.getElementById('cal-agenda').src = GOOGLE_CAL_URL + '&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTabs=0&showTz=0&wkst=1&bgcolor=%230b0f19';
-}
+function setupCalendar() { document.getElementById('cal-agenda').src = GOOGLE_CAL_URL + '&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTabs=0&showTz=0&wkst=1&bgcolor=%230b0f19'; }
 function updateClock() {
   const now = new Date(), h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0'); document.getElementById('clock').textContent = `${h%12||12}:${m}`;
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
+  document.getElementById('date').textContent = `${days[now.getDay()]} · ${months[now.getMonth()]} ${now.getDate()}`;
 }
 
 let pinBuffer = '', pinAction = null;
