@@ -6,511 +6,372 @@
 <title>Trevica Family Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <!-- Canvas Confetti Library for Celebrations -->
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 :root {
-  --bg: #f1f3f4;
+  --bg: #f8fafc;
   --app: #ffffff;
   --card: #ffffff;
-  --card-soft: #f8fafd;
-  --text: #202124;
-  --text-strong: #111827;
-  --muted: #5f6368;
-  --muted-2: #7b8188;
-  --border: #dadce0;
-  --border-soft: #e7eaef;
-  --blue: #1a73e8;
-  --blue-soft: #e8f0fe;
-  --green: #188038;
-  --green-soft: #e6f4ea;
-  --amber: #f9ab00;
-  --amber-soft: #fef7e0;
-  --red: #d93025;
-  --red-soft: #fce8e6;
-  --purple: #9334e6;
+  --card-soft: #f1f5f9;
+  --text: #334155;
+  --text-strong: #0f172a;
+  --muted: #64748b;
+  --muted-2: #94a3b8;
+  --border: #e2e8f0;
+  --border-soft: #f1f5f9;
+  --blue: #0284c7;
+  --blue-soft: #e0f2fe;
+  --green: #16a34a;
+  --green-soft: #dcfce7;
+  --amber: #d97706;
+  --amber-soft: #fef3c7;
+  --red: #dc2626;
+  --red-soft: #fee2e2;
+  --purple: #7c3aed;
   --purple-soft: #f3e8fd;
-  --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-  --shadow-soft: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-  --radius: 20px;
-  --radius-sm: 14px;
-  --dad: #188038;
-  --mom: #d93025;
-  --jules: #1a73e8;
-  --henry: #f9ab00;
+  --shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 8px -1px rgba(15, 23, 42, 0.02);
+  --shadow-soft: 0 20px 40px -5px rgba(15, 23, 42, 0.06);
+  --radius: 24px;
+  --radius-sm: 16px;
+  --dad: #16a34a;
+  --mom: #dc2626;
+  --jules: #0284c7;
+  --henry: #ea580c;
+  --cal-filter: none;
 }
 
 body.theme-focus {
-  --bg: #0f172a;
-  --app: #1e293b;
-  --card: #334155;
-  --card-soft: #475569;
-  --text: #cbd5e1;
-  --text-strong: #f8fafc;
-  --muted: #94a3b8;
-  --muted-2: #64748b;
-  --border: #475569;
-  --border-soft: #334155;
+  --bg: #0b0f19;
+  --app: #111827;
+  --card: rgba(31, 41, 55, 0.7);
+  --card-soft: rgba(55, 65, 81, 0.5);
+  --text: #9ca3af;
+  --text-strong: #f9fafb;
+  --muted: #6b7280;
+  --muted-2: #4b5563;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-soft: rgba(255, 255, 255, 0.03);
   --blue: #38bdf8;
-  --blue-soft: #1e3a8a;
+  --blue-soft: rgba(56, 189, 248, 0.15);
   --green: #4ade80;
-  --green-soft: #14532d;
+  --green-soft: rgba(74, 222, 128, 0.15);
   --amber: #fbbf24;
-  --amber-soft: #78350f;
+  --amber-soft: rgba(251, 191, 36, 0.15);
   --red: #f87171;
-  --red-soft: #7f1d1d;
+  --red-soft: rgba(248, 113, 113, 0.15);
   --purple: #c084fc;
-  --purple-soft: #581c87;
-  --shadow: 0 4px 6px -1px rgba(0,0,0,0.2);
-  --shadow-soft: 0 20px 25px -5px rgba(0,0,0,0.4);
+  --purple-soft: rgba(192, 132, 252, 0.15);
+  --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --shadow-soft: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+  /* Premium inverted filter mapping to make white calendar frames pitch dark */
+  --cal-filter: invert(0.88) hue-rotate(180deg) contrast(1.1);
 }
 
 * { box-sizing: border-box; touch-action: manipulation; }
-html, body { min-height: 100%; transition: background-color 0.3s, color 0.3s; }
+html, body { min-height: 100%; }
 body {
   margin: 0;
-  font-family: Roboto, Arial, sans-serif;
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif;
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
 }
-button, input, select { font-family: inherit; }
-button { cursor: pointer; transition: all 0.2s ease; }
-button:active { transform: scale(0.97); }
 
-.app-shell {
-  max-width: 1100px;
-  min-height: 100vh;
-  margin: 0 auto;
-  background: var(--app);
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-  transition: opacity 0.5s ease, filter 0.5s ease;
-}
-
-/* Ambient Saver Overlay */
+/* Ambient Saver Screen styling */
 #ambient-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: #090d16;
+  background: #030712;
   z-index: 9999;
   color: #ffffff;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: Roboto, sans-serif;
+  backdrop-filter: blur(20px);
 }
-#ambient-time { font-size: 110px; font-weight: 700; letter-spacing: -0.05em; color: #f8fafc; }
-#ambient-date { font-size: 28px; color: #94a3b8; margin-top: 10px; }
-#ambient-prompt { margin-top: 50px; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
+#ambient-time { font-size: clamp(80px, 12vw, 140px); font-weight: 800; letter-spacing: -0.05em; color: #ffffff; }
+#ambient-date { font-size: clamp(20px, 3vw, 32px); color: #94a3b8; font-weight: 500; margin-top: 10px; }
+#ambient-prompt { margin-top: 60px; font-size: 13px; color: #4b5563; text-transform: uppercase; letter-spacing: 0.15em; font-weight: 600; }
+
+.app-shell {
+  max-width: 1440px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: var(--app);
+  padding: 0 20px;
+}
 
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: color-mix(in srgb, var(--app) 85%, transparent);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-soft);
-  padding: 22px 24px 16px;
+  background: color-mix(in srgb, var(--app) 80%, transparent);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 10px 20px;
 }
 
 .topbar-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
 }
 
-.brand-block { min-width: 0; }
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .08em;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 .status-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 99px;
   background: var(--green);
-  box-shadow: 0 0 10px var(--green);
+  box-shadow: 0 0 12px var(--green);
 }
-.status-dot.offline { background: var(--amber); box-shadow: 0 0 10px var(--amber); }
+.status-dot.offline { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
 
 h1 {
   margin: 0;
   color: var(--text-strong);
-  font-size: clamp(32px, 4.5vw, 46px);
-  line-height: 1.03;
-  letter-spacing: -0.045em;
-  font-weight: 700;
+  font-size: clamp(28px, 3.5vw, 40px);
+  letter-spacing: -0.04em;
+  font-weight: 800;
 }
 
-.time-block { text-align: right; flex: 0 0 auto; }
+.time-block { text-align: right; }
 #clock {
   color: var(--text-strong);
-  font-size: clamp(32px, 5.5vw, 54px);
-  font-weight: 700;
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
 }
-#date { color: var(--muted); font-size: 14px; font-weight: 500; margin-top: 6px; }
+#date { color: var(--muted); font-size: 13px; font-weight: 600; margin-top: 4px; }
 
 .nav-row {
   display: flex;
   gap: 10px;
-  margin-top: 20px;
-  overflow-x: auto;
-  padding-bottom: 4px;
+  margin-top: 24px;
 }
 .nav-tab {
   appearance: none;
-  border: 1px solid var(--border-soft);
+  border: 1px solid var(--border);
   background: var(--card-soft);
-  color: var(--muted);
-  border-radius: 999px;
-  padding: 12px 20px;
-  font-size: 15px;
+  color: var(--text);
+  border-radius: 14px;
+  padding: 12px 24px;
+  font-size: 14px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  white-space: nowrap;
 }
 .nav-tab:hover { background: var(--card); color: var(--text-strong); }
 .nav-tab.active { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+.theme-toggle { margin-left: auto; background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 12px 18px; font-weight: 700; color: var(--text); }
+
 .badge {
-  min-width: 22px;
-  height: 22px;
-  border-radius: 999px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 99px;
   background: var(--red);
   color: white;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 0 6px;
 }
 
-.content { padding: 24px 24px 40px; }
+.content { padding: 24px 10px 40px; }
 .panel { display: none; }
-.panel.active { display: block; animation: fadeIn 0.25s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.panel.active { display: block; }
 
-.hero-grid {
+/* RE-ENGINEERED 3-COLUMN MASTER LAYOUT */
+.dashboard-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 20px;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: minmax(400px, 1.1fr) minmax(380px, 1fr) minmax(320px, 0.9fr);
+  }
 }
 
 .card {
   background: var(--card);
-  border: 1px solid var(--border-soft);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   overflow: hidden;
 }
-.card.pad { padding: 20px; }
-.card-title-row {
+.card.pad { padding: 24px; }
+
+.card-header-main {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 18px 20px;
-  border-bottom: 1px solid var(--border-soft);
 }
-.card-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-strong);
-  letter-spacing: -0.01em;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-.card-subtitle { font-size: 13px; color: var(--muted); font-weight: 500; }
+.card-main-title { font-size: 18px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.02em; }
 
-/* Expanded touch target list items */
-.chore-row {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 14px;
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  min-height: 58px;
-  background: var(--card-soft);
-  margin-bottom: 8px;
-  border: 1px solid transparent;
-  cursor: pointer;
-}
-.chore-row:hover { border-color: var(--border); background: var(--card); }
-.chore-row.done { opacity: 0.65; }
-.chore-row.done .chore-name { text-decoration: line-through; color: var(--muted); }
-
-.chk {
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: white;
-  background: var(--app);
-  transition: all 0.15s ease;
-}
-.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
-
-/* Dinner Dashboard Widget Style */
-.dinner-widget {
-  background: linear-gradient(135deg, var(--purple-soft), var(--card));
-  border: 1px solid color-mix(in srgb, var(--purple) 30%, var(--border-soft));
-}
-
-.calendar-shell { background: var(--card); }
+/* SMART GOOGLE CALENDAR WRAPPER */
 .calendar-frame-wrap {
-  height: 440px;
-  background: #fff;
+  height: 540px;
+  background: var(--app);
+  overflow: hidden;
   position: relative;
 }
-.calendar-frame-wrap.full { height: 780px; }
 .calendar-frame-wrap iframe {
   width: 100%;
   height: 100%;
   border: 0;
-  display: block;
+  filter: var(--cal-filter); /* Seamless theme inversion magic */
+  transition: filter 0.3s ease;
 }
+.calendar-frame-wrap.full { height: 750px; }
 
-.quick-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.stat {
-  background: var(--card);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  min-height: 100px;
-  box-shadow: var(--shadow);
-}
-.stat-label { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-.stat-value { color: var(--text-strong); font-size: 32px; font-weight: 700; letter-spacing: -0.04em; margin-top: 6px; }
-.stat-note { color: var(--muted); font-size: 12px; margin-top: 4px; }
-
-.section-stack { display: grid; gap: 16px; margin-top: 20px; }
-.person-stack { display: grid; grid-template-columns: 1fr; gap: 16px; }
-
-.person-card {
-  background: var(--card);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-}
-.person-card.card-dad { --person: var(--dad); --person-soft: var(--green-soft); }
-.person-card.card-mom { --person: var(--mom); --person-soft: var(--red-soft); }
-.person-card.card-jules { --person: var(--jules); --person-soft: var(--blue-soft); }
-.person-card.card-henry { --person: var(--henry); --person-soft: var(--amber-soft); }
-
-.person-top {
+/* PREMIUM KIOSK BUTTONS & CHORE LISTS */
+.chore-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 14px;
-  padding: 20px 20px 14px;
+  gap: 16px;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  min-height: 64px;
+  background: var(--card-soft);
+  margin-bottom: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+.chore-row:hover { border-color: var(--border); transform: translateY(-2px); background: var(--card); }
+.chore-row.done { opacity: 0.5; }
+.chore-row.done .chore-name { text-decoration: line-through; }
+
+.chk {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  background: var(--person-soft);
-  color: var(--person);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+  font-size: 14px;
+  color: white;
+  transition: all 0.15s ease;
 }
-.person-name { font-size: 20px; font-weight: 700; color: var(--text-strong); letter-spacing: -0.02em; }
-.person-age { color: var(--muted); font-size: 13px; margin-top: 2px; }
-.streak-badge { display: inline-flex; align-items: center; background: var(--amber-soft); color: var(--amber); font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; margin-left: 6px; }
-.earned { text-align: right; }
-.earned-amt { color: var(--person); font-size: 28px; font-weight: 700; letter-spacing: -0.04em; }
-.earned-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+.chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
+.chore-name { font-size: 15px; font-weight: 600; color: var(--text-strong); }
 
-.progress-wrap { padding: 0 20px 14px; }
-.progress-bar { height: 10px; background: var(--card-soft); border-radius: 99px; overflow: hidden; border: 1px solid var(--border-soft); }
-.progress-fill { height: 100%; width: 0%; border-radius: 99px; background: var(--person); transition: width .4s cubic-bezier(0.4, 0, 0.2, 1); }
-.progress-label { color: var(--muted); font-size: 13px; margin-top: 8px; display: flex; justify-content: space-between; gap: 12px; }
-
-.status-card {
-  margin: 0 20px 14px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-soft);
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* PERSON SUB-CARDS IN CORE PANEL */
+.person-widget {
   background: var(--card-soft);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid var(--border-soft);
 }
-.status-card.ready { background: var(--amber-soft); border-color: var(--amber); }
-.status-card.pending { background: var(--blue-soft); border-color: var(--blue); }
-.status-card.paid { background: var(--green-soft); border-color: var(--green); }
-.status-icon { font-size: 22px; }
-.status-main { flex: 1; min-width: 0; }
-.status-main strong { display: block; color: var(--text-strong); font-size: 14px; }
-.status-main span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.person-widget-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px;}
+.p-widget-avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--person-soft); color: var(--person); display:flex; align-items:center; justify-content:center; font-size:20px; }
+.p-widget-name { font-weight: 800; color: var(--text-strong); font-size: 16px; }
+.p-widget-streak { font-size: 11px; background: var(--amber-soft); color: var(--amber); padding: 2px 8px; border-radius: 6px; font-weight: 700; margin-left: auto; }
 
+/* STATS */
+.quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.stat-mini { background: var(--card-soft); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center;}
+.stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+.stat-m-val { font-size: 24px; font-weight: 800; color: var(--text-strong); margin-top: 4px; }
+
+/* DINNER MODULE GLOW DESIGN */
+.dinner-premium-box {
+  background: linear-gradient(135deg, var(--purple-soft), transparent);
+  border: 1px solid color-mix(in srgb, var(--purple) 20%, var(--border));
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  position: relative;
+}
+.dinner-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--purple); letter-spacing: 0.1em; margin-bottom: 6px;}
+.dinner-text { font-size: 18px; font-weight: 700; color: var(--text-strong); }
+
+/* FOOTERS AND CONTROL PILLS */
 .pill-btn {
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 10px 18px;
-  font-size: 13px;
-  font-weight: 700;
+  border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 16px; font-size: 13px; font-weight: 700;
 }
 .pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
 .pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
-.pill-btn.ghost { background: transparent; color: var(--muted); border-color: transparent; }
-.pill-btn.ghost:hover { background: var(--card-soft); }
+.pill-btn.ghost { background: transparent; border-color: transparent; color: var(--muted); }
 
-.chore-list { padding: 0 16px 16px; }
-.list-label { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 12px 6px 8px; }
+.section-title-row { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; margin-bottom: 14px; }
+.section-title { font-size: 20px; font-weight: 800; color: var(--text-strong); letter-spacing: -0.03em; }
 
-.job-amt {
-  color: var(--green);
-  background: var(--green-soft);
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 700;
-}
-.job-amt.pending-pay { color: var(--blue); background: var(--blue-soft); }
-.job-amt.paid-out { color: var(--muted); background: var(--card-soft); text-decoration: line-through; }
+.person-grid-chores { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media(min-width: 768px) { .person-grid-chores { grid-template-columns: repeat(2, 1fr); } }
 
-.approval-list { display: grid; gap: 12px; }
-.approval-item {
-  background: var(--card);
-  border: 1px solid var(--border-soft);
-  box-shadow: var(--shadow);
-  border-radius: var(--radius);
-  padding: 18px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 14px;
-  align-items: center;
-}
-.appr-who { color: var(--text-strong); font-size: 17px; font-weight: 700; }
-.appr-what { color: var(--muted); font-size: 14px; margin-top: 3px; }
-.appr-amt { color: var(--text-strong); font-size: 26px; font-weight: 700; letter-spacing: -0.04em; text-align: right; }
-.appr-actions { grid-column: 1 / -1; display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+.approval-list { display: grid; gap: 14px; }
+.approval-item { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
+.manage-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media(min-width: 768px) { .manage-grid { grid-template-columns: repeat(2, 1fr); } }
 
-.empty-state { color: var(--muted); text-align: center; padding: 48px 20px; font-weight: 500; }
-.empty-state .big { font-size: 42px; margin-bottom: 10px; }
-
-.manage-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-.manage-card { background: var(--card); border: 1px solid var(--border-soft); box-shadow: var(--shadow); border-radius: var(--radius); overflow: hidden; }
-.manage-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--border-soft); }
-.manage-name { font-weight: 700; color: var(--text-strong); font-size: 18px; }
-.manage-body { padding: 16px 20px 20px; }
 .field-row { display: grid; grid-template-columns: 1fr 120px; gap: 12px; align-items: center; padding-bottom: 14px; border-bottom: 1px solid var(--border-soft); margin-bottom: 14px; }
-.field-row label { color: var(--muted); font-size: 14px; font-weight: 500; }
-.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 11px 14px; font-size: 15px; outline: none; width: 100%; }
-.inp:focus { border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
-
-.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
-.manage-chore-row:last-child { border-bottom: 0; }
-.mcname { font-size: 15px; }
-.mctype { color: var(--muted); font-size: 12px; font-weight: 700; background: var(--card-soft); border-radius: 999px; padding: 4px 10px; }
-.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 10px; font-weight: 700; font-size: 16px; }
-
-.add-form { margin-top: 16px; display: grid; gap: 10px; background: var(--card-soft); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 14px; }
-.add-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; }
+.inp { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 12px; font-size: 14px; outline: none; width: 100%; }
+.inp:focus { border-color: var(--blue); }
+.add-form { margin-top: 16px; background: var(--card-soft); padding: 14px; border-radius: var(--radius-sm); display: grid; gap: 10px; }
 .type-row { display: flex; gap: 10px; }
-.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); border-radius: 10px; padding: 10px; font-weight: 700; }
+.type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 700; }
 .type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
-.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 12px; padding: 12px; font-weight: 700; font-size: 14px; }
+.add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 10px; padding: 12px; font-weight: 700; }
+.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; }
+.manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
 
-.footer-actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; color: var(--muted); font-size: 14px; line-height: 1.4; }
-
-.modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter: blur(8px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); backdrop-filter: blur(12px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
 .modal-bg.open { display:flex; }
-.modal { background:var(--card); color:var(--text); border:1px solid var(--border-soft); border-radius:24px; padding:28px; width:360px; max-width:100%; box-shadow: var(--shadow-soft); }
-.modal h3 { margin:0 0 10px; font-size:24px; color: var(--text-strong); letter-spacing:-.03em; }
-.modal p { margin:0; color:var(--muted); line-height:1.5; font-size:15px; }
-.modal-btns { display:flex; gap:12px; margin-top:20px; }
-.modal-btns button { flex:1; }
-
+.modal { background:var(--card); border:1px solid var(--border); border-radius:28px; padding:32px; width:380px; max-width:100%; box-shadow: var(--shadow-soft); text-align: center; }
 .pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
-.pin-dot { width:15px; height:15px; border-radius:999px; background:var(--border); }
-.pin-dot.filled { background:var(--blue); box-shadow: 0 0 8px var(--blue); }
+.pin-dot { width:16px; height:16px; border-radius:99px; background:var(--border); }
+.pin-dot.filled { background:var(--blue); box-shadow: 0 0 10px var(--blue); }
 .pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:240px; margin:0 auto; }
-.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; text-align:center; user-select: none; }
-.pin-key:active { background: var(--border-soft); }
-.pin-error { min-height: 22px; color: var(--red); text-align: center; margin-top: 12px; font-size: 14px; font-weight: 500; }
+.pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; user-select:none; }
+.pin-error { color: var(--red); font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 600; }
 
-.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 999px; padding: 16px 28px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 15px; text-align: center; white-space: nowrap; }
-.toast.show { display:block; animation: toastIn .2s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.toast { display:none; position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); z-index: 250; background: var(--text-strong); color: var(--app); border-radius: 99px; padding: 16px 32px; box-shadow: var(--shadow-soft); font-weight: 700; font-size: 14px; }
+.toast.show { display:block; animation: toastIn .25s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 @keyframes toastIn { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-@media (min-width: 860px) {
-  .hero-grid { grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr); align-items: start; }
-  .side-stack { display: grid; gap: 20px; }
-  .quick-stats { grid-template-columns: 1fr; }
-  .person-stack { grid-template-columns: repeat(2, 1fr); }
-  .manage-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 640px) {
-  .topbar { padding: 18px 16px 14px; }
-  .content { padding: 16px; }
-  .topbar-row { align-items: flex-start; }
-  .time-block { display: none; }
-  .quick-stats { grid-template-columns: 1fr; }
-  .calendar-frame-wrap { height: 400px; }
-  .calendar-frame-wrap.full { height: 680px; }
-  .approval-item { grid-template-columns: auto 1fr; }
-  .appr-amt { grid-column: 2; text-align:left; }
-}
+.progress-inline-bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 6px; }
+.progress-inline-fill { height: 100%; background: var(--person); width: 0%; transition: width 0.4s ease; }
 </style>
 </head>
 <body class="theme-focus">
-<!-- Kiosk Standby Screen -->
+
+<!-- Standby Screen Mode -->
 <div id="ambient-overlay" onclick="wakeKiosk()">
-  <div id="ambient-time">12:00</div>
-  <div id="ambient-date">Monday, January 1</div>
-  <div id="ambient-prompt">👋 Tap anywhere to wake screen</div>
+  <div id="ambient-time">--:--</div>
+  <div id="ambient-date">---</div>
+  <div id="ambient-prompt">👋 Tap screen to interact</div>
 </div>
 
 <div class="app-shell">
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Family system</span></div>
+        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Connecting</span></div>
         <h1>Trevica Dashboard</h1>
       </div>
       <div class="time-block">
@@ -529,105 +390,99 @@ h1 {
   </header>
 
   <main class="content">
+    
+    <!-- RE-ENGINEERED HOME PANEL -->
     <section class="panel active" id="panel-home">
-      <div class="hero-grid">
-        <div class="card calendar-shell">
-          <div class="card-title-row">
+      <div class="dashboard-grid">
+        
+        <!-- Column 1: Native Inverted Calendar Embed Widget -->
+        <div class="card">
+          <div class="card-header-main">
             <div>
-              <div class="card-title">Today’s calendar</div>
-              <div class="card-subtitle">Family schedule · Denver time</div>
+              <div class="card-main-title">Today's Calendar</div>
+              <div style="font-size:12px; color:var(--muted); margin-top:2px;">Denver Schedule</div>
             </div>
-            <button class="pill-btn ghost" onclick="switchTab('calendar')">Open full</button>
+            <button class="pill-btn ghost" onclick="switchTab('calendar')">Full View</button>
           </div>
           <div class="calendar-frame-wrap">
             <iframe id="cal-agenda" src="" loading="lazy"></iframe>
           </div>
         </div>
 
-        <div class="side-stack">
-          <!-- Live Dinner Widget -->
-          <div class="card pad dinner-widget" id="home-dinner-card" style="display:none;">
-            <div class="card-title" style="color:var(--text-strong)">🍽️ On the Menu Tonight</div>
-            <div id="home-dinner-text" style="font-size:20px; font-weight:700; margin-top:10px; color:var(--text-strong)"></div>
+        <!-- Column 2: Modern Family Chore Hub & Streak View -->
+        <div class="card pad">
+          <div class="section-title-row" style="margin-top:0; margin-bottom:16px;">
+            <div class="card-main-title">Family Goals</div>
+            <div id="week-label" style="font-size:12px; color:var(--muted)">Week Loading</div>
           </div>
-          
-          <div class="quick-stats" id="quick-stats"></div>
+          <div id="home-people"></div>
+        </div>
+
+        <!-- Column 3: Stats, Focus, and Meal Modules -->
+        <div class="side-stack">
+          <!-- Dynamic Dinner Box -->
+          <div class="card dinner-premium-box" id="home-dinner-card" style="display:none;">
+            <div class="dinner-title">🍽️ Tonight's Dinner Plan</div>
+            <div id="home-dinner-text" class="dinner-text"></div>
+          </div>
+
+          <div class="quick-stats-stack" id="quick-stats"></div>
+
           <div class="card pad">
-            <div class="card-title" style="margin-bottom:12px">Today’s focus</div>
+            <div class="card-main-title" style="margin-bottom:16px;">Today's Focus Task</div>
             <div id="focus-list"></div>
           </div>
         </div>
-      </div>
 
-      <div class="section-stack">
-        <div class="card-title-row" style="padding: 0; border: 0; box-shadow:none;">
-          <div>
-            <div class="card-title">Family progress</div>
-            <div class="card-subtitle" id="week-label">Week of —</div>
-          </div>
-          <button class="pill-btn danger" onclick="requirePin('reset')">New week</button>
-        </div>
-        <div class="person-stack" id="home-people"></div>
       </div>
     </section>
 
+    <!-- CHORES DETAILED PANEL -->
     <section class="panel" id="panel-chores">
-      <div class="person-stack" id="chores-people"></div>
+      <div class="person-grid-chores" id="chores-people"></div>
       <div class="footer-actions">
-        <span>Weekly chores earn the allowance when all are complete. Jobs pay individually after approval.</span>
-        <button class="pill-btn danger" onclick="requirePin('reset')">New week</button>
+        <span>Weekly chores unlock allowances automatically once fully checked. One-time jobs await parent sign-off.</span>
+        <button class="pill-btn danger" onclick="requirePin('reset')">Reset Week</button>
       </div>
     </section>
 
+    <!-- APPROVAL PANEL -->
     <section class="panel" id="panel-approvals">
       <div id="approvals-container"></div>
     </section>
 
+    <!-- FULL CALENDAR VIEW PANEL -->
     <section class="panel" id="panel-calendar">
-      <div class="card calendar-shell">
-        <div class="card-title-row">
-          <div>
-            <div class="card-title">Family calendar</div>
-            <div class="card-subtitle">Week view</div>
-          </div>
-        </div>
+      <div class="card">
         <div class="calendar-frame-wrap full">
           <iframe id="cal-full" src="" loading="lazy"></iframe>
         </div>
       </div>
     </section>
 
+    <!-- PARENT MANAGEMENT AREA -->
     <section class="panel" id="panel-manage">
-      <!-- Top Level App Feature Toggles -->
-      <div class="card pad" style="margin-bottom: 20px;">
-        <div class="card-title" style="margin-bottom:14px">System Features</div>
-        <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
-          <label style="display:inline-flex; align-items:center; gap:8px; font-weight:700; cursor:pointer;">
-            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:20px; height:20px;"> Enable Shared Dinner Menu Plan
-          </label>
-        </div>
-        <div id="manage-dinner-box" style="margin-top:16px; display:none; background:var(--card-soft); padding:14px; border-radius:12px;">
-          <label style="display:block; font-size:13px; font-weight:700; margin-bottom:6px; color:var(--muted)">WHAT'S FOR DINNER TONIGHT?</label>
-          <div style="display:flex; gap:10px;">
-            <input type="text" id="dinner-input" class="inp" placeholder="e.g., Homemade Tacos 🌮" />
-            <button class="pill-btn primary" onclick="saveDinnerMenu()">Update Menu</button>
-          </div>
+      <div class="card pad" style="margin-bottom: 24px;">
+        <div class="card-main-title" style="margin-bottom:14px">System Control Matrix</div>
+        <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer;">
+          <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:22px; height:22px;"> Enable Kitchen Dinner Menu Widget
+        </label>
+        <div id="manage-dinner-box" style="margin-top:16px; display:none;">
+          <input type="text" id="dinner-input" class="inp" placeholder="Type menu item (e.g., Lasagna & Garlic Bread 🥖)" style="max-width:400px; display:inline-block; margin-right:10px;" />
+          <button class="pill-btn primary" onclick="saveDinnerMenu()">Publish Menu</button>
         </div>
       </div>
-
       <div class="manage-grid" id="manage-grid"></div>
-      <div class="footer-actions">
-        <span>Parent area. Changes save to the shared dashboard.</span>
-        <button class="pill-btn danger" onclick="requirePin('reset')">Start new week</button>
-      </div>
     </section>
+
   </main>
 </div>
 
+<!-- KEYPAD PIN SYSTEM MODAL -->
 <div class="modal-bg" id="pin-modal">
-  <div class="modal" style="text-align:center">
-    <h3>Parent PIN</h3>
-    <p id="pin-desc">Enter your 4-digit PIN to continue.</p>
+  <div class="modal">
+    <h3 style="margin:0 0 6px; font-size:22px; color:var(--text-strong)">Parent Authorization</h3>
+    <p id="pin-desc" style="margin:0; font-size:14px; color:var(--muted)">Enter Pin Security Code</p>
     <div class="pin-dots" id="pin-dots">
       <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
@@ -635,7 +490,7 @@ h1 {
       <div class="pin-key" onclick="pinKey('1')">1</div><div class="pin-key" onclick="pinKey('2')">2</div><div class="pin-key" onclick="pinKey('3')">3</div>
       <div class="pin-key" onclick="pinKey('4')">4</div><div class="pin-key" onclick="pinKey('5')">5</div><div class="pin-key" onclick="pinKey('6')">6</div>
       <div class="pin-key" onclick="pinKey('7')">7</div><div class="pin-key" onclick="pinKey('8')">8</div><div class="pin-key" onclick="pinKey('9')">9</div>
-      <div class="pin-key" onclick="pinKey('cancel')" style="font-size:13px;color:var(--muted)">Cancel</div><div class="pin-key" onclick="pinKey('0')">0</div><div class="pin-key" onclick="pinKey('back')">⌫</div>
+      <div class="pin-key" onclick="pinKey('cancel')" style="font-size:12px; color:var(--muted)">Cancel</div><div class="pin-key" onclick="pinKey('0')">0</div><div class="pin-key" onclick="pinKey('back')">⌫</div>
     </div>
     <div class="pin-error" id="pin-error"></div>
   </div>
@@ -643,22 +498,20 @@ h1 {
 
 <div class="modal-bg" id="reset-modal">
   <div class="modal">
-    <h3>Start a new week?</h3>
-    <p>This clears checkmarks and pending approvals. Weekly chores stay. One-time jobs are removed.</p>
+    <h3 style="color:var(--text-strong)">Clear System Matrix?</h3>
+    <p style="color:var(--muted)">This action resets all checkmarks and clears current allowance boards for a brand new cycle.</p>
     <div class="modal-btns">
-      <button class="pill-btn" onclick="closeModal('reset-modal')">Cancel</button>
-      <button class="pill-btn danger" onclick="doReset()">Yes, reset</button>
+      <button class="pill-btn" onclick="closeModal('reset-modal')">Abort</button>
+      <button class="pill-btn danger" onclick="doReset()">Confirm Reset</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
 // ══════════════════════════════════════════════
-// CONFIG
+// ENGINE ARCHITECTURE VARIABLES
 // ══════════════════════════════════════════════
 const GOOGLE_CAL_URL = 'https://calendar.google.com/calendar/embed?src=family11684173322375554414%40group.calendar.google.com&ctz=America%2FDenver';
 const PARENT_PIN = '1234';
@@ -673,7 +526,6 @@ const firebaseConfig = {
   appId: "1:231538201509:web:e8ca93e484efc1750f8e4c"
 };
 
-// Satisfying sound effects using clear standard web oscillator chimes
 const soundCheck = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav');
 const soundApprove = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
 
@@ -688,12 +540,9 @@ try {
   stateRef = firebase.database().ref('familyDashboard/state');
   firebaseOnline = true;
 } catch (err) {
-  console.warn('Firebase did not initialize. Local saving still works.', err);
+  console.warn('Firebase connection bypassed. Local persistence engine online.', err);
 }
 
-// ══════════════════════════════════════════════
-// DEFAULT PEOPLE & DATA STRUCTURES
-// ══════════════════════════════════════════════
 const DEFAULT_PEOPLE = [
   { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, streak:0, chores:[
     { id:'d1', name:'Take out trash', type:'weekly' },
@@ -721,25 +570,13 @@ const DEFAULT_PEOPLE = [
   ]},
 ];
 
-// ══════════════════════════════════════════════
-// STATE MANAGEMENT
-// ══════════════════════════════════════════════
 function getWeekKey() {
   const d = new Date(), jan1 = new Date(d.getFullYear(),0,1);
   return `w${d.getFullYear()}_${Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7)}`;
 }
 function deepCopy(v) { return JSON.parse(JSON.stringify(v)); }
 function freshState() {
-  return { 
-    people: deepCopy(DEFAULT_PEOPLE), 
-    checked:{}, 
-    approved:{}, 
-    pending:[], 
-    weekKey:getWeekKey(), 
-    theme:'focus',
-    dinnerEnabled: false,
-    dinnerMenu: ''
-  };
+  return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], weekKey:getWeekKey(), theme:'focus', dinnerEnabled: false, dinnerMenu: '' };
 }
 function normalizeState(input) {
   const base = freshState();
@@ -769,41 +606,37 @@ function normalizeState(input) {
   return normalized;
 }
 function loadState() {
-  try { const r = localStorage.getItem('fb_v4'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem('fb_v5'); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
 function saveState() {
   state = normalizeState(state);
-  try { localStorage.setItem('fb_v4', JSON.stringify(state)); } catch {}
+  try { localStorage.setItem('fb_v5', JSON.stringify(state)); } catch {}
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
     saveTimer = setTimeout(() => {
-      stateRef.set(state).then(() => applySyncStatus('synced')).catch(err => {
-        console.warn('Firebase save failed. Local save still works.', err);
-        applySyncStatus('local');
-      });
+      stateRef.set(state).then(() => applySyncStatus('synced')).catch(() => applySyncStatus('local'));
     }, 120);
   }
 }
+
 let state = loadState();
 state = normalizeState(state);
 
 // ══════════════════════════════════════════════
-// HELPERS & AMBIENT MODE
+// MONITOR RESILIENCE LOOPS & SCREENSAVERS
 // ══════════════════════════════════════════════
 let ambientTimer;
 function resetAmbientTimer() {
   clearTimeout(ambientTimer);
   ambientTimer = setTimeout(() => {
     const now = new Date();
-    const hrs = now.getHours();
-    // Engage ambient screensaver mode if inactive for 5 minutes between 7 PM and 7 AM
-    if (hrs >= 19 || hrs < 7) {
+    if (now.getHours() >= 19 || now.getHours() < 7) {
       document.getElementById('ambient-overlay').style.display = 'flex';
       updateAmbientClock();
     }
-  }, 5 * 60 * 1000); 
+  }, 5 * 60 * 1000); // 5 Minutes
 }
 function wakeKiosk() {
   document.getElementById('ambient-overlay').style.display = 'none';
@@ -819,7 +652,6 @@ function updateAmbientClock() {
   }
 }
 
-// Global visual interaction wrappers
 window.addEventListener('click', resetAmbientTimer);
 window.addEventListener('touchstart', resetAmbientTimer);
 
@@ -850,136 +682,95 @@ function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot');
   const label = document.getElementById('sync-label');
   if (!dot || !label) return;
-  dot.classList.toggle('offline', mode !== 'synced' && mode !== 'saving');
-  if (mode === 'synced') label.textContent = 'Synced family system';
-  else if (mode === 'saving') label.textContent = 'Saving changes';
-  else label.textContent = 'Local mode';
+  dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' ? ' offline' : '');
+  label.textContent = mode === 'synced' ? 'System Synced' : mode === 'saving' ? 'Saving Matrix...' : 'Local Engine Only';
 }
-function showToast(message) {
-  const t = document.getElementById('toast');
-  t.textContent = message;
-  t.classList.add('show');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.remove('show'), 2800);
+function showToast(msg) {
+  const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
 // ══════════════════════════════════════════════
-// ACTIONS & APPS MODULE IMPLEMENTATIONS
+// ENGINE DATA OPERATIONS
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
   if (isApproved(pid)) {
     const p = state.people.find(x => x.id === pid);
-    const chore = p?.chores.find(c => c.id === cid);
-    if (chore?.type === 'weekly') return;
+    if (p?.chores.find(c => c.id === cid)?.type === 'weekly') return;
   }
   if (!state.checked[pid]) state.checked[pid] = [];
   const idx = state.checked[pid].indexOf(cid);
-  
   if (idx === -1) {
-    state.checked[pid].push(cid);
-    try { soundCheck.play(); } catch(e){}
+    state.checked[pid].push(cid); try { soundCheck.play(); }catch(e){}
   } else {
     state.checked[pid].splice(idx,1);
   }
 
   const p = state.people.find(x => x.id === pid);
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
-    const alreadyPending = state.pending.some(x => x.type === 'allowance' && x.personId === pid);
-    if (!alreadyPending) {
+    if (!state.pending.some(x => x.type === 'allowance' && x.personId === pid)) {
       state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
-      showToast(`${p.name} finished weekly chores! 🚀`);
-      // Celebratory Confetti Burst for hitting target
-      confetti({ particleCount: 140, spread: 70, origin: { y: 0.6 } });
+      showToast(`${p.name} completed the payload! 🎉`);
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
     }
   }
   saveState(); renderAll(); updateBadge();
 }
 
-function toggleDinnerMenu(isEnabled) {
-  state.dinnerEnabled = isEnabled;
-  saveState();
-  renderAll();
-}
-
-function saveDinnerMenu() {
-  const input = document.getElementById('dinner-input');
-  state.dinnerMenu = input.value.trim();
-  saveState();
-  renderAll();
-  showToast('Dinner menu plan updated! 🌮');
-}
+function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll(); }
+function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Broad-casted! 🍳'); }
 
 function requestJobApproval(pid,cid) {
-  const p = state.people.find(x => x.id === pid);
-  const c = p?.chores.find(x => x.id === cid);
+  const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid);
   if (!c || isJobApproved(pid,cid)) return;
   if (!isChecked(pid,cid)) { toggleChore(pid,cid); return; }
-  const alreadyPending = state.pending.some(x => x.type === 'job' && x.personId === pid && x.choreId === cid);
-  if (alreadyPending) return;
+  if (state.pending.some(x => x.type === 'job' && x.personId === pid && x.choreId === cid)) return;
   state.pending.push({ id: uid(), type: 'job', personId: pid, choreId: cid, amt: c.amt, name: c.name });
   saveState(); renderAll(); updateBadge();
 }
+
 function approveItem(itemId) {
-  const item = state.pending.find(x => x.id === itemId);
-  if (!item) return;
+  const item = state.pending.find(x => x.id === itemId); if (!item) return;
   if (!state.approved[item.personId]) state.approved[item.personId] = { jobs:{} };
-  if (!state.approved[item.personId].jobs) state.approved[item.personId].jobs = {};
-  
   if (item.type === 'allowance') {
     state.approved[item.personId].allowance = true;
-    const p = state.people.find(x => x.id === item.personId);
-    if (p) p.streak = (p.streak || 0) + 1; // Increment core performance streak
+    const p = state.people.find(x => x.id === item.personId); if(p) p.streak = (p.streak || 0) + 1;
   } else {
     state.approved[item.personId].jobs[item.choreId] = true;
   }
-  
   try { soundApprove.play(); } catch(e){}
   state.pending = state.pending.filter(x => x.id !== itemId);
-  saveState(); renderAll(); updateBadge(); showToast('Approved. Nice work!');
+  saveState(); renderAll(); updateBadge(); showToast('Payload approved.');
 }
+
 function denyItem(itemId) {
-  const item = state.pending.find(x => x.id === itemId);
-  if (!item) return;
+  const item = state.pending.find(x => x.id === itemId); if (!item) return;
   if (item.type === 'allowance') state.checked[item.personId] = [];
   else if (item.choreId && state.checked[item.personId]) state.checked[item.personId] = state.checked[item.personId].filter(x => x !== item.choreId);
   state.pending = state.pending.filter(x => x.id !== itemId);
   saveState(); renderAll(); updateBadge();
 }
-function updateAllowance(pid,val) {
-  const p = state.people.find(x => x.id === pid);
-  if (!p) return;
-  p.weeklyAllowance = parseFloat(val) || 0;
-  saveState(); renderAll();
-}
-function selectType(pid,type) {
-  document.getElementById(`btn-weekly-${pid}`)?.classList.toggle('selected', type === 'weekly');
-  document.getElementById(`btn-job-${pid}`)?.classList.toggle('selected', type === 'job');
-}
+
+function updateAllowance(pid,val) { const p = state.people.find(x => x.id === pid); if(p) p.weeklyAllowance = parseFloat(val) || 0; saveState(); renderAll(); }
+function selectType(pid,type) { document.getElementById(`btn-weekly-${pid}`)?.classList.toggle('selected', type === 'weekly'); document.getElementById(`btn-job-${pid}`)?.classList.toggle('selected', type === 'job'); }
 function getSelectedType(pid) { return document.getElementById(`btn-job-${pid}`)?.classList.contains('selected') ? 'job' : 'weekly'; }
+
 function addChore(pid) {
-  const nameEl = document.getElementById(`inp-name-${pid}`);
-  const amtEl = document.getElementById(`inp-amt-${pid}`);
-  const name = nameEl.value.trim(); if (!name) { nameEl.focus(); return; }
-  const type = getSelectedType(pid);
-  const amt = type === 'job' ? (parseFloat(amtEl.value) || 0) : 0;
+  const nameEl = document.getElementById(`inp-name-${pid}`), amtEl = document.getElementById(`inp-amt-${pid}`);
+  const name = nameEl.value.trim(); if (!name) return;
+  const type = getSelectedType(pid), amt = type === 'job' ? (parseFloat(amtEl.value) || 0) : 0;
   state.people.find(x => x.id === pid).chores.push({ id: uid(), name, amt, type });
   saveState(); renderAll();
 }
+
 function deleteChore(pid,cid) {
-  const p = state.people.find(x => x.id === pid);
-  p.chores = p.chores.filter(c => c.id !== cid);
+  const p = state.people.find(x => x.id === pid); p.chores = p.chores.filter(c => c.id !== cid);
   if (state.checked[pid]) state.checked[pid] = state.checked[pid].filter(x => x !== cid);
   state.pending = state.pending.filter(x => !(x.personId === pid && x.choreId === cid));
   saveState(); renderAll(); updateBadge();
 }
-function undoApproval(pid) {
-  if (state.approved[pid]) {
-    state.approved[pid].allowance = false;
-    const p = state.people.find(x => x.id === pid);
-    if (p && p.streak > 0) p.streak = p.streak - 1;
-  }
-  saveState(); renderAll();
-}
+
+function undoApproval(pid) { if (state.approved[pid]) { state.approved[pid].allowance = false; const p = state.people.find(x => x.id === pid); if(p && p.streak>0) p.streak--; } saveState(); renderAll(); }
 function doReset() {
   const kept = state.people.map(p => ({...p, chores:p.chores.filter(c => c.type === 'weekly')}));
   state = {...freshState(), people: kept, theme: state.theme || 'focus', dinnerEnabled: state.dinnerEnabled, dinnerMenu: state.dinnerMenu};
@@ -987,183 +778,152 @@ function doReset() {
 }
 
 // ══════════════════════════════════════════════
-// RENDER VIEWS
+// RENDER MODULES
 // ══════════════════════════════════════════════
 function renderPersonCard(person, compact=false) {
-  const weekly = person.chores.filter(c => c.type === 'weekly');
-  const jobs = person.chores.filter(c => c.type === 'job');
-  const prog = personProgress(person);
-  const approved = isApproved(person.id);
-  const pendingAllowance = state.pending.some(x => x.type === 'allowance' && x.personId === person.id);
-  const weekDone = weekly.filter(c => isChecked(person.id,c.id)).length;
-  const earned = earnedTotal(person.id);
-  const streakText = person.streak > 0 ? `<span class="streak-badge">🔥 ${person.streak} wk streak</span>` : '';
+  const weekly = person.chores.filter(c => c.type === 'weekly'), jobs = person.chores.filter(c => c.type === 'job');
+  const prog = personProgress(person), approved = isApproved(person.id), pendingAllowance = state.pending.some(x => x.type === 'allowance' && x.personId === person.id);
+  const earned = earnedTotal(person.id), streakText = person.streak > 0 ? `<span class="p-widget-streak">🔥 ${person.streak} Wk Streak</span>` : '';
 
-  let statusHtml = '';
-  if (person.weeklyAllowance > 0) {
-    if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Allowance approved</strong><span>${fmt(person.weeklyAllowance)} added to this week.</span></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Undo</button></div>`;
-    else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Waiting for approval</strong><span>${fmt(person.weeklyAllowance)} is ready for parent review.</span></div></div>`;
-    else if (allWeeklyDone(person.id)) statusHtml = `<div class="status-card ready"><div class="status-icon">★</div><div class="status-main"><strong>Ready for approval</strong><span>All weekly chores are complete.</span></div></div>`;
-    else statusHtml = `<div class="status-card"><div class="status-icon">${person.emoji}</div><div class="status-main"><strong>${weekDone}/${weekly.length} weekly chores</strong><span>Complete all to earn ${fmt(person.weeklyAllowance)}.</span></div></div>`;
+  if (compact) {
+    return `<div class="person-widget" style="--person: var(--${person.id}); --person-soft: var(--${person.id}-soft)">
+      <div class="person-widget-header">
+        <div class="p-widget-avatar">${person.emoji}</div>
+        <div>
+          <div class="p-widget-name">${person.name}</div>
+          <div style="font-size:12px; color:var(--muted)">${prog.done}/${prog.total} Goals Hit · Earned: ${fmt(earned)}</div>
+        </div>
+        ${streakText}
+      </div>
+      <div class="progress-inline-bar"><div class="progress-inline-fill" style="width:${prog.pct}%"></div></div>
+    </div>`;
   }
 
-  const weeklyHtml = compact ? '' : `${weekly.length ? '<div class="list-label">Weekly chores</div>' : ''}${weekly.map(c => {
-    const done = isChecked(person.id,c.id);
-    const locked = approved && done;
+  // Large Extended Mode Panel
+  let statusHtml = '';
+  if (person.weeklyAllowance > 0) {
+    if (approved) statusHtml = `<div class="status-card paid"><div class="status-icon">✓</div><div class="status-main"><strong>Disbursed</strong><span>Allowance fully authorized.</span></div><button class="pill-btn" onclick="requirePin('unapprove','${person.id}')">Rollback</button></div>`;
+    else if (pendingAllowance) statusHtml = `<div class="status-card pending"><div class="status-icon">•</div><div class="status-main"><strong>Awaiting Signature</strong><span>Ready for parental review.</span></div></div>`;
+    else if (allWeeklyDone(person.id)) statusHtml = `<div class="status-card ready"><div class="status-icon">★</div><div class="status-main"><strong>Ready</strong><span>Core weekly chores completed.</span></div></div>`;
+  }
+
+  const weeklyHtml = `${weekly.map(c => {
+    const done = isChecked(person.id,c.id), locked = approved && done;
     return `<div class="chore-row ${done?'done':''}" onclick="${locked ? '' : `toggleChore('${person.id}','${c.id}')`}"><div class="chk" style="--person:var(--${person.id})">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div></div></div>`;
   }).join('')}`;
 
-  const jobsHtml = compact ? '' : `${jobs.length ? '<div class="list-label">One-time jobs</div>' : ''}${jobs.map(c => {
-    const checked = isChecked(person.id,c.id);
-    const jpending = state.pending.some(x => x.type === 'job' && x.personId === person.id && x.choreId === c.id);
-    const japproved = isJobApproved(person.id,c.id);
-    let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">pending</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
+  const jobsHtml = `${jobs.map(c => {
+    const checked = isChecked(person.id,c.id), jpending = state.pending.some(x => x.type === 'job' && x.personId === person.id && x.choreId === c.id), japproved = isJobApproved(person.id,c.id);
+    let amtLabel = japproved ? `<span class="job-amt paid-out">$${c.amt.toFixed(2)}</span>` : jpending ? `<span class="job-amt pending-pay">Pending</span>` : `<span class="job-amt">$${c.amt.toFixed(2)}</span>`;
     const clickFn = checked && !jpending && !japproved ? `requestJobApproval('${person.id}','${c.id}')` : (!checked ? `toggleChore('${person.id}','${c.id}')` : '');
     return `<div class="chore-row ${checked?'done':''}" onclick="${clickFn}"><div class="chk" style="--person:var(--${person.id})">${checked?'✓':''}</div><div class="chore-name">${c.name}</div>${amtLabel}</div>`;
   }).join('')}`;
 
-  return `<article class="person-card ${person.cls}">
-    <div class="person-top">
-      <div class="avatar">${person.emoji}</div>
-      <div><div class="person-name">${person.name}${streakText}</div>${person.age ? `<div class="person-age">${person.age}</div>` : ''}</div>
-      <div class="earned"><div class="earned-amt">${earned > 0 ? '$'+earned.toFixed(2) : '—'}</div><div class="earned-label">earned</div></div>
+  return `<div class="card pad" style="border-top: 4px solid var(--${person.id})">
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px;">
+      <div class="avatar" style="font-size:32px">${person.emoji}</div>
+      <div><div class="p-widget-name" style="font-size:20px">${person.name}</div><div style="font-size:12px; color:var(--muted)">Base Allowance: ${fmt(person.weeklyAllowance)} ${person.age?'· '+person.age:''}</div></div>
+      <div style="margin-left:auto; text-align:right"><div style="font-size:24px; font-weight:800; color:var(--text-strong)">${fmt(earned)}</div><div style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Earned Balance</div></div>
     </div>
-    <div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:${prog.pct}%"></div></div><div class="progress-label"><span>${prog.done} of ${prog.total} complete</span><span>${prog.pct}%</span></div></div>
     ${statusHtml}
-    <div class="chore-list">${weeklyHtml}${jobsHtml}</div>
-  </article>`;
+    <div class="list-label">Core Track</div>${weeklyHtml}
+    ${jobs.length ? '<div class="list-label" style="margin-top:14px">Premium Ventures</div>' : ''}${jobsHtml}
+  </div>`;
 }
 
 function renderQuickStats() {
-  const totalChores = state.people.reduce((sum,p) => sum + p.chores.length, 0);
-  const doneChores = state.people.reduce((sum,p) => sum + p.chores.filter(c => isChecked(p.id,c.id)).length, 0);
-  const earned = state.people.reduce((sum,p) => sum + earnedTotal(p.id), 0);
+  const total = state.people.reduce((sum,p) => sum + p.chores.length, 0), done = state.people.reduce((sum,p) => sum + p.chores.filter(c => isChecked(p.id,c.id)).length, 0), earned = state.people.reduce((sum,p) => sum + earnedTotal(p.id), 0);
   document.getElementById('quick-stats').innerHTML = `
-    <div class="stat"><div class="stat-label">Chores</div><div class="stat-value">${doneChores}/${totalChores}</div><div class="stat-note">complete this week</div></div>
-    <div class="stat"><div class="stat-label">Approvals</div><div class="stat-value">${pendingCount()}</div><div class="stat-note">waiting for parent review</div></div>
-    <div class="stat"><div class="stat-label">Earned</div><div class="stat-value">${earned > 0 ? '$'+earned.toFixed(0) : '—'}</div><div class="stat-note">approved so far</div></div>`;
+    <div class="stat-mini"><div class="stat-m-label">Chores</div><div class="stat-m-val">${done}/${total}</div></div>
+    <div class="stat-mini"><div class="stat-m-label">Pending</div><div class="stat-m-val">${pendingCount()}</div></div>
+    <div class="stat-mini"><div class="stat-m-label">Disbursed</div><div class="stat-m-val">$${earned.toFixed(0)}</div></div>`;
 }
+
 function renderFocusList() {
-  const kids = state.people.filter(p => p.weeklyAllowance > 0);
-  const lines = kids.map(p => {
-    const weekly = p.chores.filter(c => c.type === 'weekly');
-    const next = weekly.find(c => !isChecked(p.id,c.id));
-    const text = next ? `${p.name}: ${next.name}` : `${p.name}: weekly chores complete`;
-    return `<div class="chore-row" style="cursor:default; margin-bottom: 6px; min-height:48px; padding:8px 12px;"><div class="avatar" style="width:36px;height:36px;border-radius:10px;font-size:18px">${p.emoji}</div><div class="chore-name" style="font-size:14px;">${text}</div><div>${next ? '' : '★'}</div></div>`;
+  const lines = state.people.filter(p => p.weeklyAllowance > 0).map(p => {
+    const next = p.chores.filter(c => c.type === 'weekly').find(c => !isChecked(p.id,c.id));
+    return `<div class="chore-row" style="cursor:default; min-height:50px; padding:8px 12px; margin-bottom:6px;"><div class="chore-name" style="font-size:14px">${p.name}: <span style="font-weight:400; color:var(--text)">${next ? next.name : 'All sets clear ✓'}</span></div></div>`;
   }).join('');
-  document.getElementById('focus-list').innerHTML = lines || '<div class="empty-state">No focus items yet.</div>';
+  document.getElementById('focus-list').innerHTML = lines || '<div class="empty-state">No track lines active.</div>';
 }
+
 function renderPeople() {
   document.getElementById('home-people').innerHTML = state.people.filter(p => p.weeklyAllowance > 0).map(p => renderPersonCard(p, true)).join('');
   document.getElementById('chores-people').innerHTML = state.people.map(p => renderPersonCard(p, false)).join('');
 }
+
 function renderApprovals() {
   const container = document.getElementById('approvals-container');
-  if (state.pending.length === 0) {
-    container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>No pending approvals.</div></div>`;
-    return;
-  }
+  if (state.pending.length === 0) { container.innerHTML = `<div class="card"><div class="empty-state"><div class="big">✓</div>No payloads awaiting parent signature.</div></div>`; return; }
   container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
-    const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'Unknown', cls:'card-dad'};
-    const desc = item.type === 'allowance' ? `Completed all weekly chores — requesting ${fmt(item.amt)} allowance` : `Completed job “${item.name}” — requesting ${fmt(item.amt)}`;
-    return `<div class="approval-item"><div class="avatar ${p.cls}">${p.emoji}</div><div><div class="appr-who">${p.name}</div><div class="appr-what">${desc}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Deny</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Approve</button></div></div>`;
+    const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'User'};
+    return `<div class="approval-item"><div><div style="font-size:24px">${p.emoji}</div></div><div><div class="appr-who">${p.name}</div><div class="appr-what">${item.type==='allowance'?'Core completion authorization payout':'Premium objective tracking payout: '+item.name}</div></div><div class="appr-amt">${fmt(item.amt)}</div><div class="appr-actions"><button class="pill-btn" onclick="denyItem('${item.id}')">Reject</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Sign Off</button></div></div>`;
   }).join('')}</div>`;
 }
+
 function renderManage() {
-  const grid = document.getElementById('manage-grid');
-  grid.innerHTML = state.people.map(person => {
-    const weekly = person.chores.filter(c => c.type === 'weekly');
-    const jobs = person.chores.filter(c => c.type === 'job');
-    return `<div class="manage-card ${person.cls}"><div class="manage-head"><div class="avatar">${person.emoji}</div><div class="manage-name">${person.name}</div></div><div class="manage-body">
-      <div class="field-row"><label>Weekly allowance</label><input class="inp" type="number" min="0" step="0.50" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
-      ${weekly.length ? '<div class="list-label">Weekly chores</div>' : ''}
-      ${weekly.map(c => `<div class="manage-chore-row"><span class="mcname">${c.name}</span><span class="mctype">weekly</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
-      ${jobs.length ? '<div class="list-label">One-time jobs</div>' : ''}
-      ${jobs.map(c => `<div class="manage-chore-row"><span class="mcname">${c.name}</span><span class="mctype">$${c.amt.toFixed(2)}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
-      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Chore or job name" /><div class="add-row"><input class="inp" id="inp-amt-${person.id}" placeholder="$" type="number" min="0" step="0.50" /><div class="type-row"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Weekly</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Job</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Add item</button></div>
-    </div></div>`;
+  document.getElementById('manage-grid').innerHTML = state.people.map(person => {
+    return `<div class="card pad">
+      <div class="p-widget-name" style="font-size:18px; margin-bottom:14px;">${person.emoji} Adjust Parameters: ${person.name}</div>
+      <div class="field-row"><label>Core Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
+      <div class="list-label">Operational Manifest</div>
+      ${person.chores.map(c => `<div class="manage-chore-row"><span>${c.name}</span><span class="mctype">${c.type==='job'?'$'+c.amt.toFixed(2):'weekly'}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
+      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Objective Title" /><div style="display:flex; gap:10px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="Value ($)" style="width:100px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Weekly</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Premium</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Inject Objective</button></div>
+    </div>`;
   }).join('');
-  
-  // Set explicit states for dinner controls inside configurations panel
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled;
   document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none';
   document.getElementById('dinner-input').value = state.dinnerMenu;
 }
-function updateBadge() {
-  const n = pendingCount();
-  const b = document.getElementById('appr-badge');
-  b.style.display = n > 0 ? 'inline-flex' : 'none';
-  b.textContent = n;
-}
+
+function updateBadge() { const n = pendingCount(); const b = document.getElementById('appr-badge'); b.style.display = n > 0 ? 'inline-flex' : 'none'; b.textContent = n; }
+
 function renderAll() {
   state = normalizeState(state);
   renderQuickStats(); renderFocusList(); renderPeople(); renderApprovals(); renderManage(); updateBadge(); applyTheme();
-  
-  // Conditionally process ambient interface features
-  const dinnerWidget = document.getElementById('home-dinner-card');
-  if(state.dinnerEnabled && state.dinnerMenu) {
-    dinnerWidget.style.display = 'block';
-    document.getElementById('home-dinner-text').textContent = state.dinnerMenu;
-  } else {
-    dinnerWidget.style.display = 'none';
-  }
+  const dinnerCard = document.getElementById('home-dinner-card');
+  if(state.dinnerEnabled && state.dinnerMenu) { dinnerCard.style.display = 'block'; document.getElementById('home-dinner-text').textContent = state.dinnerMenu; } else { dinnerCard.style.display = 'none'; }
 }
 
 // ══════════════════════════════════════════════
-// UI NAVIGATION & INTERACTIVE ENGINE
+// SWITCH INTERFACES & SECURE ENTRY
 // ══════════════════════════════════════════════
 let manageUnlocked = false;
 function switchTab(name) {
   if (name === 'manage' && !manageUnlocked) { requirePin('manage'); return; }
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-  const order = ['home','chores','approvals','calendar','manage'];
-  const idx = order.indexOf(name);
-  if (idx >= 0) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('panel-' + name).classList.add('active');
-  if (name === 'approvals') renderApprovals();
-  if (name === 'manage') renderManage();
+  document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', ['home','chores','approvals','calendar','manage'][i] === name));
+  document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + name));
+  if (name === 'approvals') renderApprovals(); if (name === 'manage') renderManage();
 }
-function toggleTheme() {
-  state.theme = state.theme === 'classic' ? 'focus' : 'classic';
-  saveState(); applyTheme();
-}
+function toggleTheme() { state.theme = state.theme === 'classic' ? 'focus' : 'classic'; saveState(); applyTheme(); }
 function applyTheme() {
-  document.body.classList.toggle('theme-focus', state.theme !== 'classic');
-  document.getElementById('theme-btn').textContent = state.theme === 'classic' ? 'Focus mode' : 'Day mode';
+  document.body.className = state.theme !== 'classic' ? 'theme-focus' : '';
+  document.getElementById('theme-btn').textContent = state.theme === 'classic' ? 'Focus Light' : 'Kiosk Dark';
 }
 function setupCalendar() {
-  const agenda = GOOGLE_CAL_URL + '&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTabs=0&showTz=0&wkst=1&bgcolor=%23ffffff';
-  const week = GOOGLE_CAL_URL + '&mode=WEEK&showTitle=0&showPrint=0&showCalendars=0&showTabs=1&showTz=0&wkst=1&bgcolor=%23ffffff';
-  document.getElementById('cal-agenda').src = agenda;
-  document.getElementById('cal-full').src = week;
+  document.getElementById('cal-agenda').src = GOOGLE_CAL_URL + '&mode=AGENDA&showTitle=0&showPrint=0&showCalendars=0&showTabs=0&showTz=0&wkst=1&bgcolor=%23ffffff';
+  document.getElementById('cal-full').src = GOOGLE_CAL_URL + '&mode=WEEK&showTitle=0&showPrint=0&showCalendars=0&showTabs=0&showTz=0&wkst=1&bgcolor=%23ffffff';
 }
 function updateClock() {
   const now = new Date(), h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0');
   document.getElementById('clock').textContent = `${h%12||12}:${m}`;
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('date').textContent = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
   const s = new Date(now); s.setDate(now.getDate()-now.getDay()); const e = new Date(s); e.setDate(s.getDate()+6);
-  const weekEl = document.getElementById('week-label');
-  if (weekEl) weekEl.textContent = `Week of ${months[s.getMonth()]} ${s.getDate()} – ${months[e.getMonth()]} ${e.getDate()}`;
+  const weekEl = document.getElementById('week-label'); if (weekEl) weekEl.textContent = `${months[s.getMonth()]} ${s.getDate()} – ${months[e.getMonth()]} ${e.getDate()}`;
   updateAmbientClock();
 }
 
-// PIN SYSTEM CONTROLLER
 let pinBuffer = '', pinAction = null, pinMeta = null;
 function requirePin(action, meta) {
-  pinAction = action; pinMeta = meta; pinBuffer = ''; updatePinDots();
-  document.getElementById('pin-error').textContent = '';
-  const descs = { reset:'Enter your PIN to start a new week.', unapprove:'Enter your PIN to undo this approval.', manage:'Enter your PIN to manage chores.' };
-  document.getElementById('pin-desc').textContent = descs[action] || 'Enter your PIN.';
+  pinAction = action; pinMeta = meta; pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-desc').textContent = action==='reset'?'Security code required to wipe logs':'Security authentication required';
   document.getElementById('pin-modal').classList.add('open');
 }
 function pinKey(k) {
   if (k === 'cancel') { closeModal('pin-modal'); return; }
   if (k === 'back') { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); return; }
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += k; updatePinDots();
+  if (pinBuffer.length >= 4) return; pinBuffer += k; updatePinDots();
   if (pinBuffer.length === 4) setTimeout(checkPin, 120);
 }
 function updatePinDots() { for (let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.toggle('filled', i < pinBuffer.length); }
@@ -1174,42 +934,21 @@ function checkPin() {
     if (pinAction === 'unapprove') undoApproval(pinMeta);
     if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); }
   } else {
-    document.getElementById('pin-error').textContent = 'Incorrect PIN, try again.'; pinBuffer = ''; updatePinDots();
+    document.getElementById('pin-error').textContent = 'Security authorization failed.'; pinBuffer = ''; updatePinDots();
   }
 }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-// FIREBASE SYNC ENGINE
 function startCloudSync() {
   if (!stateRef) { applySyncStatus('local'); return; }
   stateRef.on('value', snapshot => {
-    const cloudState = snapshot.val();
-    if (!cloudState && !hasLoadedCloudOnce) {
-      hasLoadedCloudOnce = true;
-      saveState();
-      return;
-    }
-    if (cloudState) {
-      hasLoadedCloudOnce = true;
-      isLoadingFromCloud = true;
-      state = normalizeState(cloudState);
-      try { localStorage.setItem('fb_v4', JSON.stringify(state)); } catch {}
-      renderAll();
-      isLoadingFromCloud = false;
-      applySyncStatus('synced');
-    }
-  }, err => {
-    console.warn('Firebase read failed. Local mode active.', err);
-    applySyncStatus('local');
-  });
+    const cloudState = snapshot.val(); if (!cloudState && !hasLoadedCloudOnce) { hasLoadedCloudOnce = true; saveState(); return; }
+    if (cloudState) { hasLoadedCloudOnce = true; isLoadingFromCloud = true; state = normalizeState(cloudState); renderAll(); isLoadingFromCloud = false; applySyncStatus('synced'); }
+  }, () => applySyncStatus('local'));
 }
 
-// RUN INITIALIZATIONS
-setupCalendar();
-updateClock(); setInterval(updateClock, 15000);
-renderAll();
-startCloudSync();
-resetAmbientTimer();
+// INITIALIZE RUNTIME
+setupCalendar(); updateClock(); setInterval(updateClock, 15000); renderAll(); startCloudSync(); resetAmbientTimer();
 </script>
 </body>
 </html>
