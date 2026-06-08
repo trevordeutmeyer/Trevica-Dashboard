@@ -234,12 +234,11 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   <header class="topbar">
     <div class="topbar-row">
       <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">System Active</span></div>
+        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Loading</span></div>
         <h1 class="main-title-headline">Deutmeyer Family Dashboard</h1>
       </div>
       
-      <!-- Premium Integrated Center Dock -->
-      <div class="dock-container" aria-label="Console navigation">
+      <div class="dock-container" aria-label="Dashboard navigation">
         <button class="nav-tab active" onclick="switchTab('home')">Today</button>
         <button class="nav-tab" onclick="switchTab('chores')">All Chores</button>
         <button class="nav-tab" onclick="switchTab('approvals')">Approvals <span class="badge" id="appr-badge" style="display:none">0</span></button>
@@ -322,8 +321,8 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <section class="panel" id="panel-history">
       <div class="panel-scroll-frame">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Completions History Activity Trail</div>
-          <button class="pill-btn danger" onclick="clearHistoryLogs()">Clear Log History</button>
+          <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Recent Activity</div>
+          <button class="pill-btn danger" onclick="clearHistoryLogs()">Clear History</button>
         </div>
         <div id="history-logs-container"></div>
       </div>
@@ -333,34 +332,34 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <section class="panel" id="panel-manage">
       <div class="panel-scroll-frame">
         <div class="card pad" style="margin-bottom:16px;">
-          <div class="card-main-title" style="margin-bottom:10px">Dashboard Customizations</div>
+          <div class="card-main-title" style="margin-bottom:10px">Dashboard Settings</div>
           <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer; font-size:14px; color:var(--text-strong)">
-            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:18px; height:18px;"> Enable Active Kitchen Dinner Widget
+            <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:18px; height:18px;"> Show dinner plan
           </label>
           <div id="manage-dinner-box" style="margin-top:12px; display:none;">
-            <input type="text" id="dinner-input" class="inp" placeholder="Type menu layout..." style="max-width:320px; display:inline-block; margin-right:10px;" />
-            <button class="pill-btn primary" onclick="saveDinnerMenu()">Publish Plan</button>
+            <input type="text" id="dinner-input" class="inp" placeholder="What is for dinner?" style="max-width:320px; display:inline-block; margin-right:10px;" />
+            <button class="pill-btn primary" onclick="saveDinnerMenu()">Save Dinner</button>
           </div>
         </div>
         <div class="manage-grid" id="manage-grid"></div>
-        <div style="margin-top:24px; text-align:right;"><button class="pill-btn danger" onclick="requirePin('reset')">Start Brand New Week Loop</button></div>
+        <div style="margin-top:24px; text-align:right;"><button class="pill-btn danger" onclick="requirePin('reset')">Start New Week</button></div>
       </div>
     </section>
 
   </main>
 </div>
 
-<!-- On-The-Fly Pop-up Injection Menu Tray -->
+<!-- Quick task modal -->
 <div class="overlay-glass-container" id="fast-task-overlay" onclick="closeFastTaskOverlay(event)">
   <div class="overlay-card">
-    <h3 style="margin:0 0 14px; font-size:18px; color:var(--text-strong)">⚡ Fast Task Injection</h3>
-    <input type="text" id="front-task-input" class="inp" placeholder="Type item text name..." style="margin-bottom:12px;" />
+    <h3 style="margin:0 0 14px; font-size:18px; color:var(--text-strong)">Add a Quick Task</h3>
+    <input type="text" id="front-task-input" class="inp" placeholder="Task name" style="margin-bottom:12px;" />
     <select id="front-assignee-select" class="inp" style="margin-bottom:16px; font-weight:700;">
-      <option value="global_todo">📌 Shared Shared Family List</option>
-      <option value="jules">⭐ Kid Track: Jules</option>
-      <option value="henry">🚀 Kid Track: Henry</option>
-      <option value="dad">👨 Adult Track: Dad</option>
-      <option value="mom">👩 Adult Track: Jessica</option>
+      <option value="global_todo">📌 Shared Family List</option>
+      <option value="jules">⭐ Jules</option>
+      <option value="henry">🚀 Henry</option>
+      <option value="dad">👨 Dad</option>
+      <option value="mom">👩 Jessica</option>
     </select>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button class="pill-btn" onclick="document.getElementById('fast-task-overlay').classList.remove('open')">Cancel</button>
@@ -369,7 +368,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   </div>
 </div>
 
-<!-- Secure Parental Override PIN System Overlay -->
+<!-- Parent PIN modal -->
 <div class="modal-bg" id="pin-modal">
   <div class="modal">
     <h3 style="margin:0 0 6px; color:var(--text-strong)">Parent Security Code</h3>
@@ -388,7 +387,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 <div class="modal-bg" id="reset-modal">
   <div class="modal">
-    <h3 style="color:var(--text-strong)">Purge Universal Weekly Metrics?</h3>
+    <h3 style="color:var(--text-strong)">Start a new week?</h3>
     <div class="modal-btns" style="display:flex; gap:10px; margin-top:14px;">
       <button class="pill-btn" onclick="closeModal('reset-modal')">Cancel</button>
       <button class="pill-btn danger" onclick="doReset()">Confirm Reset</button>
@@ -432,64 +431,340 @@ function playTone(f, t, d, v) {
 function chimeCheck() { playTone(659.25, 'sine', 0.12, 0.12); setTimeout(() => playTone(880.00, 'sine', 0.22, 0.12), 60); }
 function chimeCascade() { playTone(523.25, 'triangle', 0.08, 0.1); setTimeout(() => playTone(783.99, 'triangle', 0.25, 0.12), 80); }
 
-let stateRef = null; let firebaseOnline = false; let isLoadingFromCloud = false; let hasLoadedCloudOnce = false; let saveTimer = null;
+const STATE_SCHEMA_VERSION = 1;
+const FIREBASE_STATE_PATH = 'familyDashboard/state';
+const LOCAL_STATE_KEY = 'fb_v11';
+const CLIENT_ID_KEY = 'trevica_client_id';
+const MAX_ACTIVITY_ITEMS = 80;
 
-try {
-  firebase.initializeApp(firebaseConfig); stateRef = firebase.database().ref('familyDashboard/state'); firebaseOnline = true;
-} catch (err) { console.warn('Bypassed sync integration framework.', err); }
+const DEFAULT_HOUSEHOLD = {
+  id: 'deutmeyer',
+  name: 'Deutmeyer Family',
+  timezone: 'America/Denver',
+  dashboardTitle: 'Deutmeyer Family Dashboard',
+  primaryDevice: 'Surface Pro kiosk'
+};
+
+function uid(prefix = 'id') {
+  const random = window.crypto?.randomUUID ? window.crypto.randomUUID().replace(/-/g, '').slice(0, 12) : Math.random().toString(36).slice(2, 11);
+  return `${prefix}_${random}`;
+}
+
+function getClientId() {
+  try {
+    let id = localStorage.getItem(CLIENT_ID_KEY);
+    if (!id) {
+      id = uid('client');
+      localStorage.setItem(CLIENT_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return uid('session');
+  }
+}
+
+const clientId = getClientId();
+let stateRef = null;
+let connectedRef = null;
+let firebaseOnline = false;
+let isLoadingFromCloud = false;
+let hasLoadedCloudOnce = false;
+let saveTimer = null;
+let lastLocalWriteId = null;
 
 const DEFAULT_PEOPLE = [
-  { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', weeklyAllowance:0, streak:0, chores:[
-    { id:'d1', name:'Take out trash', type:'weekly' },
-    { id:'d2', name:'Mow the lawn', type:'weekly' },
-    { id:'d3', name:'Dishes after dinner', type:'weekly' },
+  { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', role:'parent', weeklyAllowance:0, streak:0, chores:[
+    { id:'d1', name:'Take out trash', type:'weekly', amt:0 },
+    { id:'d2', name:'Mow the lawn', type:'weekly', amt:0 },
+    { id:'d3', name:'Dishes after dinner', type:'weekly', amt:0 },
   ]},
-  { id:'mom', name:'Jessica', emoji:'👩', cls:'card-mom', weeklyAllowance:0, streak:0, chores:[
-    { id:'m1', name:'Grocery run', type:'weekly' },
-    { id:'m2', name:'Laundry', type:'weekly' },
-    { id:'m3', name:'Water the plants', type:'weekly' },
+  { id:'mom', name:'Jessica', emoji:'👩', cls:'card-mom', role:'parent', weeklyAllowance:0, streak:0, chores:[
+    { id:'m1', name:'Grocery run', type:'weekly', amt:0 },
+    { id:'m2', name:'Laundry', type:'weekly', amt:0 },
+    { id:'m3', name:'Water the plants', type:'weekly', amt:0 },
   ]},
-  { id:'jules', name:'Jules', emoji:'⭐', cls:'card-jules', age:'Age 9', weeklyAllowance:5.00, streak:3, chores:[
-    { id:'j1', name:'Make bed', type:'weekly' },
-    { id:'j2', name:'Feed the pet', type:'weekly' },
-    { id:'j3', name:'Set the table', type:'weekly' },
-    { id:'j4', name:'Clean room', type:'weekly' },
-    { id:'j5', name:'Homework done', type:'weekly' },
+  { id:'jules', name:'Jules', emoji:'⭐', cls:'card-jules', role:'child', age:'Age 9', weeklyAllowance:5.00, streak:3, chores:[
+    { id:'j1', name:'Make bed', type:'weekly', amt:0 },
+    { id:'j2', name:'Feed the pet', type:'weekly', amt:0 },
+    { id:'j3', name:'Set the table', type:'weekly', amt:0 },
+    { id:'j4', name:'Clean room', type:'weekly', amt:0 },
+    { id:'j5', name:'Homework done', type:'weekly', amt:0 },
   ]},
-  { id:'henry', name:'Henry', emoji:'🚀', cls:'card-henry', age:'Age 11', weeklyAllowance:7.00, streak:5, chores:[
-    { id:'h1', name:'Make bed', type:'weekly' },
-    { id:'h2', name:'Empty dishwasher', type:'weekly' },
-    { id:'h3', name:'Vacuum living room', type:'weekly' },
-    { id:'h4', name:'Take out recycling', type:'weekly' },
-    { id:'h5', name:'Homework done', type:'weekly' },
+  { id:'henry', name:'Henry', emoji:'🚀', cls:'card-henry', role:'child', age:'Age 11', weeklyAllowance:7.00, streak:5, chores:[
+    { id:'h1', name:'Make bed', type:'weekly', amt:0 },
+    { id:'h2', name:'Empty dishwasher', type:'weekly', amt:0 },
+    { id:'h3', name:'Vacuum living room', type:'weekly', amt:0 },
+    { id:'h4', name:'Take out recycling', type:'weekly', amt:0 },
+    { id:'h5', name:'Homework done', type:'weekly', amt:0 },
   ]},
 ];
 
+try {
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  stateRef = database.ref(FIREBASE_STATE_PATH);
+  connectedRef = database.ref('.info/connected');
+  firebaseOnline = true;
+} catch (err) { console.warn('Bypassed sync integration framework.', err); }
+
 function getWeekKey() { const d = new Date(), j1 = new Date(d.getFullYear(),0,1); return `w${d.getFullYear()}_${Math.ceil(((d-j1)/86400000+j1.getDay()+1)/7)}`; }
 function deepCopy(v) { return JSON.parse(JSON.stringify(v)); }
-function freshState() { return { people: deepCopy(DEFAULT_PEOPLE), checked:{}, approved:{}, pending:[], logs:[], globalTodos:[], weekKey:getWeekKey(), dinnerEnabled: false, dinnerMenu: '' }; }
+
+function cleanText(value, fallback = '') {
+  const text = value === undefined || value === null ? '' : String(value).trim();
+  return text || fallback;
+}
+
+function safeKey(value, fallback) {
+  const key = cleanText(value).replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
+  return key || fallback;
+}
+
+function toMoney(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch]));
+}
+
+function formatActivityTime(date = new Date()) {
+  return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function normalizeChore(chore, fallbackId) {
+  const source = chore && typeof chore === 'object' ? chore : {};
+  const type = source.type === 'job' ? 'job' : 'weekly';
+  return {
+    ...source,
+    id: safeKey(source.id, fallbackId),
+    name: cleanText(source.name, 'Untitled task'),
+    type,
+    amt: type === 'job' ? toMoney(source.amt) : 0
+  };
+}
+
+function normalizePerson(person, index) {
+  const source = person && typeof person === 'object' ? person : {};
+  const fallback = DEFAULT_PEOPLE[index] || {};
+  const id = safeKey(source.id || fallback.id, `person_${index + 1}`);
+  const choresSource = Array.isArray(source.chores) ? source.chores : (Array.isArray(fallback.chores) ? fallback.chores : []);
+  return {
+    ...fallback,
+    ...source,
+    id,
+    name: cleanText(source.name || fallback.name, 'Family member'),
+    emoji: cleanText(source.emoji || fallback.emoji, '•'),
+    cls: cleanText(source.cls || fallback.cls, `card-${id}`),
+    role: cleanText(source.role || fallback.role, toMoney(source.weeklyAllowance ?? fallback.weeklyAllowance) > 0 ? 'child' : 'parent'),
+    weeklyAllowance: toMoney(source.weeklyAllowance ?? fallback.weeklyAllowance),
+    streak: Math.max(0, parseInt(source.streak ?? fallback.streak ?? 0, 10) || 0),
+    chores: choresSource.map((c, choreIndex) => normalizeChore(c, `${id}_task_${choreIndex + 1}`))
+  };
+}
+
+function normalizeChecked(checked) {
+  const result = {};
+  if (!checked || typeof checked !== 'object' || Array.isArray(checked)) return result;
+  Object.entries(checked).forEach(([personId, choreIds]) => {
+    if (!Array.isArray(choreIds)) return;
+    result[safeKey(personId, 'person')] = choreIds.map((id, index) => safeKey(id, `task_${index + 1}`));
+  });
+  return result;
+}
+
+function normalizeApproved(approved) {
+  const result = {};
+  if (!approved || typeof approved !== 'object' || Array.isArray(approved)) return result;
+  Object.entries(approved).forEach(([personId, record]) => {
+    const source = record && typeof record === 'object' ? record : {};
+    const jobs = source.jobs && typeof source.jobs === 'object' && !Array.isArray(source.jobs) ? source.jobs : {};
+    result[safeKey(personId, 'person')] = {
+      allowance: source.allowance === true,
+      jobs: Object.entries(jobs).reduce((acc, [choreId, done]) => {
+        acc[safeKey(choreId, 'task')] = done === true;
+        return acc;
+      }, {})
+    };
+  });
+  return result;
+}
+
+function normalizePending(pending) {
+  if (!Array.isArray(pending)) return [];
+  return pending.map((item, index) => {
+    const source = item && typeof item === 'object' ? item : {};
+    const type = source.type === 'job' ? 'job' : 'allowance';
+    const normalized = {
+      ...source,
+      id: safeKey(source.id, `pending_${index + 1}`),
+      type,
+      personId: safeKey(source.personId, 'person'),
+      amt: toMoney(source.amt)
+    };
+    if (source.choreId) normalized.choreId = safeKey(source.choreId, 'task');
+    return normalized;
+  });
+}
+
+function normalizeTodo(todo, index) {
+  const source = todo && typeof todo === 'object' ? todo : {};
+  return {
+    ...source,
+    id: safeKey(source.id, `todo_${index + 1}`),
+    name: cleanText(source.name, 'Shared task'),
+    done: source.done === true
+  };
+}
+
+function normalizeSettings(input) {
+  const settings = input.settings && typeof input.settings === 'object' ? input.settings : {};
+  return {
+    dinnerEnabled: typeof settings.dinnerEnabled === 'boolean' ? settings.dinnerEnabled : input.dinnerEnabled === true,
+    dinnerMenu: cleanText(settings.dinnerMenu ?? input.dinnerMenu)
+  };
+}
+
+function normalizeHousehold(input) {
+  const source = input && typeof input === 'object' ? input : {};
+  return {
+    ...DEFAULT_HOUSEHOLD,
+    ...source,
+    id: safeKey(source.id || DEFAULT_HOUSEHOLD.id, DEFAULT_HOUSEHOLD.id),
+    name: cleanText(source.name || DEFAULT_HOUSEHOLD.name, DEFAULT_HOUSEHOLD.name),
+    timezone: cleanText(source.timezone || DEFAULT_HOUSEHOLD.timezone, DEFAULT_HOUSEHOLD.timezone),
+    dashboardTitle: cleanText(source.dashboardTitle || DEFAULT_HOUSEHOLD.dashboardTitle, DEFAULT_HOUSEHOLD.dashboardTitle)
+  };
+}
+
+function normalizeActivityEntry(item, index) {
+  const source = item && typeof item === 'object' ? item : { message: item };
+  const message = cleanText(source.message || source.msg);
+  if (!message) return null;
+  const parsedDate = source.createdAt ? new Date(source.createdAt) : (source.time ? new Date(source.time) : new Date());
+  const validDate = Number.isFinite(parsedDate.getTime()) ? parsedDate : new Date();
+  const entry = {
+    id: safeKey(source.id, `activity_${index + 1}`),
+    type: cleanText(source.type, 'legacy'),
+    action: cleanText(source.action, 'note'),
+    message,
+    msg: message,
+    time: cleanText(source.time, formatActivityTime(validDate)),
+    createdAt: validDate.toISOString(),
+    createdAtMs: Number.isFinite(Number(source.createdAtMs)) ? Number(source.createdAtMs) : validDate.getTime(),
+    weekKey: cleanText(source.weekKey, getWeekKey())
+  };
+  ['actorId', 'personId', 'targetType', 'targetId', 'clientId'].forEach(key => {
+    if (source[key]) entry[key] = cleanText(source[key]);
+  });
+  if (Number.isFinite(Number(source.amount))) entry.amount = Number(source.amount);
+  if (source.metadata && typeof source.metadata === 'object' && !Array.isArray(source.metadata)) entry.metadata = deepCopy(source.metadata);
+  return entry;
+}
+
+function normalizeActivity(activity) {
+  if (!Array.isArray(activity)) return [];
+  return activity
+    .map((item, index) => normalizeActivityEntry(item, index))
+    .filter(Boolean)
+    .sort((a, b) => b.createdAtMs - a.createdAtMs)
+    .slice(0, MAX_ACTIVITY_ITEMS);
+}
+
+function freshState() {
+  const now = new Date();
+  const meta = {
+    createdAt: now.toISOString(),
+    createdAtMs: now.getTime(),
+    createdBy: clientId,
+    updatedAt: now.toISOString(),
+    updatedAtMs: now.getTime(),
+    updatedBy: clientId,
+    writeId: uid('seed')
+  };
+  return {
+    schemaVersion: STATE_SCHEMA_VERSION,
+    household: deepCopy(DEFAULT_HOUSEHOLD),
+    people: deepCopy(DEFAULT_PEOPLE),
+    checked:{},
+    approved:{},
+    pending:[],
+    activity:[],
+    logs:[],
+    globalTodos:[],
+    weekKey:getWeekKey(),
+    settings:{ dinnerEnabled: false, dinnerMenu: '' },
+    dinnerEnabled: false,
+    dinnerMenu: '',
+    meta
+  };
+}
 
 function normalizeState(input) {
-  const base = freshState(); const s = (input && typeof input === 'object') ? input : {};
+  const base = freshState();
+  const s = (input && typeof input === 'object') ? input : {};
+  const settings = normalizeSettings(s);
+  const activity = normalizeActivity(Array.isArray(s.activity) ? s.activity : s.logs);
+  const metaSource = s.meta && typeof s.meta === 'object' ? s.meta : {};
+  const meta = {
+    ...base.meta,
+    ...metaSource,
+    createdAt: cleanText(metaSource.createdAt, base.meta.createdAt),
+    createdAtMs: Number.isFinite(Number(metaSource.createdAtMs)) ? Number(metaSource.createdAtMs) : base.meta.createdAtMs,
+    updatedAt: cleanText(metaSource.updatedAt, base.meta.updatedAt),
+    updatedAtMs: Number.isFinite(Number(metaSource.updatedAtMs)) ? Number(metaSource.updatedAtMs) : base.meta.updatedAtMs,
+    updatedBy: cleanText(metaSource.updatedBy, base.meta.updatedBy),
+    writeId: cleanText(metaSource.writeId, base.meta.writeId)
+  };
+  const peopleSource = Array.isArray(s.people) && s.people.length ? s.people : base.people;
   return {
-    people: Array.isArray(s.people) && s.people.length ? s.people : base.people,
-    checked: s.checked && typeof s.checked === 'object' && !Array.isArray(s.checked) ? s.checked : {},
-    approved: s.approved && typeof s.approved === 'object' && !Array.isArray(s.approved) ? s.approved : {},
-    pending: Array.isArray(s.pending) ? s.pending : [],
-    logs: Array.isArray(s.logs) ? s.logs : [],
-    globalTodos: Array.isArray(s.globalTodos) ? s.globalTodos : [],
+    schemaVersion: STATE_SCHEMA_VERSION,
+    household: normalizeHousehold(s.household || base.household),
+    people: peopleSource.map((person, index) => normalizePerson(person, index)),
+    checked: normalizeChecked(s.checked),
+    approved: normalizeApproved(s.approved),
+    pending: normalizePending(s.pending),
+    activity,
+    logs: activity,
+    globalTodos: Array.isArray(s.globalTodos) ? s.globalTodos.map(normalizeTodo) : [],
     weekKey: typeof s.weekKey === 'string' ? s.weekKey : getWeekKey(),
-    dinnerEnabled: typeof s.dinnerEnabled === 'boolean' ? s.dinnerEnabled : base.dinnerEnabled,
-    dinnerMenu: typeof s.dinnerMenu === 'string' ? s.dinnerMenu : base.dinnerMenu
+    settings,
+    dinnerEnabled: settings.dinnerEnabled,
+    dinnerMenu: settings.dinnerMenu,
+    meta
   };
 }
 
 function loadState() {
-  try { const r = localStorage.getItem('fb_v11'); if (r) return normalizeState(JSON.parse(r)); } catch {}
+  try { const r = localStorage.getItem(LOCAL_STATE_KEY); if (r) return normalizeState(JSON.parse(r)); } catch {}
   return freshState();
 }
-function saveState() {
-  state = normalizeState(state); try { localStorage.setItem('fb_v11', JSON.stringify(state)); } catch {}
+
+function cacheState(nextState) {
+  try { localStorage.setItem(LOCAL_STATE_KEY, JSON.stringify(nextState)); } catch {}
+}
+
+function stampStateForSave(nextState, reason = 'manual') {
+  const now = new Date();
+  const normalized = normalizeState(nextState);
+  const writeId = uid('write');
+  normalized.meta = {
+    ...normalized.meta,
+    updatedAt: now.toISOString(),
+    updatedAtMs: now.getTime(),
+    updatedBy: clientId,
+    writeId,
+    reason
+  };
+  normalized.logs = normalized.activity;
+  lastLocalWriteId = writeId;
+  return normalized;
+}
+
+function saveState(reason = 'manual') {
+  state = stampStateForSave(state, reason);
+  cacheState(state);
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
@@ -512,14 +787,13 @@ function processSystemBanners() {
     banner.className = "smart-banner alert-active";
     banner.innerHTML = `🎬 <b>ALERT:</b> Family Movie Time begins in ${delta > 0 ? delta : 0} minutes! Clear your items.`;
   } else if (state.dinnerEnabled && state.dinnerMenu) {
-    banner.className = "smart-banner"; banner.innerHTML = `🍽️ <b>Tonight's Dinner:</b> ${state.dinnerMenu}`;
+    banner.className = "smart-banner"; banner.innerHTML = `🍽️ <b>Tonight's Dinner:</b> ${escapeHtml(state.dinnerMenu)}`;
   } else {
-    banner.className = "smart-banner"; banner.innerHTML = `✨ <b>Deutmeyer Command Core</b> · Welcome home.`;
+    banner.className = "smart-banner"; banner.innerHTML = `✨ <b>Welcome home.</b>`;
   }
 }
 setInterval(processSystemBanners, 15000);
 
-function uid() { return Math.random().toString(36).substr(2,9); }
 function isChecked(pid,cid) { return (state.checked[pid] || []).includes(cid); }
 function isApproved(pid) { return state.approved[pid]?.allowance === true; }
 function isJobApproved(pid,cid) { return state.approved[pid]?.jobs?.[cid] === true; }
@@ -527,11 +801,42 @@ function personProgress(p) { const total = p.chores.length; const done = p.chore
 function pendingCount() { return state.pending.length; }
 function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot'), label = document.getElementById('sync-label'); if(!dot || !label) return;
-  dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' ? ' offline' : '');
-  label.textContent = mode === 'synced' ? 'System Live' : mode === 'saving' ? 'Syncing...' : 'Local File Mesh';
+  dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' && mode !== 'seeding' ? ' offline' : '');
+  label.textContent = mode === 'synced' ? 'Synced' : mode === 'saving' ? 'Saving...' : mode === 'seeding' ? 'Setting up sync' : 'Offline';
 }
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._timer); t._timer = setTimeout(() => t.classList.remove('show'), 2800); }
-function pushLogTrail(msg) { const now = new Date(); state.logs.unshift({ id: uid(), time: now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), msg }); if(state.logs.length > 40) state.logs.pop(); }
+function createActivityEntry(input) {
+  const details = input && typeof input === 'object' ? input : { message: input };
+  const now = new Date();
+  const message = cleanText(details.message || details.msg);
+  if (!message) return null;
+  const entry = {
+    id: uid('activity'),
+    type: cleanText(details.type, 'household'),
+    action: cleanText(details.action, 'note'),
+    message,
+    msg: message,
+    time: formatActivityTime(now),
+    createdAt: now.toISOString(),
+    createdAtMs: now.getTime(),
+    weekKey: state?.weekKey || getWeekKey(),
+    clientId
+  };
+  ['actorId', 'personId', 'targetType', 'targetId'].forEach(key => {
+    if (details[key]) entry[key] = cleanText(details[key]);
+  });
+  if (Number.isFinite(Number(details.amount))) entry.amount = Number(details.amount);
+  if (details.metadata && typeof details.metadata === 'object' && !Array.isArray(details.metadata)) entry.metadata = deepCopy(details.metadata);
+  return entry;
+}
+function recordActivity(details) {
+  const entry = createActivityEntry(details);
+  if (!entry) return null;
+  state.activity = [entry, ...(state.activity || [])].slice(0, MAX_ACTIVITY_ITEMS);
+  state.logs = state.activity;
+  return entry;
+}
+function pushLogTrail(message, details = {}) { return recordActivity({ ...details, message }); }
 function allWeeklyDone(pid) { const p = state.people.find(x => x.id === pid); const weekly = p ? p.chores.filter(c => c.type === 'weekly') : []; return weekly.length > 0 && weekly.every(c => isChecked(pid, c.id)); }
 function earnedTotal(pid) { const p = state.people.find(x => x.id === pid); if (!p) return 0; let total = isApproved(pid) ? p.weeklyAllowance : 0; p.chores.filter(c => c.type === 'job').forEach(c => { if (isJobApproved(pid,c.id)) total += Number(c.amt) || 0; }); return total; }
 
@@ -542,21 +847,25 @@ function toggleChore(pid,cid) {
   if (isApproved(pid)) { const p = state.people.find(x => x.id === pid); if (p?.chores.find(c => c.id === cid)?.type === 'weekly') return; }
   if (!state.checked[pid]) state.checked[pid] = []; const idx = state.checked[pid].indexOf(cid);
   const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid);
+  if (!p || !c) return;
   
   if (idx === -1) {
     state.checked[pid].push(cid); chimeCheck(); confetti({ particleCount: 35, spread: 45, origin: { y: 0.85 } });
-    pushLogTrail(`${p.name} completed: ${c.name}`);
+    pushLogTrail(`${p.name} completed: ${c.name}`, { type:'chore', action:'chore.completed', actorId:pid, personId:pid, targetType:'chore', targetId:cid });
   } else {
-    state.checked[pid].splice(idx,1); pushLogTrail(`${p.name} uncompleted: ${c.name}`);
+    state.checked[pid].splice(idx,1);
+    pushLogTrail(`${p.name} uncompleted: ${c.name}`, { type:'chore', action:'chore.uncompleted', actorId:pid, personId:pid, targetType:'chore', targetId:cid });
   }
 
   if (allWeeklyDone(pid) && p.weeklyAllowance > 0 && !isApproved(pid)) {
     if (!state.pending.some(x => x.type === 'allowance' && x.personId === pid)) {
-      state.pending.push({ id: uid(), type: 'allowance', personId: pid, amt: p.weeklyAllowance });
+      const pendingId = uid('pending');
+      state.pending.push({ id: pendingId, type: 'allowance', personId: pid, amt: p.weeklyAllowance });
+      pushLogTrail(`${p.name} requested weekly allowance approval`, { type:'approval', action:'approval.requested', actorId:pid, personId:pid, targetType:'allowance', targetId:pendingId, amount:p.weeklyAllowance });
       showToast(`${p.name} finished core goals! 🎉`); confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
     }
   }
-  saveState(); renderAll();
+  saveState('chore.toggle'); renderAll();
 }
 
 function openFastTaskOverlay() { document.getElementById('fast-task-overlay').classList.add('open'); document.getElementById('front-task-input').focus(); }
@@ -566,25 +875,47 @@ function injectTaskOnTheFly() {
   const input = document.getElementById('front-task-input'), targetSel = document.getElementById('front-assignee-select');
   const value = input.value.trim(); if(!value) return; const target = targetSel.value;
   if(target === 'global_todo') {
-    state.globalTodos.push({ id: uid(), name: value, done: false }); pushLogTrail(`Shared Family Task added: ${value}`);
+    const todoId = uid('todo');
+    state.globalTodos.push({ id: todoId, name: value, done: false });
+    pushLogTrail(`Shared Family Task added: ${value}`, { type:'todo', action:'todo.created', actorId:'kiosk', targetType:'todo', targetId:todoId });
   } else {
     const p = state.people.find(x => x.id === target);
-    if(p) { p.chores.push({ id: uid(), name: value, type: 'weekly', amt: 0 }); pushLogTrail(`Fast Task assigned to ${p.name}: ${value}`); }
+    if(p) {
+      const choreId = uid('chore');
+      p.chores.push({ id: choreId, name: value, type: 'weekly', amt: 0 });
+      pushLogTrail(`Fast Task assigned to ${p.name}: ${value}`, { type:'chore', action:'chore.created', actorId:'kiosk', personId:p.id, targetType:'chore', targetId:choreId });
+    }
   }
-  input.value = ''; document.getElementById('fast-task-overlay').classList.remove('open'); saveState(); renderAll();
+  input.value = ''; document.getElementById('fast-task-overlay').classList.remove('open'); saveState('task.inject'); renderAll();
 }
 
 function toggleGlobalTodo(id) {
   const todo = state.globalTodos.find(x => x.id === id);
   if(todo) {
     todo.done = !todo.done; if(todo.done) { chimeCheck(); confetti({ particleCount: 30, spread: 40, origin: { y: 0.85 } }); }
-    pushLogTrail(`Shared Family Task status flipped: ${todo.name}`); saveState(); renderAll();
+    pushLogTrail(`Shared Family Task ${todo.done ? 'completed' : 'reopened'}: ${todo.name}`, { type:'todo', action:todo.done ? 'todo.completed' : 'todo.reopened', actorId:'kiosk', targetType:'todo', targetId:todo.id });
+    saveState('todo.toggle'); renderAll();
   }
 }
-function clearFinishedTodos() { state.globalTodos = state.globalTodos.filter(x => !x.done); saveState(); renderAll(); }
-function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll(); }
-function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Broadcast Dispatched!'); }
-function clearHistoryLogs() { state.logs = []; saveState(); renderAll(); }
+function clearFinishedTodos() {
+  const cleared = state.globalTodos.filter(x => x.done).length;
+  state.globalTodos = state.globalTodos.filter(x => !x.done);
+  if (cleared) pushLogTrail(`${cleared} completed shared task${cleared === 1 ? '' : 's'} cleared`, { type:'todo', action:'todo.clear_completed', actorId:'kiosk' });
+  saveState('todo.clear_finished'); renderAll();
+}
+function toggleDinnerMenu(on) {
+  state.dinnerEnabled = on;
+  state.settings = { ...(state.settings || {}), dinnerEnabled: on, dinnerMenu: state.dinnerMenu || '' };
+  pushLogTrail(`Dinner widget ${on ? 'enabled' : 'disabled'}`, { type:'settings', action:on ? 'dinner.enabled' : 'dinner.disabled', actorId:'parent', targetType:'settings', targetId:'dinner' });
+  saveState('dinner.toggle'); renderAll();
+}
+function saveDinnerMenu() {
+  state.dinnerMenu = document.getElementById('dinner-input').value.trim();
+  state.settings = { ...(state.settings || {}), dinnerEnabled: state.dinnerEnabled, dinnerMenu: state.dinnerMenu };
+  pushLogTrail(`Dinner plan updated: ${state.dinnerMenu || 'No plan listed'}`, { type:'settings', action:'dinner.updated', actorId:'parent', targetType:'settings', targetId:'dinner' });
+  saveState('dinner.save'); renderAll(); showToast('Dinner saved.');
+}
+function clearHistoryLogs() { state.activity = []; state.logs = []; saveState('activity.clear'); renderAll(); }
 
 function requestJobApproval(pid,cid) {
   const p = state.people.find(x => x.id === pid);
@@ -593,46 +924,84 @@ function requestJobApproval(pid,cid) {
   if (!state.checked[pid]) state.checked[pid] = [];
   if (!state.checked[pid].includes(cid)) state.checked[pid].push(cid);
   if (!isJobApproved(pid, cid) && !state.pending.some(x => x.type === 'job' && x.personId === pid && x.choreId === cid)) {
-    state.pending.push({ id: uid(), type: 'job', personId: pid, choreId: cid, amt: Number(c.amt) || 0 });
-    pushLogTrail(`${p.name} requested parent approval for: ${c.name}`);
+    const pendingId = uid('pending');
+    state.pending.push({ id: pendingId, type: 'job', personId: pid, choreId: cid, amt: Number(c.amt) || 0 });
+    pushLogTrail(`${p.name} requested parent approval for: ${c.name}`, { type:'approval', action:'approval.requested', actorId:pid, personId:pid, targetType:'job', targetId:cid, amount:Number(c.amt) || 0, metadata:{ pendingId } });
     showToast('Sent to parent approvals.');
   }
-  saveState(); renderAll();
+  saveState('approval.request_job'); renderAll();
 }
 
 function approveItem(itemId) {
   const item = state.pending.find(x => x.id === itemId); if (!item) return;
   if (!state.approved[item.personId]) state.approved[item.personId] = { jobs:{} };
   const p = state.people.find(x => x.id === item.personId);
-  if (item.type === 'allowance') { state.approved[item.personId].allowance = true; if(p) p.streak++; pushLogTrail(`Parent signed allowance loop for ${p.name}`); }
-  else { state.approved[item.personId].jobs[item.choreId] = true; pushLogTrail(`Parent checked off premium venture item for ${p.name}`); }
-  chimeCascade(); state.pending = state.pending.filter(x => x.id !== itemId); saveState(); renderAll();
+  if (item.type === 'allowance') {
+    state.approved[item.personId].allowance = true;
+    if(p) p.streak++;
+    pushLogTrail(`Parent approved allowance for ${p?.name || 'family member'}`, { type:'approval', action:'approval.approved', actorId:'parent', personId:item.personId, targetType:'allowance', targetId:itemId, amount:item.amt });
+  } else {
+    state.approved[item.personId].jobs[item.choreId] = true;
+    pushLogTrail(`Parent approved paid task for ${p?.name || 'family member'}`, { type:'approval', action:'approval.approved', actorId:'parent', personId:item.personId, targetType:'job', targetId:item.choreId, amount:item.amt });
+  }
+  chimeCascade(); state.pending = state.pending.filter(x => x.id !== itemId); saveState('approval.approve'); renderAll();
 }
 function denyItem(itemId) {
   const item = state.pending.find(x => x.id === itemId); if (!item) return;
+  const p = state.people.find(x => x.id === item.personId);
   if (item.type === 'allowance') state.checked[item.personId] = [];
   else if (item.choreId && state.checked[item.personId]) state.checked[item.personId] = state.checked[item.personId].filter(x => x !== item.choreId);
-  state.pending = state.pending.filter(x => x.id !== itemId); saveState(); renderAll();
+  pushLogTrail(`Parent denied ${item.type} request for ${p?.name || 'family member'}`, { type:'approval', action:'approval.denied', actorId:'parent', personId:item.personId, targetType:item.type, targetId:item.choreId || itemId, amount:item.amt });
+  state.pending = state.pending.filter(x => x.id !== itemId); saveState('approval.deny'); renderAll();
 }
 
-function updateAllowance(pid,val) { const p = state.people.find(x => x.id === pid); if(p) p.weeklyAllowance = parseFloat(val) || 0; saveState(); renderAll(); }
+function updateAllowance(pid,val) {
+  const p = state.people.find(x => x.id === pid);
+  if(p) {
+    p.weeklyAllowance = parseFloat(val) || 0;
+    pushLogTrail(`${p.name}'s weekly allowance set to $${p.weeklyAllowance.toFixed(2)}`, { type:'settings', action:'allowance.updated', actorId:'parent', personId:pid, targetType:'person', targetId:pid, amount:p.weeklyAllowance });
+  }
+  saveState('allowance.update'); renderAll();
+}
 function selectType(pid,type) { document.getElementById(`btn-weekly-${pid}`)?.classList.toggle('selected', type === 'weekly'); document.getElementById(`btn-job-${pid}`)?.classList.toggle('selected', type === 'job'); }
 function getSelectedType(pid) { return document.getElementById(`btn-job-${pid}`)?.classList.contains('selected') ? 'job' : 'weekly'; }
 function addChore(pid) {
   const nameEl = document.getElementById(`inp-name-${pid}`), amtEl = document.getElementById(`inp-amt-${pid}`); const name = nameEl.value.trim(); if (!name) return;
   const type = getSelectedType(pid), amt = type === 'job' ? (parseFloat(amtEl.value) || 0) : 0;
-  state.people.find(x => x.id === pid).chores.push({ id: uid(), name, amt, type }); saveState(); renderAll();
+  const p = state.people.find(x => x.id === pid);
+  if (!p) return;
+  const choreId = uid('chore');
+  p.chores.push({ id: choreId, name, amt, type });
+  pushLogTrail(`Task added for ${p.name}: ${name}`, { type:'chore', action:'chore.created', actorId:'parent', personId:pid, targetType:'chore', targetId:choreId, amount:amt });
+  saveState('chore.add'); renderAll();
 }
 function deleteChore(pid,cid) {
-  const p = state.people.find(x => x.id === pid); p.chores = p.chores.filter(c => c.id !== cid);
+  const p = state.people.find(x => x.id === pid);
+  if (!p) return;
+  const removed = p.chores.find(c => c.id === cid);
+  p.chores = p.chores.filter(c => c.id !== cid);
   if (state.checked[pid]) state.checked[pid] = state.checked[pid].filter(x => x !== cid);
-  state.pending = state.pending.filter(x => !(x.personId === pid && x.choreId === cid)); saveState(); renderAll();
+  state.pending = state.pending.filter(x => !(x.personId === pid && x.choreId === cid));
+  if (removed) pushLogTrail(`Task removed from ${p.name}: ${removed.name}`, { type:'chore', action:'chore.deleted', actorId:'parent', personId:pid, targetType:'chore', targetId:cid });
+  saveState('chore.delete'); renderAll();
 }
-function undoApproval(pid) { if (state.approved[pid]) { state.approved[pid].allowance = false; const p = state.people.find(x => x.id === pid); if(p && p.streak > 0) p.streak--; } saveState(); renderAll(); }
+function undoApproval(pid) {
+  if (state.approved[pid]) {
+    state.approved[pid].allowance = false;
+    const p = state.people.find(x => x.id === pid);
+    if(p && p.streak > 0) p.streak--;
+    pushLogTrail(`Allowance approval reopened for ${p?.name || 'family member'}`, { type:'approval', action:'approval.reopened', actorId:'parent', personId:pid, targetType:'allowance', targetId:pid });
+  }
+  saveState('approval.undo'); renderAll();
+}
 function doReset() {
   const kept = state.people.map(p => ({...p, chores:p.chores.filter(c => c.type === 'weekly')}));
-  state = {...freshState(), people: kept, logs: state.logs, dinnerEnabled: state.dinnerEnabled, dinnerMenu: state.dinnerMenu};
-  pushLogTrail(`Universal system loop reset executed.`); saveState(); closeModal('reset-modal'); renderAll();
+  const activity = state.activity || state.logs || [];
+  const dinnerEnabled = state.dinnerEnabled;
+  const dinnerMenu = state.dinnerMenu;
+  state = {...freshState(), people: kept, activity, logs: activity, settings:{ dinnerEnabled, dinnerMenu }, dinnerEnabled, dinnerMenu};
+  pushLogTrail(`New week started.`, { type:'week', action:'week.reset', actorId:'parent', targetType:'week', targetId:state.weekKey });
+  saveState('week.reset'); closeModal('reset-modal'); renderAll();
 }
 
 // ══════════════════════════════════════════════
@@ -645,7 +1014,7 @@ function renderUnifiedFrontMatrix() {
   if(state.globalTodos && state.globalTodos.length > 0) {
     html += `<div class="list-label" style="color:var(--purple);"><span>📌 Shared Family Tasks</span><button class="pill-btn ghost" onclick="clearFinishedTodos()" style="font-size:10px; padding:2px 6px;">Clear Checked</button></div>`;
     state.globalTodos.forEach(todo => {
-      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')"><div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div><div class="chore-name">${todo.name}</div><div></div></div>`;
+      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')"><div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div><div class="chore-name">${escapeHtml(todo.name)}</div><div></div></div>`;
     });
   }
 
@@ -654,16 +1023,15 @@ function renderUnifiedFrontMatrix() {
     const active = p.chores.filter(c => !isChecked(p.id, c.id));
     const completed = p.chores.filter(c => isChecked(p.id, c.id));
     const prog = personProgress(p);
-    const approved = isApproved(p.id);
     const streakText = p.streak > 0 ? `<span class="p-widget-streak">🔥 ${p.streak} Wk Streak</span>` : '';
 
     html += `<div class="list-label" style="margin-top:14px; border-bottom: 1px solid var(--border-soft); padding-bottom:4px;">
-      <span style="color:var(--text-strong); font-size:16px; font-weight:800;">${p.emoji} ${p.name}'s Manifest (${prog.done}/${p.chores.length})</span>
+      <span style="color:var(--text-strong); font-size:16px; font-weight:800;">${escapeHtml(p.emoji)} ${escapeHtml(p.name)} (${prog.done}/${p.chores.length})</span>
       ${streakText}
     </div>`;
 
     if(p.chores.length === 0) {
-      html += `<div style="font-size:13px; color:var(--text); padding:8px 14px;">No operational assignments active.</div>`;
+      html += `<div style="font-size:13px; color:var(--text); padding:8px 14px;">No chores yet.</div>`;
       return;
     }
 
@@ -671,7 +1039,7 @@ function renderUnifiedFrontMatrix() {
     active.forEach(c => {
       const isJob = c.type === 'job';
       const actionFn = isJob ? `requestJobApproval('${p.id}','${c.id}')` : `toggleChore('${p.id}','${c.id}')`;
-      html += `<div class="chore-row" onclick="${actionFn}"><div class="chk" style="--person:var(--${p.id})"></div><div class="chore-name">${c.name}</div><div style="font-size:12px; font-weight:700; color:var(--text)">${isJob ? '$'+c.amt.toFixed(2):'Core'}</div></div>`;
+      html += `<div class="chore-row" onclick="${actionFn}"><div class="chk" style="--person:var(--${p.id})"></div><div class="chore-name">${escapeHtml(c.name)}</div><div style="font-size:12px; font-weight:700; color:var(--text)">${isJob ? '$'+c.amt.toFixed(2):'Chore'}</div></div>`;
     });
 
     // List cleared operations second
@@ -680,7 +1048,7 @@ function renderUnifiedFrontMatrix() {
       const jpending = state.pending.some(x => x.type === 'job' && x.personId === p.id && x.choreId === c.id);
       const japproved = isJobApproved(p.id, c.id);
       let statusLabel = isJob ? (japproved ? 'Paid' : (jpending ? 'Pending' : 'Done')) : 'Done';
-      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div><div class="chore-name">${c.name}</div><div style="font-size:12px; color:var(--text)">${statusLabel}</div></div>`;
+      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div><div class="chore-name">${escapeHtml(c.name)}</div><div style="font-size:12px; color:var(--text)">${statusLabel}</div></div>`;
     });
   });
 
@@ -692,11 +1060,11 @@ function renderDetailedChoreManifestPage() {
     const earned = earnedTotal(p.id);
     return `<div class="card pad" style="border-top:4px solid var(--${p.id})">
       <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
-        <span style="font-size:24px">${p.emoji}</span><span style="font-size:18px; font-weight:800; color:var(--text-strong)">${p.name}</span>
+        <span style="font-size:24px">${escapeHtml(p.emoji)}</span><span style="font-size:18px; font-weight:800; color:var(--text-strong)">${escapeHtml(p.name)}</span>
         <span style="margin-left:auto; font-size:16px; font-weight:800; color:var(--text-strong)">$${earned.toFixed(2)}</span>
       </div>
       ${p.chores.map(c => {
-        const done = isChecked(p.id, c.id); return `<div class="chore-row ${done?'done':''}" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="${done?'background:var(--'+p.id+'); border-color:var(--'+p.id+')':''}">${done?'✓':''}</div><div class="chore-name">${c.name}</div><div style="font-size:11px; color:var(--text)">${c.type==='job'?'Premium':'Core'}</div></div>`;
+        const done = isChecked(p.id, c.id); return `<div class="chore-row ${done?'done':''}" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="${done?'background:var(--'+p.id+'); border-color:var(--'+p.id+')':''}">${done?'✓':''}</div><div class="chore-name">${escapeHtml(c.name)}</div><div style="font-size:11px; color:var(--text)">${c.type==='job'?'Paid':'Chore'}</div></div>`;
       }).join('')}
     </div>`;
   }).join('');
@@ -704,25 +1072,26 @@ function renderDetailedChoreManifestPage() {
 
 function renderHistoryLogsView() {
   const container = document.getElementById('history-logs-container'); if(!container) return;
-  if(state.logs.length === 0) { container.innerHTML = `<div class="empty-state">No execution trails stored in buffer.</div>`; return; }
-  container.innerHTML = state.logs.map(l => `<div class="history-manifest-card"><span style="font-size:14px; color:var(--text-strong); font-weight:600;">${l.msg}</span><span style="font-size:12px; color:var(--text); font-weight:600;">${l.time}</span></div>`).join('');
+  const activity = state.activity || state.logs || [];
+  if(activity.length === 0) { container.innerHTML = `<div class="empty-state">No activity yet.</div>`; return; }
+  container.innerHTML = activity.map(l => `<div class="history-manifest-card"><span style="font-size:14px; color:var(--text-strong); font-weight:600;">${escapeHtml(l.message || l.msg)}</span><span style="font-size:12px; color:var(--text); font-weight:600;">${escapeHtml(l.time)}</span></div>`).join('');
 }
 
 function renderApprovalsView() {
-  const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="empty-state">Matrix Clear. No logs pending verification.</div>`; return; }
+  const container = document.getElementById('approvals-container'); if (state.pending.length === 0) { container.innerHTML = `<div class="empty-state">No approvals waiting.</div>`; return; }
   container.innerHTML = `<div class="approval-list">${state.pending.map(item => {
     const p = state.people.find(x => x.id === item.personId) || {emoji:'•', name:'User'};
-    return `<div class="approval-item"><span style="font-size:22px">${p.emoji}</span><div><div style="font-weight:800; color:var(--text-strong)">${p.name}</div><div style="font-size:12px">${item.type==='allowance'?'Core allowance disbursal checkout':'Premium task completion sign-off'}</div></div><div style="margin-left:auto; display:flex; gap:8px;"><button class="pill-btn danger" onclick="denyItem('${item.id}')">Deny</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Approve</button></div></div>`;
+    return `<div class="approval-item"><span style="font-size:22px">${escapeHtml(p.emoji)}</span><div><div style="font-weight:800; color:var(--text-strong)">${escapeHtml(p.name)}</div><div style="font-size:12px">${item.type==='allowance'?'Weekly allowance':'Paid task'}</div></div><div style="margin-left:auto; display:flex; gap:8px;"><button class="pill-btn danger" onclick="denyItem('${item.id}')">Deny</button><button class="pill-btn primary" onclick="approveItem('${item.id}')">Approve</button></div></div>`;
   }).join('')}</div>`;
 }
 
 function renderManageView() {
   document.getElementById('manage-grid').innerHTML = state.people.map(person => {
     return `<div class="card pad">
-      <div style="font-weight:800; font-size:15px; color:var(--text-strong); margin-bottom:10px;">Adjust Manifest: ${person.name}</div>
-      <div class="field-row"><label>Base Value ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
-      ${person.chores.map(c => `<div class="manage-chore-row"><span style="font-size:13px">${c.name}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
-      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="Objective Title Text..." /><div style="display:flex; gap:6px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="$" style="width:70px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Core</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Premium</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Inject Operational Node</button></div>
+      <div style="font-weight:800; font-size:15px; color:var(--text-strong); margin-bottom:10px;">${escapeHtml(person.name)}</div>
+      <div class="field-row"><label>Weekly Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
+      ${person.chores.map(c => `<div class="manage-chore-row"><span style="font-size:13px">${escapeHtml(c.name)}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
+      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="New chore or task" /><div style="display:flex; gap:6px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="$" style="width:70px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Chore</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Paid</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Add Task</button></div>
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
@@ -763,15 +1132,48 @@ let pinBuffer = '', pinAction = null;
 function requirePin(action) { pinAction = action; pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = ''; document.getElementById('pin-modal').classList.add('open'); }
 function pinKey(k) { if (k === 'cancel') { closeModal('pin-modal'); return; } if (k === 'back') { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); return; } if (pinBuffer.length >= 4) return; pinBuffer += k; updatePinDots(); if (pinBuffer.length === 4) setTimeout(checkPin, 120); }
 function updatePinDots() { for (let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.toggle('filled', i < pinBuffer.length); }
-function checkPin() { if (pinBuffer === PARENT_PIN) { closeModal('pin-modal'); if (pinAction === 'reset') document.getElementById('reset-modal').classList.add('open'); if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); } } else { document.getElementById('pin-error').textContent = 'Clearance failure.'; pinBuffer = ''; updatePinDots(); } }
+function checkPin() { if (pinBuffer === PARENT_PIN) { closeModal('pin-modal'); if (pinAction === 'reset') document.getElementById('reset-modal').classList.add('open'); if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); } } else { document.getElementById('pin-error').textContent = 'Wrong PIN.'; pinBuffer = ''; updatePinDots(); } }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function resetAmbientTimer() {}
 
+function applyRemoteState(remoteState) {
+  isLoadingFromCloud = true;
+  state = normalizeState(remoteState);
+  cacheState(state);
+  renderAll();
+  isLoadingFromCloud = false;
+  applySyncStatus('synced');
+}
+
+function seedCloudState() {
+  state = stampStateForSave(state, 'cloud.seed');
+  cacheState(state);
+  applySyncStatus('seeding');
+  stateRef.transaction(current => current || state).then(result => {
+    hasLoadedCloudOnce = true;
+    applyRemoteState(result.snapshot.val() || state);
+  }).catch(() => applySyncStatus('local'));
+}
+
 function startCloudSync() {
   if (!stateRef) { applySyncStatus('local'); return; }
+  if (connectedRef) {
+    connectedRef.on('value', snapshot => {
+      firebaseOnline = snapshot.val() === true;
+      if (!firebaseOnline) applySyncStatus('local');
+      else if (hasLoadedCloudOnce) applySyncStatus('synced');
+    });
+  }
   stateRef.on('value', snapshot => {
-    const cloudState = snapshot.val(); if (!cloudState && !hasLoadedCloudOnce) { hasLoadedCloudOnce = true; saveState(); return; }
-    if (cloudState) { hasLoadedCloudOnce = true; isLoadingFromCloud = true; state = normalizeState(cloudState); renderAll(); isLoadingFromCloud = false; applySyncStatus('synced'); }
+    const cloudState = snapshot.val();
+    if (!cloudState) {
+      if (!hasLoadedCloudOnce) seedCloudState();
+      else applySyncStatus('local');
+      return;
+    }
+    hasLoadedCloudOnce = true;
+    if (cloudState.meta?.writeId === lastLocalWriteId) lastLocalWriteId = null;
+    applyRemoteState(cloudState);
   }, () => applySyncStatus('local'));
 }
 
