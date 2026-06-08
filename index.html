@@ -163,6 +163,14 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .stat-mini { background: var(--card-soft); padding: 12px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
 .stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
 .stat-m-val { font-size: 22px; font-weight: 800; color: var(--text-strong); margin-top: 2px; }
+.card { background: var(--card-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.card.pad { padding: 18px; }
+.eyebrow { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.status-dot { width: 9px; height: 9px; border-radius: 999px; background: var(--green); box-shadow: 0 0 12px var(--green); display: inline-block; }
+.status-dot.offline { background: var(--amber); box-shadow: 0 0 12px var(--amber); }
+.dinner-title { color: var(--purple); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.empty-state { color: var(--text); background: var(--card-soft); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 22px; text-align: center; font-weight: 700; }
+.pill-btn.ghost { background: transparent; }
 
 /* Floating Plus Pop-up Setup */
 .floating-action-node {
@@ -268,7 +276,20 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
         <div class="main-tracking-core">
           
           <div style="display:flex; gap:12px; align-items:center; flex-shrink:0;">
-            <div class="quick-stats-stack" id="quick-stats" style="flex:1.2; margin-bottom:0;"></div>
+            <div class="quick-stats-stack" id="quick-stats" style="flex:1.2; margin-bottom:0;">
+              <div class="stat-mini">
+                <div class="stat-m-label">Done</div>
+                <div class="stat-m-val" id="stats-total-value">0/0</div>
+              </div>
+              <div class="stat-mini">
+                <div class="stat-m-label">Pending</div>
+                <div class="stat-m-val" id="stats-pending-value">0</div>
+              </div>
+              <div class="stat-mini">
+                <div class="stat-m-label">Week</div>
+                <div class="stat-m-val" id="stats-week-value">--</div>
+              </div>
+            </div>
             <div class="card" id="home-dinner-card" style="display:none; flex:0.8; padding:10px 14px; background:linear-gradient(135deg, var(--purple-soft), transparent); border-color:var(--purple);">
               <div class="dinner-title">🍽️ Tonight's Dinner Plan</div>
               <div id="home-dinner-text" style="font-size:14px; font-weight:700; color:var(--text-strong)"></div>
@@ -565,6 +586,20 @@ function toggleDinnerMenu(on) { state.dinnerEnabled = on; saveState(); renderAll
 function saveDinnerMenu() { state.dinnerMenu = document.getElementById('dinner-input').value.trim(); saveState(); renderAll(); showToast('Menu Broadcast Dispatched!'); }
 function clearHistoryLogs() { state.logs = []; saveState(); renderAll(); }
 
+function requestJobApproval(pid,cid) {
+  const p = state.people.find(x => x.id === pid);
+  const c = p?.chores.find(x => x.id === cid);
+  if (!p || !c) return;
+  if (!state.checked[pid]) state.checked[pid] = [];
+  if (!state.checked[pid].includes(cid)) state.checked[pid].push(cid);
+  if (!isJobApproved(pid, cid) && !state.pending.some(x => x.type === 'job' && x.personId === pid && x.choreId === cid)) {
+    state.pending.push({ id: uid(), type: 'job', personId: pid, choreId: cid, amt: Number(c.amt) || 0 });
+    pushLogTrail(`${p.name} requested parent approval for: ${c.name}`);
+    showToast('Sent to parent approvals.');
+  }
+  saveState(); renderAll();
+}
+
 function approveItem(itemId) {
   const item = state.pending.find(x => x.id === itemId); if (!item) return;
   if (!state.approved[item.personId]) state.approved[item.personId] = { jobs:{} };
@@ -697,9 +732,10 @@ function updateSystemCounters() {
   const total = state.people.reduce((sum,p) => sum + p.chores.length, 0), done = state.people.reduce((sum,p) => sum + p.chores.filter(c => isChecked(p.id,c.id)).length, 0);
   const apprBadge = document.getElementById('appr-badge'); if(apprBadge) { apprBadge.style.display = pendingCount() > 0 ? 'inline-flex' : 'none'; apprBadge.textContent = pendingCount(); }
   document.getElementById('stats-total-value').textContent = `${done}/${total}`; document.getElementById('stats-pending-value').textContent = pendingCount();
+  const weekEl = document.getElementById('stats-week-value'); if (weekEl) weekEl.textContent = String(state.weekKey || getWeekKey()).split('_').pop().replace('w', '');
   
   const dinnerBanner = document.getElementById('home-dinner-card');
-  if(state.dinnerEnabled && state.dinnerMenu) { dinnerBanner.style.display = 'block'; document.getElementById('home-dinner-text').textContent = state.dinnerMenu; } else { dinnerCard.style.display = 'none'; }
+  if(state.dinnerEnabled && state.dinnerMenu) { dinnerBanner.style.display = 'block'; document.getElementById('home-dinner-text').textContent = state.dinnerMenu; } else { dinnerBanner.style.display = 'none'; }
 }
 
 function renderAll() {
@@ -729,6 +765,7 @@ function pinKey(k) { if (k === 'cancel') { closeModal('pin-modal'); return; } if
 function updatePinDots() { for (let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.toggle('filled', i < pinBuffer.length); }
 function checkPin() { if (pinBuffer === PARENT_PIN) { closeModal('pin-modal'); if (pinAction === 'reset') document.getElementById('reset-modal').classList.add('open'); if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); } } else { document.getElementById('pin-error').textContent = 'Clearance failure.'; pinBuffer = ''; updatePinDots(); } }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function resetAmbientTimer() {}
 
 function startCloudSync() {
   if (!stateRef) { applySyncStatus('local'); return; }
