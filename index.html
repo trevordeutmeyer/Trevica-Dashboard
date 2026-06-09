@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Deutmeyer Family Dashboard</title>
+<script>(function(){var h=new Date().getHours();document.documentElement.setAttribute('data-theme',(h>=7&&h<20)?'light':'dark');})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
@@ -11,32 +12,42 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 <style>
 :root {
-  --bg: #030712;
-  --app: #0b0f19;
-  --card: rgba(22, 30, 49, 0.85);
-  --card-soft: rgba(30, 41, 59, 0.5);
-  --text: #94a3b8;
-  --text-strong: #f8fafc;
-  --muted: #475569;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-soft: rgba(255, 255, 255, 0.03);
-  --blue: #38bdf8;
-  --blue-soft: rgba(56, 189, 248, 0.15);
-  --green: #4ade80;
-  --green-soft: rgba(74, 222, 128, 0.15);
-  --amber: #fbbf24;
-  --amber-soft: rgba(251, 191, 36, 0.15);
-  --red: #f87171;
-  --red-soft: rgba(248, 113, 113, 0.15);
-  --purple: #c084fc;
-  --purple-soft: rgba(192, 132, 252, 0.18);
-  --shadow: 0 20px 40px rgba(0,0,0,0.5);
-  --radius: 24px;
-  --radius-sm: 16px;
-  --dad: #4ade80;
-  --mom: #f87171;
-  --jules: #38bdf8;
-  --henry: #f97316;
+  --accent: #d97706;
+  --accent-soft: rgba(217, 119, 6, 0.12);
+  --green: #22c55e;  --green-soft: rgba(34, 197, 94, 0.15);
+  --red: #f87171;    --red-soft: rgba(248, 113, 113, 0.15);
+  --blue: #38bdf8;   --blue-soft: rgba(56, 189, 248, 0.15);
+  --amber: #f59e0b;  --amber-soft: rgba(245, 158, 11, 0.15);
+  --purple: #a855f7; --purple-soft: rgba(168, 85, 247, 0.15);
+  --dad: #22c55e; --mom: #f87171; --jules: #38bdf8; --henry: #f97316;
+  --radius: 16px; --radius-sm: 12px;
+}
+
+[data-theme="light"] {
+  --bg: #f7f4ef;
+  --app: #f0ece4;
+  --card: #ffffff;
+  --card-soft: rgba(0, 0, 0, 0.03);
+  --text: #7a6a58;
+  --text-strong: #1a1612;
+  --muted: #a08b78;
+  --border: rgba(0, 0, 0, 0.09);
+  --border-soft: rgba(0, 0, 0, 0.042);
+  --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 18px rgba(0,0,0,0.07);
+  --cal-filter: none;
+}
+
+[data-theme="dark"] {
+  --bg: #100e0c;
+  --app: #171411;
+  --card: rgba(255,255,255,0.055);
+  --card-soft: rgba(255,255,255,0.028);
+  --text: #9e8e7c;
+  --text-strong: #ede8e0;
+  --muted: #6b5d4f;
+  --border: rgba(255,255,255,0.09);
+  --border-soft: rgba(255,255,255,0.042);
+  --shadow: 0 2px 8px rgba(0,0,0,0.3), 0 8px 32px rgba(0,0,0,0.4);
   --cal-filter: invert(0.92) hue-rotate(180deg) contrast(1.25);
 }
 
@@ -62,33 +73,34 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   flex-shrink: 0;
 }
 .topbar-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.main-title-headline { margin: 0; color: var(--text-strong); font-size: 26px; font-weight: 800; letter-spacing: -0.04em; }
+.main-title-headline { margin: 0; color: var(--text-strong); font-size: 22px; font-weight: 700; letter-spacing: -0.025em; }
 
 .dock-container { display: inline-flex; background: var(--card-soft); border: 1px solid var(--border); padding: 4px; border-radius: 16px; }
 .nav-tab {
-  appearance: none; border: none; background: transparent; color: var(--text); border-radius: 12px;
-  padding: 10px 20px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+  appearance: none; border: none; background: transparent; color: var(--text); border-radius: 10px;
+  padding: 9px 18px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.18s ease; font-family: inherit;
 }
-.nav-tab.active { background: var(--app); color: var(--blue); box-shadow: var(--shadow); }
+.nav-tab.active { background: var(--card); color: var(--accent); box-shadow: 0 1px 6px rgba(0,0,0,0.1); }
 
 .time-block { text-align: right; }
-#clock { color: var(--text-strong); font-size: 28px; font-weight: 800; line-height: 1; }
+#clock { color: var(--text-strong); font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
 #date { color: var(--text); font-size: 12px; font-weight: 600; margin-top: 2px; }
 
 /* Dynamic Announcement Bar */
 .smart-banner {
   flex-shrink: 0;
   margin: 12px 12px 0;
-  padding: 14px 20px;
+  padding: 11px 18px;
   border-radius: var(--radius-sm);
-  background: var(--card-soft);
+  background: var(--card);
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--text-strong);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  box-shadow: var(--shadow);
 }
 .smart-banner.alert-active {
   background: linear-gradient(90deg, var(--purple-soft), rgba(124, 58, 237, 0.4));
@@ -120,50 +132,51 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .main-tracking-core { display: flex; flex-direction: column; height: 100%; min-height: 0; }
 .scroll-payload-box { flex: 1; min-height: 0; overflow-y: auto; padding-right: 6px; }
 
-/* Large High-Contrast Row Elements */
+/* Chore Rows */
 .chore-row {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   border-radius: var(--radius-sm);
-  padding: 14px 18px;
-  min-height: 60px;
-  background: var(--card-soft);
-  margin-bottom: 8px;
-  border: 1px solid transparent;
+  padding: 12px 16px;
+  min-height: 52px;
+  background: var(--card);
+  margin-bottom: 6px;
+  border: 1px solid var(--border-soft);
   cursor: pointer;
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow);
 }
-.chore-row:hover { border-color: var(--border); transform: translateY(-2px); background: var(--card); }
-.chore-row:active { transform: scale(0.98); }
-.chore-row.done { opacity: 0.35; }
+.chore-row:hover { border-color: var(--border); transform: translateY(-1px); }
+.chore-row:active { transform: scale(0.99); opacity: 0.9; }
+.chore-row.done { opacity: 0.36; box-shadow: none; }
 .chore-row.done .chore-name { text-decoration: line-through; }
 
 .chk {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
-  border: 2px solid var(--border);
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  border: 1.5px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 12px;
   color: white;
-  background: rgba(0,0,0,0.02);
+  flex-shrink: 0;
 }
 .chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
-.chore-name { font-size: 16px; font-weight: 700; color: var(--text-strong); }
+.chore-name { font-size: 15px; font-weight: 600; color: var(--text-strong); }
 
 .list-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; padding: 12px 4px 6px; display: flex; align-items: center; justify-content: space-between; }
-.p-widget-streak { font-size: 11px; background: linear-gradient(135deg, #ff9800, #ff5722); color: #ffffff; padding: 3px 10px; border-radius: 8px; font-weight: 800; box-shadow: 0 4px 10px rgba(255, 87, 34, 0.2); }
+.p-widget-streak { font-size: 11px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff; padding: 3px 10px; border-radius: 8px; font-weight: 700; letter-spacing: 0.02em; flex-shrink: 0; }
 
 /* Quick Summary Statistics Header Strip */
 .quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; flex-shrink: 0; }
-.stat-mini { background: var(--card-soft); padding: 12px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; }
+.stat-mini { background: var(--card); padding: 12px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; box-shadow: var(--shadow); }
 .stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
 .stat-m-val { font-size: 22px; font-weight: 800; color: var(--text-strong); margin-top: 2px; }
-.card { background: var(--card-soft); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow); }
 .card.pad { padding: 18px; }
 .eyebrow { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
 .status-dot { width: 9px; height: 9px; border-radius: 999px; background: var(--green); box-shadow: 0 0 12px var(--green); display: inline-block; }
@@ -174,10 +187,13 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 /* Floating Plus Pop-up Setup */
 .floating-action-node {
-  position: absolute; right: 20px; bottom: 20px; width: 56px; height: 56px; border-radius: 99px;
-  background: var(--blue); color: white; border: none; font-size: 26px; font-weight: 700;
-  box-shadow: 0 10px 25px rgba(56, 189, 248, 0.3); z-index: 100;
+  position: absolute; right: 20px; bottom: 20px; width: 52px; height: 52px; border-radius: 99px;
+  background: var(--accent); color: white; border: none; font-size: 26px; font-weight: 600;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.4); z-index: 100; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+.floating-action-node:hover { transform: scale(1.07); box-shadow: 0 6px 22px rgba(217, 119, 6, 0.5); }
 .overlay-glass-container {
   display: none; position: fixed; inset: 0; background: rgba(2, 4, 8, 0.65);
   backdrop-filter: blur(20px); z-index: 999; align-items: center; justify-content: center; padding: 20px;
@@ -201,7 +217,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .add-form { margin-top: 14px; background: var(--card-soft); padding: 12px; border-radius: var(--radius-sm); display: grid; gap: 10px; }
 .type-row { display: flex; gap: 10px; }
 .type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 700; font-size: 13px; }
-.type-btn.selected { background: var(--blue-soft); color: var(--blue); border-color: var(--blue); }
+.type-btn.selected { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 .add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 10px; padding: 12px; font-weight: 700; }
 .del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; }
 .manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
@@ -211,7 +227,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .modal { background:var(--card); border:1px solid var(--border); border-radius: 28px; padding:32px; width:380px; text-align: center; }
 .pin-dots { display:flex; justify-content:center; gap:14px; margin:24px 0; }
 .pin-dot { width:16px; height:16px; border-radius:99px; background:var(--border); }
-.pin-dot.filled { background:var(--blue); box-shadow: 0 0 10px var(--blue); }
+.pin-dot.filled { background:var(--accent); box-shadow: 0 0 10px var(--accent); }
 .pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:240px; margin:0 auto; }
 .pin-key { border:1px solid var(--border); background:var(--card-soft); color:var(--text-strong); border-radius:16px; padding:16px; font-size:22px; font-weight:700; }
 .pin-error { color: var(--red); font-size: 14px; margin-top: 12px; min-height: 20px; font-weight: 600; }
@@ -220,36 +236,247 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .toast.show { display:block; animation: toastIn 0.2s ease; }
 .badge { min-width: 18px; height: 18px; border-radius: 99px; background: var(--red); color: white; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; }
 .pill-btn { border: 1px solid var(--border); background: var(--card); color: var(--text); border-radius: 12px; padding: 10px 18px; font-size: 13px; font-weight: 700; }
-.pill-btn.primary { background: var(--blue); color: white; border-color: var(--blue); }
+.pill-btn.primary { background: var(--accent); color: white; border-color: var(--accent); font-weight: 700; }
 .pill-btn.danger { background: var(--red-soft); color: var(--red); border-color: var(--red); }
 .footer-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; flex-shrink: 0; }
 .job-amt { color: var(--green); background: var(--green-soft); border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 700; }
 .job-amt.pending-pay { color: var(--blue); background: var(--blue-soft); }
 .job-amt.paid-out { color: var(--text); background: var(--card-soft); text-decoration: line-through; }
+
+.person-prog-bar { height: 6px; background: var(--border-soft); border-radius: 99px; margin: 6px 0 10px; overflow: hidden; }
+.person-prog-fill { height: 100%; border-radius: 99px; min-width: 6px; transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* ─── Kids-First Home Layout ─────────────────── */
+#panel-home { gap: 10px; }
+.kids-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; min-height: 0; }
+.kid-hero-card { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; background: var(--card); box-shadow: var(--shadow); }
+.kid-card-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
+.kid-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.kid-big-name { font-size: 20px; font-weight: 800; color: var(--text-strong); line-height: 1.1; letter-spacing: -0.02em; }
+.kid-meta { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.kid-emoji-badge { font-size: 28px; line-height: 1; }
+.kid-streak-tag { font-size: 11px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; padding: 3px 9px; border-radius: 8px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.kid-prog-wrap { margin-top: 8px; }
+.kid-prog-bar { height: 7px; background: var(--border-soft); border-radius: 99px; overflow: hidden; }
+.kid-prog-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+.kid-prog-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+.kid-chore-scroll { flex: 1; overflow-y: auto; }
+.kid-chore-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
+.kid-chore-row:last-child { border-bottom: none; }
+.kid-chore-row:hover { background: var(--card-soft); }
+.kid-chore-row.done { opacity: 0.36; }
+.kid-chore-row.done .kid-chore-name { text-decoration: line-through; }
+.kid-chore-name { font-size: 14px; font-weight: 600; color: var(--text-strong); flex: 1; }
+
+/* ─── Calendar full-width strip ──────────────── */
+.cal-full-strip { height: 300px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
+.cal-full-strip iframe { width: 100%; height: 100%; border: 0; filter: var(--cal-filter); }
+
+/* ─── Adults horizontal strip ────────────────── */
+.adults-compact-area { display: flex; flex-direction: row; gap: 8px; flex-shrink: 0; height: 150px; overflow-x: auto; }
+.adult-compact-card { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 10px 14px; box-shadow: var(--shadow); flex: 1; min-width: 140px; overflow-y: auto; }
+.adult-card-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.compact-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; cursor: pointer; border-bottom: 1px solid var(--border-soft); }
+.compact-row:last-of-type { border-bottom: none; }
+.compact-row.done { opacity: 0.36; }
+.compact-row.done span { text-decoration: line-through; }
+.compact-row span { font-size: 13px; font-weight: 600; color: var(--text-strong); flex: 1; }
+.compact-clear-btn { font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 4px 0 2px; font-weight: 600; font-family: inherit; }
+
+/* ─── Settings gear button ───────────────────── */
+.settings-icon-btn {
+  background: var(--card-soft); border: 1px solid var(--border); color: var(--muted);
+  border-radius: 12px; width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; cursor: pointer; flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.settings-icon-btn:hover { background: var(--card); color: var(--text-strong); }
+
+/* ─── Settings popup ─────────────────────────── */
+#settings-popup {
+  display: none; position: fixed; right: 16px; top: 80px; z-index: 300;
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); min-width: 200px; padding: 8px;
+}
+#settings-popup.open { display: block; }
+.settings-pop-btn {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  background: none; border: none; padding: 12px 14px; border-radius: 10px;
+  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text-strong);
+  cursor: pointer; text-align: left; transition: background 0.1s;
+}
+.settings-pop-btn:hover { background: var(--card-soft); }
+
+/* ─── Person detail modal ────────────────────── */
+.person-detail-modal {
+  width: 460px; max-width: 92vw; max-height: 80vh;
+  overflow-y: auto; text-align: left; padding: 24px; border-radius: var(--radius);
+}
+.adult-compact-card { cursor: pointer; }
+
+/* ═══ MANGA STREET ART HEADER ══════════════════════════════ */
+.manga-topbar {
+  padding: 0; flex-shrink: 0; position: relative; overflow: hidden; min-height: 84px;
+  border-bottom: 3px solid var(--text-strong);
+}
+/* Halftone dot texture */
+.manga-topbar::after {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(circle, rgba(217,119,6,0.055) 1.2px, transparent 1.2px);
+  background-size: 15px 15px;
+}
+/* Corner registration marks */
+.manga-topbar::before {
+  content: ''; position: absolute; bottom: 5px; right: 5px;
+  width: 16px; height: 16px; z-index: 4;
+  border-right: 2.5px solid var(--accent); border-bottom: 2.5px solid var(--accent);
+}
+/* SVG speed lines layer */
+.manga-speed-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 1; pointer-events: none;
+}
+/* Ghost FX word in background */
+.manga-fx-ghost {
+  position: absolute; left: 34%; top: 50%; transform: translateY(-50%) rotate(-11deg);
+  font-size: 72px; font-weight: 900; letter-spacing: 0.08em;
+  color: transparent; -webkit-text-stroke: 1px rgba(217,119,6,0.09);
+  z-index: 1; pointer-events: none; user-select: none; white-space: nowrap; line-height: 1;
+}
+/* Inner layout */
+.manga-inner {
+  display: flex; align-items: center; gap: 12px; padding: 11px 16px 9px;
+  position: relative; z-index: 2;
+}
+/* Title zone */
+.manga-title-zone { flex: 1; min-width: 0; }
+.manga-headline {
+  font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;
+  color: var(--accent);
+  -webkit-text-stroke: 2.5px var(--text-strong);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--text-strong), 5px 5px 0 rgba(0,0,0,0.06);
+  display: inline-block; transform: rotate(-1.5deg); transform-origin: left center;
+  white-space: nowrap;
+}
+.manga-subrow { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+/* Parallelogram tag for DASHBOARD */
+.manga-tag {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--app); background: var(--text-strong);
+  padding: 3px 16px 3px 9px; display: inline-block; transform: rotate(-0.5deg);
+  clip-path: polygon(0% 0%, calc(100% - 9px) 0%, 100% 100%, 0% 100%);
+}
+/* Star starburst badge */
+.manga-starburst {
+  width: 32px; height: 32px; background: var(--accent); position: relative;
+  border: 2px solid var(--text-strong); display: flex; align-items: center; justify-content: center;
+  clip-path: polygon(50% 0%,55% 30%,80% 5%,65% 33%,100% 25%,75% 45%,100% 55%,72% 58%,85% 85%,58% 68%,50% 100%,42% 68%,15% 85%,28% 58%,0% 55%,25% 45%,0% 25%,35% 33%,20% 5%,45% 30%);
+  animation: burst-pulse 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.manga-starburst-inner { font-size: 11px; color: white; font-weight: 900; margin-top: -2px; }
+@keyframes burst-pulse { 0%,100%{transform:scale(1)rotate(0deg)} 50%{transform:scale(1.12)rotate(8deg)} }
+/* Animated deco stars */
+.manga-deco-stars {
+  font-size: 13px; color: var(--accent); letter-spacing: 2px;
+  -webkit-text-stroke: 0.5px var(--text-strong);
+  animation: star-twinkle 2.5s ease-in-out infinite;
+}
+@keyframes star-twinkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.55;transform:scale(1.1)} }
+/* Sync status row */
+.manga-sync-row {
+  display: flex; align-items: center; gap: 4px; margin-top: 4px;
+  font-size: 10px; font-weight: 700; color: var(--muted);
+}
+/* Clock block */
+.manga-clock-block {
+  flex-shrink: 0; text-align: right;
+  border-left: 2px solid var(--border); padding-left: 14px;
+}
+.manga-clock-block #clock {
+  font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;
+  color: var(--text-strong);
+}
+.manga-clock-block #date { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+/* Gear button override inside manga header */
+.manga-inner .settings-icon-btn {
+  border-radius: 10px; background: var(--card-soft); border: 1.5px solid var(--border);
+}
 </style>
 </head>
 <body>
 
 <div class="app-shell">
-  <header class="topbar">
-    <div class="topbar-row">
-      <div class="brand-block">
-        <div class="eyebrow"><span class="status-dot" id="cloud-dot"></span><span id="sync-label">Loading</span></div>
-        <h1 class="main-title-headline">Deutmeyer Family Dashboard</h1>
-      </div>
-      
-      <div class="dock-container" aria-label="Dashboard navigation">
-        <button class="nav-tab active" onclick="switchTab('home')">Today</button>
-        <button class="nav-tab" onclick="switchTab('chores')">All Chores</button>
-        <button class="nav-tab" onclick="switchTab('approvals')">Approvals <span class="badge" id="appr-badge" style="display:none">0</span></button>
-        <button class="nav-tab" onclick="switchTab('history')">History Log</button>
-        <button class="nav-tab" onclick="switchTab('manage')">Manage</button>
+  <header class="manga-topbar">
+
+    <!-- ① Radiating speed lines (SVG layer) -->
+    <svg class="manga-speed-bg" viewBox="0 0 800 84" preserveAspectRatio="xMidYMid slice"
+         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <radialGradient id="spdFade" cx="13%" cy="50%" r="90%" fx="13%" fy="50%">
+          <stop offset="0%"  stop-color="rgb(217,119,6)" stop-opacity="0.28"/>
+          <stop offset="50%" stop-color="rgb(217,119,6)" stop-opacity="0.09"/>
+          <stop offset="100%" stop-color="rgb(217,119,6)" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <g stroke="url(#spdFade)" fill="none">
+        <line x1="105" y1="42" x2="800" y2="-600" stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="-230" stroke-width="1.1"/>
+        <line x1="105" y1="42" x2="800" y2="-90"  stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="-28"  stroke-width="1.6"/>
+        <line x1="105" y1="42" x2="800" y2="0"    stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="12"   stroke-width="1.2"/>
+        <line x1="105" y1="42" x2="800" y2="22"   stroke-width="0.6"/>
+        <line x1="105" y1="42" x2="800" y2="31"   stroke-width="2.0"/>
+        <line x1="105" y1="42" x2="800" y2="37"   stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="42"   stroke-width="2.4"/>
+        <line x1="105" y1="42" x2="800" y2="47"   stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="53"   stroke-width="1.8"/>
+        <line x1="105" y1="42" x2="800" y2="62"   stroke-width="0.6"/>
+        <line x1="105" y1="42" x2="800" y2="72"   stroke-width="1.2"/>
+        <line x1="105" y1="42" x2="800" y2="84"   stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="100"  stroke-width="1.1"/>
+        <line x1="105" y1="42" x2="800" y2="124"  stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="162"  stroke-width="0.9"/>
+        <line x1="105" y1="42" x2="800" y2="230"  stroke-width="0.7"/>
+        <line x1="105" y1="42" x2="800" y2="360"  stroke-width="0.8"/>
+      </g>
+    </svg>
+
+    <!-- ② Ghost FX text in background -->
+    <div class="manga-fx-ghost" aria-hidden="true">ZOOM!</div>
+
+    <!-- ③ Main content row -->
+    <div class="manga-inner">
+
+      <!-- Title block -->
+      <div class="manga-title-zone">
+        <div class="manga-headline">DEUTMEYER</div>
+        <div class="manga-subrow">
+          <span class="manga-tag">DASHBOARD</span>
+          <div class="manga-starburst"><span class="manga-starburst-inner">★</span></div>
+          <span class="manga-deco-stars">✦ ✦</span>
+        </div>
+        <div class="manga-sync-row">
+          <span class="status-dot" id="cloud-dot"></span>
+          <span id="sync-label">Loading</span>
+        </div>
       </div>
 
-      <div class="time-block">
+      <!-- Clock -->
+      <div class="manga-clock-block">
         <div id="clock">--:--</div>
         <div id="date">--</div>
       </div>
+
+      <!-- Settings -->
+      <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+        <span class="badge" id="appr-badge" style="display:none;position:absolute;">0</span>
+        <button class="settings-icon-btn" onclick="toggleSettingsPopup()" title="Activity &amp; Settings">⚙</button>
+      </div>
+
     </div>
   </header>
 
@@ -262,46 +489,23 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     
     <!-- MASTER HUB TODAY PANEL VIEW -->
     <section class="panel active" id="panel-home">
-      <div class="today-master-layout">
-        
-        <!-- Left: Optimized Calendar Frame -->
-        <div class="calendar-card-box">
-          <div class="calendar-frame-wrap">
-            <iframe id="cal-agenda" src="" loading="lazy"></iframe>
-          </div>
-        </div>
-
-        <!-- Right: Combined Action Streams Box -->
-        <div class="main-tracking-core">
-          
-          <div style="display:flex; gap:12px; align-items:center; flex-shrink:0;">
-            <div class="quick-stats-stack" id="quick-stats" style="flex:1.2; margin-bottom:0;">
-              <div class="stat-mini">
-                <div class="stat-m-label">Done</div>
-                <div class="stat-m-val" id="stats-total-value">0/0</div>
-              </div>
-              <div class="stat-mini">
-                <div class="stat-m-label">Pending</div>
-                <div class="stat-m-val" id="stats-pending-value">0</div>
-              </div>
-              <div class="stat-mini">
-                <div class="stat-m-label">Week</div>
-                <div class="stat-m-val" id="stats-week-value">--</div>
-              </div>
-            </div>
-            <div class="card" id="home-dinner-card" style="display:none; flex:0.8; padding:10px 14px; background:linear-gradient(135deg, var(--purple-soft), transparent); border-color:var(--purple);">
-              <div class="dinner-title">🍽️ Tonight's Dinner Plan</div>
-              <div id="home-dinner-text" style="font-size:14px; font-weight:700; color:var(--text-strong)"></div>
-            </div>
-          </div>
-
-          <!-- Master Unified Multi-Feed Sheet List -->
-          <div class="scroll-payload-box" id="unified-master-tracks"></div>
-          
-        </div>
+      <!-- Hidden stat targets kept for JS compatibility -->
+      <span id="stats-total-value" style="display:none">0/0</span>
+      <span id="stats-pending-value" style="display:none">0</span>
+      <span id="stats-week-value" style="display:none">--</span>
+      <!-- Dinner banner (shown when enabled in Manage) -->
+      <div class="card" id="home-dinner-card" style="display:none; padding:10px 16px; flex-shrink:0; border-color:var(--purple); background:var(--purple-soft);">
+        <div class="dinner-title">🍽️ Tonight's Dinner Plan</div>
+        <div id="home-dinner-text" style="font-size:14px; font-weight:700; color:var(--text-strong)"></div>
       </div>
-
-      <!-- Quick Task On-The-Fly Trigger Button -->
+      <!-- Calendar — full width, above kids -->
+      <div class="cal-full-strip">
+        <iframe id="cal-agenda" src="" loading="lazy"></iframe>
+      </div>
+      <!-- Kids take center stage -->
+      <div class="kids-hero-grid" id="kids-hero-grid"></div>
+      <!-- Adults/Shared — compact horizontal strip below kids -->
+      <div class="adults-compact-area" id="adults-compact-area"></div>
       <button class="floating-action-node" onclick="openFastTaskOverlay()">+</button>
     </section>
 
@@ -321,8 +525,9 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <section class="panel" id="panel-history">
       <div class="panel-scroll-frame">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <button class="pill-btn" onclick="switchTab('home')" style="font-size:12px;padding:8px 14px;">← Today</button>
           <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Recent Activity</div>
-          <button class="pill-btn danger" onclick="clearHistoryLogs()">Clear History</button>
+          <button class="pill-btn danger" onclick="clearHistoryLogs()">Clear</button>
         </div>
         <div id="history-logs-container"></div>
       </div>
@@ -331,6 +536,11 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <!-- SYSTEM OVERRIDES MANAGEMENT LAYER -->
     <section class="panel" id="panel-manage">
       <div class="panel-scroll-frame">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+          <button class="pill-btn" onclick="switchTab('home'); manageUnlocked=false;" style="font-size:12px;padding:8px 14px;">← Today</button>
+          <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Family Settings</div>
+          <div style="width:80px;"></div>
+        </div>
         <div class="card pad" style="margin-bottom:16px;">
           <div class="card-main-title" style="margin-bottom:10px">Dashboard Settings</div>
           <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer; font-size:14px; color:var(--text-strong)">
@@ -356,10 +566,10 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <input type="text" id="front-task-input" class="inp" placeholder="Task name" style="margin-bottom:12px;" />
     <select id="front-assignee-select" class="inp" style="margin-bottom:16px; font-weight:700;">
       <option value="global_todo">📌 Shared Family List</option>
-      <option value="jules">⭐ Jules</option>
-      <option value="henry">🚀 Henry</option>
+      <option value="jules">🐎 Jules</option>
+      <option value="henry">⚽ Henry</option>
       <option value="dad">👨 Dad</option>
-      <option value="mom">👩 Jessica</option>
+      <option value="mom">👩 Mom</option>
     </select>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button class="pill-btn" onclick="document.getElementById('fast-task-overlay').classList.remove('open')">Cancel</button>
@@ -392,6 +602,20 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
       <button class="pill-btn" onclick="closeModal('reset-modal')">Cancel</button>
       <button class="pill-btn danger" onclick="doReset()">Confirm Reset</button>
     </div>
+  </div>
+</div>
+
+<!-- Settings popup -->
+<div id="settings-popup">
+  <button class="settings-pop-btn" onclick="openHistoryFromSettings()">📋&nbsp; Activity Log</button>
+  <button class="settings-pop-btn" onclick="openManageFromSettings()">⚙️&nbsp; Family Settings</button>
+</div>
+
+<!-- Person detail modal -->
+<div class="modal-bg" id="person-detail-modal">
+  <div class="modal person-detail-modal">
+    <div id="person-detail-content"></div>
+    <button class="pill-btn" onclick="closeModal('person-detail-modal')" style="margin-top:18px;width:100%;display:block;">Close</button>
   </div>
 </div>
 
@@ -478,19 +702,19 @@ const DEFAULT_PEOPLE = [
     { id:'d2', name:'Mow the lawn', type:'weekly', amt:0 },
     { id:'d3', name:'Dishes after dinner', type:'weekly', amt:0 },
   ]},
-  { id:'mom', name:'Jessica', emoji:'👩', cls:'card-mom', role:'parent', weeklyAllowance:0, streak:0, chores:[
+  { id:'mom', name:'Mom', emoji:'👩', cls:'card-mom', role:'parent', weeklyAllowance:0, streak:0, chores:[
     { id:'m1', name:'Grocery run', type:'weekly', amt:0 },
     { id:'m2', name:'Laundry', type:'weekly', amt:0 },
     { id:'m3', name:'Water the plants', type:'weekly', amt:0 },
   ]},
-  { id:'jules', name:'Jules', emoji:'⭐', cls:'card-jules', role:'child', age:'Age 9', weeklyAllowance:5.00, streak:3, chores:[
+  { id:'jules', name:'Jules', emoji:'🐎', cls:'card-jules', role:'child', age:'Age 9', weeklyAllowance:5.00, streak:3, chores:[
     { id:'j1', name:'Make bed', type:'weekly', amt:0 },
     { id:'j2', name:'Feed the pet', type:'weekly', amt:0 },
     { id:'j3', name:'Set the table', type:'weekly', amt:0 },
     { id:'j4', name:'Clean room', type:'weekly', amt:0 },
     { id:'j5', name:'Homework done', type:'weekly', amt:0 },
   ]},
-  { id:'henry', name:'Henry', emoji:'🚀', cls:'card-henry', role:'child', age:'Age 11', weeklyAllowance:7.00, streak:5, chores:[
+  { id:'henry', name:'Henry', emoji:'⚽', cls:'card-henry', role:'child', age:'Age 11', weeklyAllowance:7.00, streak:5, chores:[
     { id:'h1', name:'Make bed', type:'weekly', amt:0 },
     { id:'h2', name:'Empty dishwasher', type:'weekly', amt:0 },
     { id:'h3', name:'Vacuum living room', type:'weekly', amt:0 },
@@ -717,7 +941,15 @@ function normalizeState(input) {
     updatedBy: cleanText(metaSource.updatedBy, base.meta.updatedBy),
     writeId: cleanText(metaSource.writeId, base.meta.writeId)
   };
-  const peopleSource = Array.isArray(s.people) && s.people.length ? s.people : base.people;
+  const rawPeople = Array.isArray(s.people) && s.people.length ? s.people : base.people;
+  // Migrate: Jessica → Mom, ⭐ → 🐎 (Jules), 🚀 → ⚽ (Henry)
+  const peopleSource = rawPeople.map(p => {
+    if (!p) return p;
+    if (p.id === 'mom'   && p.name === 'Jessica') return { ...p, name: 'Mom' };
+    if (p.id === 'jules' && p.emoji === '⭐')      return { ...p, emoji: '🐎' };
+    if (p.id === 'henry' && p.emoji === '🚀')      return { ...p, emoji: '⚽' };
+    return p;
+  });
   return {
     schemaVersion: STATE_SCHEMA_VERSION,
     household: normalizeHousehold(s.household || base.household),
@@ -789,7 +1021,7 @@ function processSystemBanners() {
   } else if (state.dinnerEnabled && state.dinnerMenu) {
     banner.className = "smart-banner"; banner.innerHTML = `🍽️ <b>Tonight's Dinner:</b> ${escapeHtml(state.dinnerMenu)}`;
   } else {
-    banner.className = "smart-banner"; banner.innerHTML = `✨ <b>Welcome home.</b>`;
+    banner.className = "smart-banner"; banner.innerHTML = `🏠 <b>Welcome home, Deutmeyers.</b> Have a great day!`;
   }
 }
 setInterval(processSystemBanners, 15000);
@@ -1008,51 +1240,108 @@ function doReset() {
 // THE WALK-BY VIEW MASTER UNIFIED BUILDER
 // ══════════════════════════════════════════════
 function renderUnifiedFrontMatrix() {
-  let html = '';
-  
-  // 1. Render Shared Family Tasks
-  if(state.globalTodos && state.globalTodos.length > 0) {
-    html += `<div class="list-label" style="color:var(--purple);"><span>📌 Shared Family Tasks</span><button class="pill-btn ghost" onclick="clearFinishedTodos()" style="font-size:10px; padding:2px 6px;">Clear Checked</button></div>`;
-    state.globalTodos.forEach(todo => {
-      html += `<div class="chore-row ${todo.done ? 'done':''}" onclick="toggleGlobalTodo('${todo.id}')"><div class="chk" style="--person:var(--purple);">${todo.done ? '✓':''}</div><div class="chore-name">${escapeHtml(todo.name)}</div><div></div></div>`;
-    });
+  const kidsGrid = document.getElementById('kids-hero-grid');
+  const adultsArea = document.getElementById('adults-compact-area');
+  if (!kidsGrid || !adultsArea) return;
+
+  const pSoft = { dad:'rgba(34,197,94,0.12)', mom:'rgba(248,113,113,0.12)', jules:'rgba(56,189,248,0.12)', henry:'rgba(249,115,22,0.12)' };
+  const kids = state.people.filter(p => p.role === 'child');
+  const adults = state.people.filter(p => p.role === 'parent');
+
+  // ── Kid hero cards ──────────────────────────────
+  kidsGrid.innerHTML = kids.map(p => {
+    const prog = personProgress(p);
+    const weekly = p.chores.filter(c => c.type === 'weekly');
+    const jobs = p.chores.filter(c => c.type === 'job');
+    const bg = pSoft[p.id] || 'rgba(255,255,255,0.07)';
+    const earned = earnedTotal(p.id);
+    const streakTag = p.streak > 0 ? `<div class="kid-streak-tag">🔥 ${p.streak} wk</div>` : '';
+    const doneLabel = prog.pct === 100 ? '✓ All done!' : `${prog.done} / ${weekly.length} chores`;
+    const doneColor = prog.pct === 100 ? `var(--${p.id})` : 'var(--muted)';
+    const metaLabel = earned > 0 ? `$${earned.toFixed(2)} earned` : `$${p.weeklyAllowance.toFixed(2)}/week`;
+
+    const choreRows = [
+      ...weekly.map(c => {
+        const done = isChecked(p.id, c.id);
+        const locked = isApproved(p.id) && done;
+        return `<div class="kid-chore-row${done ? ' done' : ''}" onclick="${locked ? '' : `toggleChore('${p.id}','${c.id}')`}" ${locked ? 'style="cursor:default"' : ''}>
+          <div class="chk" style="${done ? `background:var(--${p.id});border-color:var(--${p.id});` : ''}">${done ? '✓' : ''}</div>
+          <span class="kid-chore-name">${escapeHtml(c.name)}</span>
+        </div>`;
+      }),
+      ...jobs.map(c => {
+        const done = isChecked(p.id, c.id);
+        const jpending = state.pending.some(x => x.type === 'job' && x.personId === p.id && x.choreId === c.id);
+        const japproved = isJobApproved(p.id, c.id);
+        const amtColor = japproved ? 'var(--green)' : jpending ? 'var(--amber)' : 'var(--accent)';
+        return `<div class="kid-chore-row${done ? ' done' : ''}" onclick="${done ? '' : `requestJobApproval('${p.id}','${c.id}')`}">
+          <div class="chk" style="${done ? `background:var(--${p.id});border-color:var(--${p.id});` : ''}">${done ? '✓' : ''}</div>
+          <span class="kid-chore-name">${escapeHtml(c.name)}</span>
+          <span style="font-size:11px;font-weight:700;color:${amtColor};margin-left:auto;">$${c.amt.toFixed(2)}</span>
+        </div>`;
+      })
+    ].join('');
+
+    return `<div class="kid-hero-card">
+      <div class="kid-card-header" onclick="openPersonDetail('${p.id}')" style="cursor:pointer;background:linear-gradient(145deg,${bg},transparent);">
+        <div class="kid-name-row">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="kid-emoji-badge">${escapeHtml(p.emoji)}</span>
+            <div>
+              <div class="kid-big-name">${escapeHtml(p.name)}</div>
+              <div class="kid-meta">${metaLabel}</div>
+            </div>
+          </div>
+          ${streakTag}
+        </div>
+        <div class="kid-prog-wrap">
+          <div class="kid-prog-bar"><div class="kid-prog-fill" style="width:${prog.pct}%;background:var(--${p.id});"></div></div>
+          <div class="kid-prog-label" style="color:${doneColor};">${doneLabel}</div>
+        </div>
+      </div>
+      <div class="kid-chore-scroll">
+        ${weekly.length + jobs.length === 0
+          ? '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">No chores yet! 🎉</div>'
+          : choreRows}
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── Adults compact + shared todos ───────────────
+  let adultsHtml = '';
+
+  if (state.globalTodos && state.globalTodos.length > 0) {
+    adultsHtml += `<div class="adult-compact-card">
+      <div class="adult-card-label" style="color:var(--purple);">📌 Shared</div>
+      ${state.globalTodos.map(t => `<div class="compact-row${t.done ? ' done' : ''}" onclick="toggleGlobalTodo('${t.id}')">
+        <div class="chk" style="${t.done ? 'background:var(--purple);border-color:var(--purple);' : ''}">${t.done ? '✓' : ''}</div>
+        <span>${escapeHtml(t.name)}</span>
+      </div>`).join('')}
+      ${state.globalTodos.some(t => t.done) ? `<button class="compact-clear-btn" onclick="clearFinishedTodos()">Clear done</button>` : ''}
+    </div>`;
   }
 
-  // 2. Loop Individual Profiles (Priority Children -> Sub Adults Grid Mapping)
-  state.people.forEach(p => {
+  adults.forEach(p => {
     const active = p.chores.filter(c => !isChecked(p.id, c.id));
-    const completed = p.chores.filter(c => isChecked(p.id, c.id));
-    const prog = personProgress(p);
-    const streakText = p.streak > 0 ? `<span class="p-widget-streak">🔥 ${p.streak} Wk Streak</span>` : '';
-
-    html += `<div class="list-label" style="margin-top:14px; border-bottom: 1px solid var(--border-soft); padding-bottom:4px;">
-      <span style="color:var(--text-strong); font-size:16px; font-weight:800;">${escapeHtml(p.emoji)} ${escapeHtml(p.name)} (${prog.done}/${p.chores.length})</span>
-      ${streakText}
+    const done = p.chores.filter(c => isChecked(p.id, c.id));
+    const pc = state.pending.length;
+    const approvalBanner = pc > 0
+      ? `<div onclick="openPersonDetail('${p.id}')" style="display:flex;align-items:center;gap:6px;padding:5px 0 7px;border-bottom:1px solid var(--border-soft);cursor:pointer;margin-bottom:4px;">
+          <span style="font-size:15px;">⏳</span>
+          <span style="font-size:12px;font-weight:700;color:var(--accent);">${pc} need${pc === 1 ? 's' : ''} approval</span>
+          <span style="font-size:10px;color:var(--muted);margin-left:auto;">tap →</span>
+        </div>`
+      : '';
+    adultsHtml += `<div class="adult-compact-card" onclick="openPersonDetail('${p.id}')">
+      <div class="adult-card-label" style="color:var(--${p.id});">${escapeHtml(p.emoji)} ${escapeHtml(p.name)}</div>
+      ${approvalBanner}
+      ${active.map(c => `<div class="compact-row" onclick="event.stopPropagation();toggleChore('${p.id}','${c.id}')"><div class="chk"></div><span>${escapeHtml(c.name)}</span></div>`).join('')}
+      ${done.map(c => `<div class="compact-row done" onclick="event.stopPropagation();toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id});border-color:var(--${p.id});">✓</div><span>${escapeHtml(c.name)}</span></div>`).join('')}
+      ${p.chores.length === 0 ? '<div style="font-size:12px;color:var(--muted);">All clear ✓</div>' : ''}
     </div>`;
-
-    if(p.chores.length === 0) {
-      html += `<div style="font-size:13px; color:var(--text); padding:8px 14px;">No chores yet.</div>`;
-      return;
-    }
-
-    // List remaining obligations first
-    active.forEach(c => {
-      const isJob = c.type === 'job';
-      const actionFn = isJob ? `requestJobApproval('${p.id}','${c.id}')` : `toggleChore('${p.id}','${c.id}')`;
-      html += `<div class="chore-row" onclick="${actionFn}"><div class="chk" style="--person:var(--${p.id})"></div><div class="chore-name">${escapeHtml(c.name)}</div><div style="font-size:12px; font-weight:700; color:var(--text)">${isJob ? '$'+c.amt.toFixed(2):'Chore'}</div></div>`;
-    });
-
-    // List cleared operations second
-    completed.forEach(c => {
-      const isJob = c.type === 'job';
-      const jpending = state.pending.some(x => x.type === 'job' && x.personId === p.id && x.choreId === c.id);
-      const japproved = isJobApproved(p.id, c.id);
-      let statusLabel = isJob ? (japproved ? 'Paid' : (jpending ? 'Pending' : 'Done')) : 'Done';
-      html += `<div class="chore-row done" onclick="toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id}); border-color:var(--${p.id})">✓</div><div class="chore-name">${escapeHtml(c.name)}</div><div style="font-size:12px; color:var(--text)">${statusLabel}</div></div>`;
-    });
   });
 
-  document.getElementById('unified-master-tracks').innerHTML = html;
+  adultsArea.innerHTML = adultsHtml || `<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px;">Add tasks with +</div>`;
 }
 
 function renderDetailedChoreManifestPage() {
@@ -1177,7 +1466,117 @@ function startCloudSync() {
   }, () => applySyncStatus('local'));
 }
 
-setupCalendar(); updateClock(); setInterval(updateClock, 15000); renderAll(); startCloudSync(); resetAmbientTimer(); setTimeout(processSystemBanners, 1000);
+function applyAutoTheme() {
+  const h = new Date().getHours();
+  document.documentElement.setAttribute('data-theme', (h >= 7 && h < 20) ? 'light' : 'dark');
+}
+
+// ── Settings popup ──────────────────────────────
+function toggleSettingsPopup() {
+  const pop = document.getElementById('settings-popup');
+  pop.classList.toggle('open');
+}
+function closeSettingsPopup() {
+  document.getElementById('settings-popup').classList.remove('open');
+}
+function openHistoryFromSettings() {
+  closeSettingsPopup();
+  switchTab('history');
+}
+function openManageFromSettings() {
+  closeSettingsPopup();
+  requirePin('manage');
+}
+document.addEventListener('click', e => {
+  const pop = document.getElementById('settings-popup');
+  if (pop && pop.classList.contains('open') && !pop.contains(e.target) && !e.target.closest('.settings-icon-btn')) {
+    pop.classList.remove('open');
+  }
+});
+
+// ── Person detail modal ────────────────────────
+function openPersonDetail(pid) {
+  const p = state.people.find(x => x.id === pid); if (!p) return;
+  const modal = document.getElementById('person-detail-modal');
+  const content = document.getElementById('person-detail-content');
+  const earned = earnedTotal(pid);
+  const prog = personProgress(p);
+  const weekly = p.chores.filter(c => c.type === 'weekly');
+  const jobs = p.chores.filter(c => c.type === 'job');
+  const pcolor = `var(--${p.id})`;
+  const pSoft = { dad:'rgba(34,197,94,0.12)', mom:'rgba(248,113,113,0.12)', jules:'rgba(56,189,248,0.12)', henry:'rgba(249,115,22,0.12)' };
+  const bg = pSoft[pid] || 'rgba(255,255,255,0.07)';
+
+  let html = `<div style="background:linear-gradient(145deg,${bg},transparent);border-radius:12px;padding:16px 18px 14px;margin-bottom:18px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-size:40px;line-height:1;">${escapeHtml(p.emoji)}</span>
+      <div>
+        <div style="font-size:24px;font-weight:800;color:var(--text-strong);letter-spacing:-0.02em;">${escapeHtml(p.name)}</div>
+        ${p.role === 'child' ? `<div style="color:${pcolor};font-size:13px;font-weight:600;">$${earned.toFixed(2)} earned · $${p.weeklyAllowance.toFixed(2)}/wk${p.streak > 0 ? ' · 🔥 '+p.streak+' wk streak' : ''}</div>` : ''}
+      </div>
+    </div>
+    ${p.role === 'child' && weekly.length > 0 ? `<div style="margin-top:10px;">
+      <div style="height:7px;background:var(--border-soft);border-radius:99px;overflow:hidden;"><div style="height:100%;border-radius:99px;width:${prog.pct}%;background:${pcolor};transition:width 0.4s;"></div></div>
+      <div style="font-size:11px;color:${prog.pct===100?pcolor:'var(--muted)'};font-weight:600;margin-top:4px;">${prog.pct===100?'✓ All done!':prog.done+' / '+weekly.length+' chores'}</div>
+    </div>` : ''}
+  </div>`;
+
+  if (p.role === 'parent' && state.pending.length > 0) {
+    html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);margin-bottom:8px;">⏳ Needs Approval</div>`;
+    state.pending.forEach(item => {
+      const child = state.people.find(x => x.id === item.personId);
+      const chore = child?.chores.find(c => c.id === item.choreId);
+      const label = item.type === 'allowance' ? `${child?.name || ''} · Weekly allowance` : `${child?.name || ''} · ${chore?.name || 'Task'}`;
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-soft);">
+        <span style="font-size:20px;">${escapeHtml(child?.emoji||'•')}</span>
+        <span style="flex:1;font-size:14px;font-weight:600;color:var(--text-strong);">${escapeHtml(label)}</span>
+        <span style="font-size:13px;font-weight:700;color:var(--green);">$${item.amt.toFixed(2)}</span>
+        <button class="pill-btn danger" onclick="denyItem('${item.id}');openPersonDetail('${pid}')" style="padding:6px 10px;font-size:12px;">✗</button>
+        <button class="pill-btn primary" onclick="approveItem('${item.id}');openPersonDetail('${pid}')" style="padding:6px 10px;font-size:12px;">✓</button>
+      </div>`;
+    });
+    html += `<div style="margin-bottom:12px;"></div>`;
+  }
+
+  if (weekly.length > 0) {
+    html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">Weekly Chores</div>`;
+    weekly.forEach(c => {
+      const done = isChecked(pid, c.id);
+      const locked = isApproved(pid) && done;
+      html += `<div class="${done?'kid-chore-row done':'kid-chore-row'}" onclick="${locked?'':''}" style="border-bottom:1px solid var(--border-soft);">
+        <div class="chk" style="${done?`background:${pcolor};border-color:${pcolor};`:''}">${done?'✓':''}</div>
+        <span class="kid-chore-name" style="${done?'text-decoration:line-through;opacity:0.5;':''}">${escapeHtml(c.name)}</span>
+        ${!locked && !done ? `<span onclick="event.stopPropagation();toggleChore('${pid}','${c.id}');openPersonDetail('${pid}')" style="font-size:11px;color:${pcolor};font-weight:700;cursor:pointer;padding:4px 8px;border-radius:8px;border:1px solid ${pcolor};margin-left:auto;">Mark done</span>` : ''}
+      </div>`;
+    });
+  }
+
+  if (jobs.length > 0) {
+    html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:14px 0 8px;">Paid Jobs</div>`;
+    jobs.forEach(c => {
+      const done = isChecked(pid, c.id);
+      const jpending = state.pending.some(x => x.type === 'job' && x.personId === pid && x.choreId === c.id);
+      const japproved = isJobApproved(pid, c.id);
+      const statusColor = japproved ? 'var(--green)' : jpending ? 'var(--amber)' : 'var(--accent)';
+      const statusLabel = japproved ? '✓ Paid' : jpending ? '⏳ Waiting' : 'Tap to submit';
+      html += `<div class="${done?'kid-chore-row done':'kid-chore-row'}" onclick="${done?'':''}" style="border-bottom:1px solid var(--border-soft);">
+        <div class="chk" style="${done?`background:${pcolor};border-color:${pcolor};`:''}">${done?'✓':''}</div>
+        <span class="kid-chore-name" style="${done?'text-decoration:line-through;opacity:0.5;':''}">${escapeHtml(c.name)}</span>
+        <span style="font-size:11px;font-weight:700;color:${statusColor};margin-left:auto;">${statusLabel}</span>
+        <span style="font-size:12px;font-weight:700;color:var(--green);margin-left:8px;">$${c.amt.toFixed(2)}</span>
+      </div>`;
+    });
+  }
+
+  if (p.chores.length === 0) {
+    html += `<div class="empty-state">No tasks assigned yet.</div>`;
+  }
+
+  content.innerHTML = html;
+  modal.classList.add('open');
+}
+
+setupCalendar(); updateClock(); setInterval(updateClock, 15000); applyAutoTheme(); setInterval(applyAutoTheme, 60000); renderAll(); startCloudSync(); resetAmbientTimer(); setTimeout(processSystemBanners, 1000);
 </script>
 </body>
 </html>
