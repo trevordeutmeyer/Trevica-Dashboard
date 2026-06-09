@@ -2,89 +2,62 @@
 
 ## Current Use
 
-The app uses Firebase Realtime Database from client-side JavaScript.
+Firebase Realtime Database, client-side JavaScript only. No Firebase Admin SDK, no server.
 
-Current database path:
+Database path:
 
-```text
+```
 familyDashboard/state
 ```
 
-Current Firebase app config is in `index.html`.
+Firebase app config is in `index.html`.
 
-## Phase 1 Sync Behavior
-
-The app remains a static GitHub Pages single-page app. It uses the Firebase client SDK only; there is no server or Firebase Admin SDK.
+## Sync Behavior
 
 Startup flow:
 
-1. Read the local fallback state from `localStorage` key `fb_v11`.
-2. Normalize local data into schema version `1`.
-3. Attach `.info/connected` and `familyDashboard/state` listeners.
-4. If `familyDashboard/state` is empty, seed it once with the normalized local/default Deutmeyer household state using a transaction.
-5. For each remote snapshot, normalize it, render it, and cache it locally without echoing the snapshot back to Firebase.
-
-Local writes are debounced and written back to `familyDashboard/state` with `meta.updatedAt`, `meta.updatedBy`, `meta.writeId`, and `meta.reason`.
+1. Read `localStorage` key `fb_v11` and normalize to current schema.
+2. Attach `.info/connected` and `familyDashboard/state` listeners.
+3. If `familyDashboard/state` is empty, seed it once with normalized local/default state using a transaction.
+4. On each remote snapshot: normalize, render, cache to `localStorage`. Do not echo back to Firebase.
+5. Local writes debounce and write to `familyDashboard/state` with `meta.updatedAt`, `meta.updatedBy`, `meta.writeId`, and `meta.reason`.
 
 ## Default Household Seed
 
-The default seed includes:
+The default seed (`DEFAULT_PEOPLE` + `DEFAULT_HOUSEHOLD` in `index.html`) includes:
 
-- `household`: Deutmeyer family metadata and America/Denver timezone.
-- `people`: Dad, Jessica, Jules, and Henry with starter weekly chores and allowance values.
-- `settings`: dinner widget state.
-- `activity` and `logs`: empty history arrays, with `logs` retained for compatibility.
-- `meta`: client/write tracking for sync diagnostics.
+| Field | Value |
+|---|---|
+| Household | Deutmeyer family, America/Denver timezone |
+| Dad | 👨, parent, no allowance |
+| Mom | 👩, parent, no allowance (migrated from "Jessica") |
+| Jules | 🐎, child, $5/week allowance, streak 0 |
+| Henry | ⚽, child, $7/week allowance, streak 0 |
+| Dinner widget | disabled |
+| Custom banners | empty array |
+| streakResetDone | true |
 
-## What Is Safe To Commit
+## What Is Safe to Commit
 
 Safe in frontend code:
-
-- `apiKey`
-- `authDomain`
-- `databaseURL`
-- `projectId`
-- `storageBucket`
-- `messagingSenderId`
-- `appId`
+- `apiKey`, `authDomain`, `databaseURL`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`
 
 Never commit:
+- Firebase Admin SDK service account JSON
+- Private keys or secrets
+- Passwords
 
-- Firebase Admin SDK service account JSON.
-- Private keys.
-- Server API secrets.
-- Passwords.
+## Security Status — Current
+
+Rules are likely open (`".read": true, ".write": true`). This means anyone who finds the URL can read or overwrite the dashboard. Acceptable for a casual private household kiosk; not acceptable if family data becomes sensitive.
 
 ## Required Security Work
 
-Before relying on this outside casual home use, enable Firebase Authentication and restrict Realtime Database rules.
-
-Recommended direction:
+Before treating the app as secure:
 
 1. Enable Firebase Authentication.
-2. Create parent account(s).
-3. Create kiosk account.
-4. Require authenticated users for reads and writes.
-5. Later, separate parent-only actions from kid/kiosk actions.
-
-## Temporary Rule Warning
-
-Rules like this are unsafe:
-
-```json
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
-```
-
-Anyone who discovers the app can read or change the dashboard if rules are public.
-
-## Target Rule Direction
-
-After auth is added, rules should move toward this shape:
+2. Create parent and kiosk user accounts.
+3. Update Realtime Database rules to require authentication:
 
 ```json
 {
@@ -97,9 +70,8 @@ After auth is added, rules should move toward this shape:
 }
 ```
 
-That is only a first locked-down version. Parent-only controls need more detailed rules and user roles.
+4. Later: add role-aware rules so only authenticated parents can write to `settings`, `customBanners`, and approval decisions.
 
-## Phase 1 Rules Note
+## Conflict Behavior
 
-Phase 1 still writes one shared state object. The recommended first production rule remains authenticated read/write access to `familyDashboard`, followed later by role-aware rules for parent-only actions.
-
+The app writes the entire state object on every change (no partial updates). If two devices write simultaneously, the last write wins. This is acceptable for current household use. If conflicts become a problem, move to per-path writes and Firebase transactions on sensitive fields.

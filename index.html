@@ -426,6 +426,144 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .manga-inner .settings-icon-btn {
   border-radius: 10px; background: var(--card-soft); border: 1.5px solid var(--border);
 }
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE LAYOUT SYSTEM
+   Breakpoints:
+     xs  < 600px          → phone portrait
+     sm  600-767px        → large phone / small tablet portrait
+     md  768-1099px       → tablet portrait, Surface Pro kiosk ← default
+     lg  ≥ 1100px         → desktop / tablet landscape
+     compact-landscape    → any landscape with height < 520px (phone landscape)
+═══════════════════════════════════════════════════════════ */
+
+/* ─── Desktop / tablet landscape (≥ 1100px) ───────────── */
+@media (min-width: 1100px) {
+  #panel-home {
+    display: grid !important;
+    grid-template-columns: 360px 1fr;
+    grid-template-areas:
+      "stats  kids"
+      "cal    kids"
+      "adults kids";
+    grid-template-rows: auto 1fr auto;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .quick-stats-stack    { grid-area: stats;  margin-bottom: 0; }
+  .cal-full-strip       { grid-area: cal;    height: auto; min-height: 220px; }
+  .adults-compact-area  {
+    grid-area: adults; height: auto; flex-direction: column;
+    overflow-x: visible; max-height: 240px; overflow-y: auto;
+  }
+  .adult-compact-card   { min-width: unset; flex: unset; }
+  #kids-hero-grid       { grid-area: kids; }
+  .kids-hero-grid       { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─── Phone portrait (< 600px) ────────────────────────── */
+@media (max-width: 599px) {
+  html, body { height: auto; overflow-y: auto; }
+  .app-shell { height: auto; min-height: 100vh; overflow: visible; padding: 0 8px; }
+  .content   { flex: unset; height: auto; overflow: visible; padding: 10px 6px 24px; }
+  .panel.active { display: block; height: auto; }
+
+  /* Header — compact */
+  .manga-topbar  { min-height: 80px; }
+  .manga-inner   { padding: 11px 14px 10px; }
+  .manga-headline { font-size: 28px; }
+  .manga-tag     { font-size: 11px; padding: 3px 14px 3px 8px; }
+  .manga-sync-row { font-size: 11px; }
+  .manga-deco-stars { font-size: 14px; }
+  .manga-clock-block #clock { font-size: 32px; }
+  .manga-clock-block #date  { font-size: 12px; }
+
+  /* Banner — compact */
+  .smart-banner  { font-size: 14px; padding: 10px 14px; }
+  .banner-tag    { font-size: 11px; }
+
+  /* Home layout — single column, natural height */
+  #panel-home { gap: 8px; }
+  .cal-full-strip { height: 180px; }
+  .kids-hero-grid {
+    grid-template-columns: 1fr;
+    flex: unset; height: auto;
+  }
+  .kid-hero-card { height: auto; }
+  .kid-chore-scroll { overflow: visible; max-height: none; }
+  .kid-big-name   { font-size: 22px; }
+  .kid-emoji-badge { font-size: 28px; }
+  .kid-chore-name { font-size: 15px; }
+  .kid-chore-row  { min-height: 54px; }
+
+  .adults-compact-area {
+    height: auto; flex-direction: column;
+    overflow-x: visible;
+  }
+  .adult-compact-card { min-width: unset; flex: unset; }
+  .adult-card-label { font-size: 13px; }
+  .compact-row span { font-size: 14px; }
+
+  /* Stats */
+  .stat-m-val   { font-size: 22px; }
+  .stat-m-label { font-size: 11px; }
+}
+
+/* ─── Large phone portrait / small tablet (600-767px) ─── */
+@media (min-width: 600px) and (max-width: 767px) {
+  .kids-hero-grid { grid-template-columns: 1fr 1fr; }
+  .manga-headline { font-size: 34px; }
+  .manga-clock-block #clock { font-size: 40px; }
+  .cal-full-strip { height: 200px; }
+}
+
+/* ─── Phone landscape (any width, height < 520px) ──────── */
+@media (max-height: 519px) and (orientation: landscape) {
+  html, body { height: auto; overflow-y: auto; }
+  .app-shell { height: auto; min-height: 100vh; overflow: visible; }
+  .content   { flex: unset; height: auto; overflow: visible; padding: 8px; }
+  .panel.active { display: block; height: auto; }
+
+  /* Header — very compact */
+  .manga-topbar   { min-height: 66px; }
+  .manga-inner    { padding: 8px 14px; }
+  .manga-headline { font-size: 26px; }
+  .manga-tag      { font-size: 10px; padding: 3px 12px 3px 7px; }
+  .manga-subrow   { margin-top: 3px; gap: 6px; }
+  .manga-sync-row { display: none; }
+  .manga-deco-stars { font-size: 13px; }
+  .manga-clock-block #clock { font-size: 30px; }
+  .manga-clock-block #date  { font-size: 11px; }
+
+  /* Banner — single line */
+  .smart-banner { font-size: 13px; padding: 8px 12px; }
+  .banner-tag   { font-size: 10px; }
+
+  /* Side-by-side: calendar left, kids right */
+  #panel-home {
+    display: grid !important;
+    grid-template-columns: 240px 1fr;
+    grid-template-areas:
+      "stats  kids"
+      "cal    kids"
+      "adults kids";
+    grid-template-rows: auto 1fr auto;
+    gap: 8px;
+  }
+  .quick-stats-stack   { grid-area: stats; }
+  .cal-full-strip      { grid-area: cal; height: auto; min-height: 120px; }
+  .kids-hero-grid      { grid-area: kids; grid-template-columns: 1fr 1fr; }
+  .adults-compact-area { grid-area: adults; height: auto; flex-direction: column; }
+  .adult-compact-card  { min-width: unset; }
+
+  .kid-hero-card  { height: auto; }
+  .kid-chore-scroll { max-height: 180px; }
+  .kid-big-name   { font-size: 20px; }
+  .kid-emoji-badge { font-size: 26px; }
+  .kid-chore-name { font-size: 14px; }
+  .kid-chore-row  { min-height: 48px; }
+  .stat-m-val     { font-size: 20px; }
+}
 </style>
 </head>
 <body>
@@ -573,6 +711,33 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
             <button class="pill-btn primary" onclick="saveDinnerMenu()">Save Dinner</button>
           </div>
         </div>
+        <!-- Custom Banners -->
+        <div class="card pad" style="margin-bottom:16px;">
+          <div style="font-weight:800;font-size:15px;color:var(--text-strong);margin-bottom:4px;">📣 Custom Banners</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:14px;">Schedule a message to display on the banner for a specific date &amp; time window.</div>
+          <div style="display:grid;gap:10px;margin-bottom:14px;">
+            <input type="text" id="banner-msg-input" class="inp" placeholder="Banner message…" />
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px;">Start</div>
+                <input type="datetime-local" id="banner-start-input" class="inp" />
+              </div>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:4px;">End</div>
+                <input type="datetime-local" id="banner-end-input" class="inp" />
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <span style="font-size:13px;font-weight:700;color:var(--muted);">Style:</span>
+              <button id="banner-type-info"   class="type-btn selected" onclick="setBannerType('info')">ℹ️ Note</button>
+              <button id="banner-type-accent" class="type-btn"          onclick="setBannerType('accent')">⭐ Event</button>
+              <button id="banner-type-danger" class="type-btn"          onclick="setBannerType('danger')">🚨 Alert</button>
+            </div>
+            <button class="add-btn" onclick="addCustomBanner()">Schedule Banner</button>
+          </div>
+          <div id="custom-banners-list"></div>
+        </div>
+
         <div class="manage-grid" id="manage-grid"></div>
         <div style="margin-top:24px; text-align:right;"><button class="pill-btn danger" onclick="requirePin('reset')">Start New Week</button></div>
       </div>
@@ -959,6 +1124,7 @@ function freshState() {
     settings:{ dinnerEnabled: false, dinnerMenu: '' },
     dinnerEnabled: false,
     dinnerMenu: '',
+    customBanners: [],
     streakResetDone: true,
     meta
   };
@@ -1006,6 +1172,7 @@ function normalizeState(input) {
     settings,
     dinnerEnabled: settings.dinnerEnabled,
     dinnerMenu: settings.dinnerMenu,
+    customBanners: Array.isArray(s.customBanners) ? s.customBanners : [],
     streakResetDone: true,
     meta
   };
@@ -1056,28 +1223,50 @@ let state = loadState(); state = normalizeState(state);
 function processSystemBanners() {
   const banner = document.getElementById('system-announcement-banner'); if(!banner) return;
   const now = new Date(), hrs = now.getHours(), mins = now.getMinutes();
-  
+  const nowMs = now.getTime();
+
+  // 1. Hard-coded movie-time alert (highest priority)
   if ((hrs === 19 && mins >= 35) || (hrs === 20 && mins <= 5)) {
     let delta = 80 - mins; if (hrs === 20) delta = 5 - mins;
     banner.className = "smart-banner alert-active";
     banner.innerHTML = `<span class="banner-tag danger">ALERT</span> 🎬 Family Movie Time in <b style="color:var(--text-strong)">${delta > 0 ? delta : 0} min</b> — wrap it up!`;
-  } else if (state.dinnerEnabled && state.dinnerMenu) {
+    return;
+  }
+
+  // 2. Active custom banners (most recently started wins)
+  const activeBanners = (state.customBanners || []).filter(b => {
+    const s = new Date(b.start).getTime(), e = new Date(b.end).getTime();
+    return !isNaN(s) && !isNaN(e) && s <= nowMs && e >= nowMs;
+  }).sort((a, b) => new Date(b.start) - new Date(a.start));
+  if (activeBanners.length > 0) {
+    const b = activeBanners[0];
+    const typeClass = b.type === 'danger' ? 'danger' : b.type === 'accent' ? 'accent' : '';
+    const typeLabel = b.type === 'danger' ? 'ALERT' : b.type === 'accent' ? 'EVENT' : 'NOTE';
+    banner.className = 'smart-banner' + (b.type === 'danger' ? ' alert-active' : '');
+    banner.innerHTML = `<span class="banner-tag ${typeClass}">${typeLabel}</span> ${escapeHtml(b.message)}`;
+    return;
+  }
+
+  // 3. Dinner menu
+  if (state.dinnerEnabled && state.dinnerMenu) {
     banner.className = "smart-banner";
     banner.innerHTML = `<span class="banner-tag accent">TONIGHT</span> 🍽️ <b>${escapeHtml(state.dinnerMenu)}</b>`;
-  } else {
-    banner.className = "smart-banner";
-    const WELCOME_MSGS = [
-      `<span class="banner-tag">HOME</span> 🐎 Jules! ⚽ Henry! The board is ready — let's GO!`,
-      `<span class="banner-tag">TODAY</span> 🔥 Who's crushing their chores first today?`,
-      `<span class="banner-tag">HOME</span> ⚡ Deutmeyers ASSEMBLE! Chores won't do themselves!`,
-      `<span class="banner-tag accent">GOOOO</span> 🏆 Champions do their chores. Be a champion.`,
-      `<span class="banner-tag">HUSTLE</span> 💪 Check it off, earn that allowance!`,
-      `<span class="banner-tag">LFG</span> 🌟 New day, new chores — you got this, Deutmeyers!`,
-      `<span class="banner-tag accent">QUEST</span> 🗺️ Daily quest unlocked! Chores await, heroes.`,
-    ];
-    const idx = (new Date().getDate() + new Date().getHours()) % WELCOME_MSGS.length;
-    banner.innerHTML = WELCOME_MSGS[idx];
+    return;
   }
+
+  // 4. Rotating welcome messages
+  banner.className = "smart-banner";
+  const WELCOME_MSGS = [
+    `<span class="banner-tag">HOME</span> 🐎 Jules! ⚽ Henry! The board is ready — let's GO!`,
+    `<span class="banner-tag">TODAY</span> 🔥 Who's crushing their chores first today?`,
+    `<span class="banner-tag">HOME</span> ⚡ Deutmeyers ASSEMBLE! Chores won't do themselves!`,
+    `<span class="banner-tag accent">GOOOO</span> 🏆 Champions do their chores. Be a champion.`,
+    `<span class="banner-tag">HUSTLE</span> 💪 Check it off, earn that allowance!`,
+    `<span class="banner-tag">LFG</span> 🌟 New day, new chores — you got this, Deutmeyers!`,
+    `<span class="banner-tag accent">QUEST</span> 🗺️ Daily quest unlocked! Chores await, heroes.`,
+  ];
+  const idx = (new Date().getDate() + new Date().getHours()) % WELCOME_MSGS.length;
+  banner.innerHTML = WELCOME_MSGS[idx];
 }
 setInterval(processSystemBanners, 15000);
 
@@ -1434,6 +1623,74 @@ function renderApprovalsView() {
   }).join('')}</div>`;
 }
 
+// ── Custom Banners ─────────────────────────────
+let _bannerType = 'info';
+function setBannerType(t) {
+  _bannerType = t;
+  ['info','accent','danger'].forEach(x => {
+    const btn = document.getElementById('banner-type-' + x);
+    if (btn) btn.classList.toggle('selected', x === t);
+  });
+}
+function addCustomBanner() {
+  const msg   = (document.getElementById('banner-msg-input')?.value || '').trim();
+  const start = document.getElementById('banner-start-input')?.value;
+  const end   = document.getElementById('banner-end-input')?.value;
+  if (!msg)   { showToast('Enter a banner message.'); return; }
+  if (!start) { showToast('Set a start date/time.'); return; }
+  if (!end)   { showToast('Set an end date/time.'); return; }
+  if (new Date(start) >= new Date(end)) { showToast('End must be after start.'); return; }
+  if (!Array.isArray(state.customBanners)) state.customBanners = [];
+  state.customBanners.push({ id: 'b' + Date.now(), message: msg, type: _bannerType, start, end });
+  document.getElementById('banner-msg-input').value = '';
+  document.getElementById('banner-start-input').value = '';
+  document.getElementById('banner-end-input').value = '';
+  saveState('banner.add');
+  renderAll();
+  renderCustomBanners();
+  showToast('Banner scheduled!');
+}
+function deleteCustomBanner(id) {
+  state.customBanners = (state.customBanners || []).filter(b => b.id !== id);
+  saveState('banner.delete');
+  renderAll();
+  renderCustomBanners();
+}
+function fmtBannerDate(dtStr) {
+  if (!dtStr) return '?';
+  const d = new Date(dtStr);
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' ' +
+         d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}
+function renderCustomBanners() {
+  const el = document.getElementById('custom-banners-list'); if (!el) return;
+  const banners = state.customBanners || [];
+  if (!banners.length) {
+    el.innerHTML = '<div style="font-size:13px;color:var(--muted);text-align:center;padding:10px 0;">No banners scheduled yet.</div>';
+    return;
+  }
+  const nowMs = Date.now();
+  el.innerHTML = [...banners]
+    .sort((a,b) => new Date(a.start) - new Date(b.start))
+    .map(b => {
+      const s = new Date(b.start).getTime(), e = new Date(b.end).getTime();
+      const active = s <= nowMs && e >= nowMs;
+      const past   = e < nowMs;
+      const color  = b.type==='danger' ? '#dc2626' : b.type==='accent' ? 'var(--accent)' : 'var(--text-strong)';
+      const label  = b.type==='danger' ? 'ALERT' : b.type==='accent' ? 'EVENT' : 'NOTE';
+      return `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px solid var(--border-soft);opacity:${past?0.45:1};">
+        <span style="font-size:10px;font-weight:800;letter-spacing:.1em;background:${color};color:white;padding:3px 8px;border-radius:4px;flex-shrink:0;margin-top:3px;">${label}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:700;color:var(--text-strong);margin-bottom:3px;">${escapeHtml(b.message)}</div>
+          <div style="font-size:11px;color:var(--muted);">${fmtBannerDate(b.start)} → ${fmtBannerDate(b.end)}&nbsp;
+            ${active ? '<span style="color:var(--green);font-weight:700;">● LIVE</span>' : past ? '<span style="opacity:.6;">ended</span>' : ''}
+          </div>
+        </div>
+        <button class="del-btn" onclick="deleteCustomBanner('${b.id}')" title="Delete">×</button>
+      </div>`;
+    }).join('');
+}
+
 function renderManageView() {
   document.getElementById('manage-grid').innerHTML = state.people.map(person => {
     return `<div class="card pad">
@@ -1444,6 +1701,7 @@ function renderManageView() {
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
+  renderCustomBanners();
 }
 
 function updateSystemCounters() {

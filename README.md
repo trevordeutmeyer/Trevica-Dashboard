@@ -1,52 +1,65 @@
 # Trevica Dashboard
 
-Personal family dashboard for the Deutmeyer household. The app is designed to run on a Surface Pro in portrait kiosk mode and provide a quick walk-by view of chores, shared tasks, approvals, dinner, history, and calendar events.
+Personal family dashboard for the Deutmeyer household. Designed to run 24/7 on a Surface Pro in portrait kiosk mode — readable at a glance from across the room — and also usable on phones, tablets, and desktop browsers.
 
 ## Live App
 
-GitHub Pages URL:
-
+```
 https://trevordeutmeyer.github.io/Trevica-Dashboard/
+```
 
 Repository:
 
+```
 https://github.com/trevordeutmeyer/Trevica-Dashboard
+```
 
 ## Current Architecture
 
-- Static GitHub Pages app.
-- Main application file: `index.html`.
-- Firebase Realtime Database stores shared dashboard state at `familyDashboard/state`.
-- Browser `localStorage` is used as a fallback when Firebase is unavailable.
-- Google Calendar is embedded in an iframe.
+- Single-file static GitHub Pages app (`index.html` contains all HTML, CSS, and JS).
+- Firebase Realtime Database stores shared state at `familyDashboard/state`.
+- `localStorage` key `fb_v11` is the offline fallback.
+- Google Calendar is embedded via iframe.
+- No build step. Edit `index.html`, push to `main`, GitHub Pages deploys automatically.
 
-## Local Work
+## Responsive Layout
 
-From the repo folder:
+The app detects the viewing environment and adjusts automatically:
+
+| Context | Layout |
+|---|---|
+| Surface Pro portrait (768–1099 px) | Kids hero grid + calendar strip + adults strip, fixed 100vh |
+| Desktop / tablet landscape (≥ 1100 px) | Two-column: calendar + adults on left, kids fill right |
+| Phone portrait (< 600 px) | Single-column, scrollable |
+| Phone landscape (height < 520 px) | Compact two-column, scrollable |
+
+## Local Development
 
 ```powershell
 python -m http.server 8080
 ```
 
-Then open:
+Then open `http://localhost:8080/`. A local server is preferred over opening `index.html` directly because it avoids CORS quirks with Firebase.
 
-```text
-http://localhost:8080/
-```
+## Key Files
 
-If Python is not available, the app can also be opened directly from `index.html`, but a local server is closer to how GitHub Pages behaves.
+| File | Purpose |
+|---|---|
+| `index.html` | Entire application |
+| `AGENTS.md` | Engineering rules for AI-assisted development |
+| `MASTER_SPEC.md` | Full product specification |
+| `docs/DATA_MODEL.md` | Firebase/localStorage state schema |
+| `docs/FIREBASE.md` | Firebase sync behavior and security notes |
+| `docs/OPERATIONS.md` | Kiosk setup, daily use, recovery |
+| `docs/PRODUCT.md` | Design intent and open decisions |
 
 ## Priorities
 
-1. Stabilize the current app so the kiosk never opens to a broken screen.
-2. Lock down Firebase rules before the dashboard becomes depended on.
-3. Replace the hard-coded parent PIN with real Firebase Authentication.
-4. Improve portrait layout for the Surface Pro kiosk.
-5. Split the single HTML file into maintainable files once behavior is stable.
+1. Keep the kiosk stable — the Surface Pro should never open to a broken screen.
+2. Lock down Firebase rules and add authentication before treating the app as secure.
+3. Replace the hard-coded parent PIN (`1234`) with real Firebase Authentication.
+4. Split `index.html` into maintainable source files once behavior is stable.
 
-## Important Security Note
+## Security Note
 
-The Firebase web config in `index.html` is public app configuration. That is expected for Firebase web apps. The real security boundary is Firebase Authentication plus Realtime Database Security Rules.
-
-The current parent PIN is only a visual deterrent because it is shipped in client-side code. It should not be treated as real security.
-
+The Firebase web config committed to this repo is public app configuration — that is normal for Firebase web apps. Real security comes from Firebase Authentication and Realtime Database Security Rules, neither of which is fully configured yet. Do not store sensitive family data here until auth rules are in place.
