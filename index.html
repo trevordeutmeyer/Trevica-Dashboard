@@ -90,13 +90,13 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .smart-banner {
   flex-shrink: 0;
   margin: 10px 12px 0;
-  padding: 11px 18px 11px 14px;
+  padding: 14px 22px 14px 16px;
   background: var(--card);
   border: 1.5px solid var(--border);
-  border-left: 4px solid var(--accent);
+  border-left: 5px solid var(--accent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  display: flex; align-items: center; gap: 10px;
-  font-size: 15px; font-weight: 700; color: var(--text-strong);
+  display: flex; align-items: center; gap: 12px;
+  font-size: 18px; font-weight: 700; color: var(--text-strong);
   box-shadow: var(--shadow); position: relative; overflow: hidden;
 }
 /* Speed-line fade on the right */
@@ -107,10 +107,10 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 }
 /* Manga ink-tag label inside banners */
 .banner-tag {
-  font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
   color: var(--app); background: var(--text-strong);
-  padding: 3px 14px 3px 8px; flex-shrink: 0; line-height: 1.6;
-  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%);
+  padding: 4px 18px 4px 10px; flex-shrink: 0; line-height: 1.6;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 100%, 0 100%);
 }
 .banner-tag.accent { background: var(--accent); }
 .banner-tag.danger { background: #dc2626; }
@@ -175,14 +175,14 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .chore-row.done .chore-name { text-decoration: line-through; }
 
 .chk {
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-  border: 1.5px solid var(--border);
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 2px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
   color: white;
   flex-shrink: 0;
 }
@@ -269,7 +269,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 /* ─── Kids-First Home Layout ─────────────────── */
 #panel-home { gap: 10px; }
-.kids-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; min-height: 0; }
+.kids-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; min-height: 0; align-items: stretch; }
 .kid-hero-card { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; background: var(--card); box-shadow: var(--shadow); }
 .kid-card-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
 .kid-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
@@ -282,7 +282,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .kid-prog-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
 .kid-prog-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
 .kid-chore-scroll { flex: 1; overflow-y: auto; }
-.kid-chore-row { display: flex; align-items: center; gap: 14px; padding: 13px 16px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
+.kid-chore-row { display: flex; align-items: center; gap: 14px; padding: 0 16px; min-height: 64px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
 .kid-chore-row:last-child { border-bottom: none; }
 .kid-chore-row:hover { background: var(--card-soft); }
 .kid-chore-row:active { background: var(--card-soft); transform: scale(0.99); }
@@ -339,7 +339,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 /* ═══ MANGA STREET ART HEADER ══════════════════════════════ */
 .manga-topbar {
-  padding: 0; flex-shrink: 0; position: relative; overflow: hidden; min-height: 100px;
+  padding: 0; flex-shrink: 0; position: relative; overflow: hidden; min-height: 124px;
   border-bottom: 3px solid var(--text-strong);
 }
 /* Halftone dot texture */
@@ -368,15 +368,15 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 }
 /* Inner layout */
 .manga-inner {
-  display: flex; align-items: center; gap: 12px; padding: 14px 16px 12px;
+  display: flex; align-items: center; gap: 12px; padding: 18px 20px 16px;
   position: relative; z-index: 2;
 }
 /* Title zone */
 .manga-title-zone { flex: 1; min-width: 0; }
 .manga-headline {
-  font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;
+  font-size: 45px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;
   color: var(--accent);
-  -webkit-text-stroke: 2.5px var(--text-strong);
+  -webkit-text-stroke: 3px var(--text-strong);
   paint-order: stroke fill;
   text-shadow: 3px 3px 0 var(--text-strong), 5px 5px 0 rgba(0,0,0,0.06);
   display: inline-block; transform: rotate(-1.5deg); transform-origin: left center;
@@ -385,9 +385,9 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .manga-subrow { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
 /* Parallelogram tag for DASHBOARD */
 .manga-tag {
-  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  font-size: 15px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--app); background: var(--text-strong);
-  padding: 4px 18px 4px 10px; display: inline-block; transform: rotate(-0.5deg);
+  padding: 5px 22px 5px 12px; display: inline-block; transform: rotate(-0.5deg);
   clip-path: polygon(0% 0%, calc(100% - 9px) 0%, 100% 100%, 0% 100%);
 }
 /* Star starburst badge */
@@ -402,15 +402,15 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 @keyframes burst-pulse { 0%,100%{transform:scale(1)rotate(0deg)} 50%{transform:scale(1.12)rotate(8deg)} }
 /* Animated deco stars */
 .manga-deco-stars {
-  font-size: 16px; color: var(--accent); letter-spacing: 2px;
+  font-size: 20px; color: var(--accent); letter-spacing: 2px;
   -webkit-text-stroke: 0.5px var(--text-strong);
   animation: star-twinkle 2.5s ease-in-out infinite;
 }
 @keyframes star-twinkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.55;transform:scale(1.1)} }
 /* Sync status row */
 .manga-sync-row {
-  display: flex; align-items: center; gap: 4px; margin-top: 4px;
-  font-size: 12px; font-weight: 700; color: var(--muted);
+  display: flex; align-items: center; gap: 4px; margin-top: 5px;
+  font-size: 14px; font-weight: 700; color: var(--muted);
 }
 /* Clock block */
 .manga-clock-block {
@@ -418,10 +418,10 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   border-left: 2px solid var(--border); padding-left: 14px;
 }
 .manga-clock-block #clock {
-  font-size: 38px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;
+  font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;
   color: var(--text-strong);
 }
-.manga-clock-block #date { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 3px; }
+.manga-clock-block #date { font-size: 16px; font-weight: 600; color: var(--muted); margin-top: 4px; }
 /* Gear button override inside manga header */
 .manga-inner .settings-icon-btn {
   border-radius: 10px; background: var(--card-soft); border: 1.5px solid var(--border);
