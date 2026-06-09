@@ -90,13 +90,13 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .smart-banner {
   flex-shrink: 0;
   margin: 10px 12px 0;
-  padding: 9px 16px 9px 14px;
+  padding: 11px 18px 11px 14px;
   background: var(--card);
   border: 1.5px solid var(--border);
   border-left: 4px solid var(--accent);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   display: flex; align-items: center; gap: 10px;
-  font-size: 13px; font-weight: 700; color: var(--text-strong);
+  font-size: 15px; font-weight: 700; color: var(--text-strong);
   box-shadow: var(--shadow); position: relative; overflow: hidden;
 }
 /* Speed-line fade on the right */
@@ -107,9 +107,9 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 }
 /* Manga ink-tag label inside banners */
 .banner-tag {
-  font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  font-size: 11px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
   color: var(--app); background: var(--text-strong);
-  padding: 2px 12px 2px 7px; flex-shrink: 0; line-height: 1.6;
+  padding: 3px 14px 3px 8px; flex-shrink: 0; line-height: 1.6;
   clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%);
 }
 .banner-tag.accent { background: var(--accent); }
@@ -187,16 +187,16 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   flex-shrink: 0;
 }
 .chore-row.done .chk { background: var(--person, var(--blue)); border-color: var(--person, var(--blue)); }
-.chore-name { font-size: 15px; font-weight: 600; color: var(--text-strong); }
+.chore-name { font-size: 17px; font-weight: 600; color: var(--text-strong); }
 
-.list-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; padding: 12px 4px 6px; display: flex; align-items: center; justify-content: space-between; }
-.p-widget-streak { font-size: 11px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff; padding: 3px 10px; border-radius: 8px; font-weight: 700; letter-spacing: 0.02em; flex-shrink: 0; }
+.list-label { font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.08em; padding: 12px 4px 6px; display: flex; align-items: center; justify-content: space-between; }
+.p-widget-streak { font-size: 13px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff; padding: 4px 11px; border-radius: 8px; font-weight: 700; letter-spacing: 0.02em; flex-shrink: 0; }
 
 /* Quick Summary Statistics Header Strip */
 .quick-stats-stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; flex-shrink: 0; }
 .stat-mini { background: var(--card); padding: 12px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-soft); text-align: center; box-shadow: var(--shadow); }
-.stat-m-label { font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
-.stat-m-val { font-size: 22px; font-weight: 800; color: var(--text-strong); margin-top: 2px; }
+.stat-m-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--muted); letter-spacing: 0.05em; }
+.stat-m-val { font-size: 28px; font-weight: 800; color: var(--text-strong); margin-top: 2px; }
 .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); box-shadow: var(--shadow); }
 .card.pad { padding: 18px; }
 .eyebrow { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
@@ -273,36 +273,37 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .kid-hero-card { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; background: var(--card); box-shadow: var(--shadow); }
 .kid-card-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
 .kid-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-.kid-big-name { font-size: 20px; font-weight: 800; color: var(--text-strong); line-height: 1.1; letter-spacing: -0.02em; }
-.kid-meta { font-size: 12px; font-weight: 600; color: var(--muted); margin-top: 2px; }
-.kid-emoji-badge { font-size: 28px; line-height: 1; }
-.kid-streak-tag { font-size: 11px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; padding: 3px 9px; border-radius: 8px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.kid-big-name { font-size: 26px; font-weight: 800; color: var(--text-strong); line-height: 1.1; letter-spacing: -0.02em; }
+.kid-meta { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.kid-emoji-badge { font-size: 34px; line-height: 1; }
+.kid-streak-tag { font-size: 12px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; padding: 4px 10px; border-radius: 8px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
 .kid-prog-wrap { margin-top: 8px; }
-.kid-prog-bar { height: 7px; background: var(--border-soft); border-radius: 99px; overflow: hidden; }
+.kid-prog-bar { height: 8px; background: var(--border-soft); border-radius: 99px; overflow: hidden; }
 .kid-prog-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
-.kid-prog-label { font-size: 11px; color: var(--muted); font-weight: 600; margin-top: 4px; }
+.kid-prog-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
 .kid-chore-scroll { flex: 1; overflow-y: auto; }
-.kid-chore-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
+.kid-chore-row { display: flex; align-items: center; gap: 14px; padding: 13px 16px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
 .kid-chore-row:last-child { border-bottom: none; }
 .kid-chore-row:hover { background: var(--card-soft); }
-.kid-chore-row.done { opacity: 0.36; }
+.kid-chore-row:active { background: var(--card-soft); transform: scale(0.99); }
+.kid-chore-row.done { opacity: 0.38; }
 .kid-chore-row.done .kid-chore-name { text-decoration: line-through; }
-.kid-chore-name { font-size: 14px; font-weight: 600; color: var(--text-strong); flex: 1; }
+.kid-chore-name { font-size: 16px; font-weight: 600; color: var(--text-strong); flex: 1; }
 
 /* ─── Calendar full-width strip ──────────────── */
-.cal-full-strip { height: 300px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
+.cal-full-strip { height: 240px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
 .cal-full-strip iframe { width: 100%; height: 100%; border: 0; filter: var(--cal-filter); }
 
 /* ─── Adults horizontal strip ────────────────── */
-.adults-compact-area { display: flex; flex-direction: row; gap: 8px; flex-shrink: 0; height: 150px; overflow-x: auto; }
+.adults-compact-area { display: flex; flex-direction: row; gap: 8px; flex-shrink: 0; height: 160px; overflow-x: auto; }
 .adult-compact-card { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 10px 14px; box-shadow: var(--shadow); flex: 1; min-width: 140px; overflow-y: auto; }
-.adult-card-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
-.compact-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; cursor: pointer; border-bottom: 1px solid var(--border-soft); }
+.adult-card-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.compact-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer; border-bottom: 1px solid var(--border-soft); }
 .compact-row:last-of-type { border-bottom: none; }
 .compact-row.done { opacity: 0.36; }
 .compact-row.done span { text-decoration: line-through; }
-.compact-row span { font-size: 13px; font-weight: 600; color: var(--text-strong); flex: 1; }
-.compact-clear-btn { font-size: 11px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 4px 0 2px; font-weight: 600; font-family: inherit; }
+.compact-row span { font-size: 15px; font-weight: 600; color: var(--text-strong); flex: 1; }
+.compact-clear-btn { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 4px 0 2px; font-weight: 600; font-family: inherit; }
 
 /* ─── Settings gear button ───────────────────── */
 .settings-icon-btn {
@@ -323,8 +324,8 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 #settings-popup.open { display: block; }
 .settings-pop-btn {
   display: flex; align-items: center; gap: 10px; width: 100%;
-  background: none; border: none; padding: 12px 14px; border-radius: 10px;
-  font-family: inherit; font-size: 14px; font-weight: 600; color: var(--text-strong);
+  background: none; border: none; padding: 14px 16px; border-radius: 10px;
+  font-family: inherit; font-size: 16px; font-weight: 600; color: var(--text-strong);
   cursor: pointer; text-align: left; transition: background 0.1s;
 }
 .settings-pop-btn:hover { background: var(--card-soft); }
@@ -338,7 +339,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 /* ═══ MANGA STREET ART HEADER ══════════════════════════════ */
 .manga-topbar {
-  padding: 0; flex-shrink: 0; position: relative; overflow: hidden; min-height: 84px;
+  padding: 0; flex-shrink: 0; position: relative; overflow: hidden; min-height: 100px;
   border-bottom: 3px solid var(--text-strong);
 }
 /* Halftone dot texture */
@@ -367,13 +368,13 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 }
 /* Inner layout */
 .manga-inner {
-  display: flex; align-items: center; gap: 12px; padding: 11px 16px 9px;
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px 12px;
   position: relative; z-index: 2;
 }
 /* Title zone */
 .manga-title-zone { flex: 1; min-width: 0; }
 .manga-headline {
-  font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;
+  font-size: 36px; font-weight: 800; letter-spacing: -0.02em; line-height: 1;
   color: var(--accent);
   -webkit-text-stroke: 2.5px var(--text-strong);
   paint-order: stroke fill;
@@ -384,9 +385,9 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .manga-subrow { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
 /* Parallelogram tag for DASHBOARD */
 .manga-tag {
-  font-size: 10px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
+  font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--app); background: var(--text-strong);
-  padding: 3px 16px 3px 9px; display: inline-block; transform: rotate(-0.5deg);
+  padding: 4px 18px 4px 10px; display: inline-block; transform: rotate(-0.5deg);
   clip-path: polygon(0% 0%, calc(100% - 9px) 0%, 100% 100%, 0% 100%);
 }
 /* Star starburst badge */
@@ -401,7 +402,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 @keyframes burst-pulse { 0%,100%{transform:scale(1)rotate(0deg)} 50%{transform:scale(1.12)rotate(8deg)} }
 /* Animated deco stars */
 .manga-deco-stars {
-  font-size: 13px; color: var(--accent); letter-spacing: 2px;
+  font-size: 16px; color: var(--accent); letter-spacing: 2px;
   -webkit-text-stroke: 0.5px var(--text-strong);
   animation: star-twinkle 2.5s ease-in-out infinite;
 }
@@ -409,7 +410,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 /* Sync status row */
 .manga-sync-row {
   display: flex; align-items: center; gap: 4px; margin-top: 4px;
-  font-size: 10px; font-weight: 700; color: var(--muted);
+  font-size: 12px; font-weight: 700; color: var(--muted);
 }
 /* Clock block */
 .manga-clock-block {
@@ -417,10 +418,10 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   border-left: 2px solid var(--border); padding-left: 14px;
 }
 .manga-clock-block #clock {
-  font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;
+  font-size: 38px; font-weight: 800; letter-spacing: -0.03em; line-height: 1;
   color: var(--text-strong);
 }
-.manga-clock-block #date { font-size: 11px; font-weight: 600; color: var(--muted); margin-top: 2px; }
+.manga-clock-block #date { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 3px; }
 /* Gear button override inside manga header */
 .manga-inner .settings-icon-btn {
   border-radius: 10px; background: var(--card-soft); border: 1.5px solid var(--border);
@@ -1065,7 +1066,17 @@ function processSystemBanners() {
     banner.innerHTML = `<span class="banner-tag accent">TONIGHT</span> 🍽️ <b>${escapeHtml(state.dinnerMenu)}</b>`;
   } else {
     banner.className = "smart-banner";
-    banner.innerHTML = `<span class="banner-tag">HOME</span> 🏠 Welcome home, Deutmeyers. Have a great day!`;
+    const WELCOME_MSGS = [
+      `<span class="banner-tag">HOME</span> 🐎 Jules! ⚽ Henry! The board is ready — let's GO!`,
+      `<span class="banner-tag">TODAY</span> 🔥 Who's crushing their chores first today?`,
+      `<span class="banner-tag">HOME</span> ⚡ Deutmeyers ASSEMBLE! Chores won't do themselves!`,
+      `<span class="banner-tag accent">GOOOO</span> 🏆 Champions do their chores. Be a champion.`,
+      `<span class="banner-tag">HUSTLE</span> 💪 Check it off, earn that allowance!`,
+      `<span class="banner-tag">LFG</span> 🌟 New day, new chores — you got this, Deutmeyers!`,
+      `<span class="banner-tag accent">QUEST</span> 🗺️ Daily quest unlocked! Chores await, heroes.`,
+    ];
+    const idx = (new Date().getDate() + new Date().getHours()) % WELCOME_MSGS.length;
+    banner.innerHTML = WELCOME_MSGS[idx];
   }
 }
 setInterval(processSystemBanners, 15000);
@@ -1120,16 +1131,22 @@ function earnedTotal(pid) { const p = state.people.find(x => x.id === pid); if (
 // ENGINE MUTATION PIPELINES
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
-  if (isApproved(pid)) { const p = state.people.find(x => x.id === pid); if (p?.chores.find(c => c.id === cid)?.type === 'weekly') return; }
-  if (!state.checked[pid]) state.checked[pid] = []; const idx = state.checked[pid].indexOf(cid);
+  if (!state.checked[pid]) state.checked[pid] = [];
+  const idx = state.checked[pid].indexOf(cid);
   const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid);
   if (!p || !c) return;
-  
+
   if (idx === -1) {
     state.checked[pid].push(cid); chimeCheck(); confetti({ particleCount: 35, spread: 45, origin: { y: 0.85 } });
     pushLogTrail(`${p.name} completed: ${c.name}`, { type:'chore', action:'chore.completed', actorId:pid, personId:pid, targetType:'chore', targetId:cid });
   } else {
-    state.checked[pid].splice(idx,1);
+    state.checked[pid].splice(idx, 1);
+    // If unchecking a weekly chore after allowance was approved, revoke the approval
+    if (c.type === 'weekly' && isApproved(pid)) {
+      if (state.approved[pid]) state.approved[pid].allowance = false;
+      state.pending = state.pending.filter(x => !(x.type === 'allowance' && x.personId === pid));
+      showToast(`${p.name}'s allowance unapproved — redo chores to re-earn it.`);
+    }
     pushLogTrail(`${p.name} uncompleted: ${c.name}`, { type:'chore', action:'chore.uncompleted', actorId:pid, personId:pid, targetType:'chore', targetId:cid });
   }
 
@@ -1307,8 +1324,7 @@ function renderUnifiedFrontMatrix() {
     const choreRows = [
       ...weekly.map(c => {
         const done = isChecked(p.id, c.id);
-        const locked = isApproved(p.id) && done;
-        return `<div class="kid-chore-row${done ? ' done' : ''}" onclick="${locked ? '' : `toggleChore('${p.id}','${c.id}')`}" ${locked ? 'style="cursor:default"' : ''}>
+        return `<div class="kid-chore-row${done ? ' done' : ''}" onclick="toggleChore('${p.id}','${c.id}')">
           <div class="chk" style="${done ? `background:var(--${p.id});border-color:var(--${p.id});` : ''}">${done ? '✓' : ''}</div>
           <span class="kid-chore-name">${escapeHtml(c.name)}</span>
         </div>`;
