@@ -269,33 +269,35 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
 /* ─── Kids-First Home Layout ─────────────────── */
 #panel-home { gap: 10px; }
-.kids-hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; flex: 1; min-height: 0; align-items: stretch; }
+.kids-hero-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; flex: 1; min-height: 0; align-items: stretch; }
 .kid-hero-card { border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; display: flex; flex-direction: column; background: var(--card); box-shadow: var(--shadow); }
-.kid-card-header { padding: 14px 16px 12px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
+.kid-card-header { padding: 16px 18px 14px; border-bottom: 2px solid var(--border-soft); flex-shrink: 0; }
 .kid-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-.kid-big-name { font-size: 26px; font-weight: 800; color: var(--text-strong); line-height: 1.1; letter-spacing: -0.02em; }
-.kid-meta { font-size: 13px; font-weight: 600; color: var(--muted); margin-top: 2px; }
-.kid-emoji-badge { font-size: 34px; line-height: 1; }
-.kid-streak-tag { font-size: 12px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; padding: 4px 10px; border-radius: 8px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
-.kid-prog-wrap { margin-top: 8px; }
-.kid-prog-bar { height: 8px; background: var(--border-soft); border-radius: 99px; overflow: hidden; }
-.kid-prog-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
-.kid-prog-label { font-size: 12px; color: var(--muted); font-weight: 600; margin-top: 4px; }
-.kid-chore-scroll { flex: 1; overflow-y: auto; }
-.kid-chore-row { display: flex; align-items: center; gap: 14px; padding: 0 16px; min-height: 64px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
+.kid-big-name { font-size: 38px; font-weight: 800; color: var(--text-strong); line-height: 1; letter-spacing: -0.03em; }
+.kid-meta { font-size: 14px; font-weight: 600; color: var(--muted); margin-top: 3px; }
+.kid-emoji-badge { font-size: 48px; line-height: 1; }
+.kid-streak-tag { font-size: 14px; background: linear-gradient(135deg, #f59e0b, #ea580c); color: white; padding: 5px 12px; border-radius: 10px; font-weight: 800; white-space: nowrap; flex-shrink: 0; box-shadow: 0 2px 8px rgba(234,88,12,0.35); }
+.kid-prog-wrap { margin-top: 10px; }
+.kid-prog-bar { height: 12px; background: var(--border-soft); border-radius: 99px; overflow: hidden; }
+.kid-prog-fill { height: 100%; border-radius: 99px; transition: width 0.7s cubic-bezier(.34,1.56,.64,1); }
+.kid-prog-label { font-size: 14px; color: var(--muted); font-weight: 700; margin-top: 5px; }
+.kid-chore-scroll { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.kid-chore-row { display: flex; align-items: center; gap: 16px; padding: 0 18px; flex: 1; min-height: 58px; max-height: 100px; cursor: pointer; border-bottom: 1px solid var(--border-soft); transition: background 0.1s; }
 .kid-chore-row:last-child { border-bottom: none; }
 .kid-chore-row:hover { background: var(--card-soft); }
 .kid-chore-row:active { background: var(--card-soft); transform: scale(0.99); }
 .kid-chore-row.done { opacity: 0.38; }
 .kid-chore-row.done .kid-chore-name { text-decoration: line-through; }
-.kid-chore-name { font-size: 16px; font-weight: 600; color: var(--text-strong); flex: 1; }
+.kid-chore-name { font-size: 19px; font-weight: 700; color: var(--text-strong); flex: 1; }
+/* Bigger checkboxes inside kid rows */
+.kid-chore-row .chk { width: 34px; height: 34px; border-radius: 10px; font-size: 16px; border-width: 2px; flex-shrink: 0; }
 
 /* ─── Calendar full-width strip ──────────────── */
-.cal-full-strip { height: 240px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
+.cal-full-strip { height: 145px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
 .cal-full-strip iframe { width: 100%; height: 100%; border: 0; filter: var(--cal-filter); }
 
 /* ─── Adults horizontal strip ────────────────── */
-.adults-compact-area { display: flex; flex-direction: row; gap: 8px; flex-shrink: 0; height: 160px; overflow-x: auto; }
+.adults-compact-area { display: flex; flex-direction: row; gap: 8px; flex-shrink: 0; height: auto; overflow-x: visible; }
 .adult-compact-card { background: var(--card); border: 1px solid var(--border-soft); border-radius: var(--radius-sm); padding: 10px 14px; box-shadow: var(--shadow); flex: 1; min-width: 140px; overflow-y: auto; }
 .adult-card-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
 .compact-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; cursor: pointer; border-bottom: 1px solid var(--border-soft); }
@@ -453,8 +455,8 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   .quick-stats-stack    { grid-area: stats;  margin-bottom: 0; }
   .cal-full-strip       { grid-area: cal;    height: auto; min-height: 220px; }
   .adults-compact-area  {
-    grid-area: adults; height: auto; flex-direction: column;
-    overflow-x: visible; max-height: 240px; overflow-y: auto;
+    grid-area: adults; height: auto; flex-direction: row;
+    overflow-x: visible; overflow-y: visible;
   }
   .adult-compact-card   { min-width: unset; flex: unset; }
   #kids-hero-grid       { grid-area: kids; }
@@ -900,12 +902,12 @@ let saveTimer = null;
 let lastLocalWriteId = null;
 
 const DEFAULT_PEOPLE = [
-  { id:'dad', name:'Dad', emoji:'👨', cls:'card-dad', role:'parent', weeklyAllowance:0, streak:0, chores:[
+  { id:'dad', name:'Dad', emoji:'🪚', cls:'card-dad', role:'parent', weeklyAllowance:0, streak:0, chores:[
     { id:'d1', name:'Take out trash', type:'weekly', amt:0 },
     { id:'d2', name:'Mow the lawn', type:'weekly', amt:0 },
     { id:'d3', name:'Dishes after dinner', type:'weekly', amt:0 },
   ]},
-  { id:'mom', name:'Mom', emoji:'👩', cls:'card-mom', role:'parent', weeklyAllowance:0, streak:0, chores:[
+  { id:'mom', name:'Mom', emoji:'🌱', cls:'card-mom', role:'parent', weeklyAllowance:0, streak:0, chores:[
     { id:'m1', name:'Grocery run', type:'weekly', amt:0 },
     { id:'m2', name:'Laundry', type:'weekly', amt:0 },
     { id:'m3', name:'Water the plants', type:'weekly', amt:0 },
@@ -1494,21 +1496,27 @@ function renderUnifiedFrontMatrix() {
   const adultsArea = document.getElementById('adults-compact-area');
   if (!kidsGrid || !adultsArea) return;
 
-  const pSoft = { dad:'rgba(34,197,94,0.12)', mom:'rgba(248,113,113,0.12)', jules:'rgba(56,189,248,0.12)', henry:'rgba(249,115,22,0.12)' };
-  const kids = state.people.filter(p => p.role === 'child');
-  const adults = state.people.filter(p => p.role === 'parent');
+  // strong per-person gradients — visible in both light and dark
+  const pSoft   = { dad:'rgba(34,197,94,0.30)',  mom:'rgba(248,113,113,0.30)',  jules:'rgba(56,189,248,0.30)',  henry:'rgba(249,115,22,0.30)'  };
+  const pBorder = { dad:'#22c55e', mom:'#f87171', jules:'#38bdf8', henry:'#f97316' };
 
-  // ── Kid hero cards ──────────────────────────────
-  kidsGrid.innerHTML = kids.map(p => {
+  // ── All family hero cards (kids + parents in same 2×2 grid) ──
+  const GRID_ORDER = ['henry','jules','mom','dad'];
+  const orderedPeople = [...state.people].sort((a,b) => GRID_ORDER.indexOf(a.id) - GRID_ORDER.indexOf(b.id));
+  kidsGrid.innerHTML = orderedPeople.map(p => {
     const prog = personProgress(p);
     const weekly = p.chores.filter(c => c.type === 'weekly');
     const jobs = p.chores.filter(c => c.type === 'job');
-    const bg = pSoft[p.id] || 'rgba(255,255,255,0.07)';
+    const bg = pSoft[p.id] || 'rgba(255,255,255,0.12)';
     const earned = earnedTotal(p.id);
     const streakTag = p.streak > 0 ? `<div class="kid-streak-tag">🔥 ${p.streak} wk</div>` : '';
     const doneLabel = prog.pct === 100 ? '✓ All done!' : `${prog.done} / ${weekly.length} chores`;
     const doneColor = prog.pct === 100 ? `var(--${p.id})` : 'var(--muted)';
-    const metaLabel = earned > 0 ? `$${earned.toFixed(2)} earned` : `$${p.weeklyAllowance.toFixed(2)}/week`;
+    const isParent = p.role === 'parent';
+    const pendingCount = isParent ? state.pending.length : 0;
+    const metaLabel = isParent
+      ? (pendingCount > 0 ? `⏳ ${pendingCount} job${pendingCount>1?'s':''} need approval` : (prog.pct===100 ? '✓ All done!' : `${prog.done}/${weekly.length} tasks`))
+      : (earned > 0 ? `$${earned.toFixed(2)} earned` : `$${p.weeklyAllowance.toFixed(2)}/week`);
 
     const choreRows = [
       ...weekly.map(c => {
@@ -1531,8 +1539,8 @@ function renderUnifiedFrontMatrix() {
       })
     ].join('');
 
-    return `<div class="kid-hero-card">
-      <div class="kid-card-header" onclick="openPersonDetail('${p.id}')" style="cursor:pointer;background:linear-gradient(145deg,${bg},transparent);">
+    return `<div class="kid-hero-card" style="border-top:6px solid ${pBorder[p.id]||'#d97706'};">
+      <div class="kid-card-header" onclick="openPersonDetail('${p.id}')" style="cursor:pointer;background:linear-gradient(160deg,${bg} 0%,transparent 68%);">
         <div class="kid-name-row">
           <div style="display:flex;align-items:center;gap:10px;">
             <span class="kid-emoji-badge">${escapeHtml(p.emoji)}</span>
@@ -1556,11 +1564,9 @@ function renderUnifiedFrontMatrix() {
     </div>`;
   }).join('');
 
-  // ── Adults compact + shared todos ───────────────
-  let adultsHtml = '';
-
+  // ── Shared todos strip (only shown when there are shared items) ──────
   if (state.globalTodos && state.globalTodos.length > 0) {
-    adultsHtml += `<div class="adult-compact-card">
+    adultsArea.innerHTML = `<div class="adult-compact-card" style="flex:1;">
       <div class="adult-card-label" style="color:var(--purple);">📌 Shared</div>
       ${state.globalTodos.map(t => `<div class="compact-row${t.done ? ' done' : ''}" onclick="toggleGlobalTodo('${t.id}')">
         <div class="chk" style="${t.done ? 'background:var(--purple);border-color:var(--purple);' : ''}">${t.done ? '✓' : ''}</div>
@@ -1568,29 +1574,9 @@ function renderUnifiedFrontMatrix() {
       </div>`).join('')}
       ${state.globalTodos.some(t => t.done) ? `<button class="compact-clear-btn" onclick="clearFinishedTodos()">Clear done</button>` : ''}
     </div>`;
+  } else {
+    adultsArea.innerHTML = '';
   }
-
-  adults.forEach(p => {
-    const active = p.chores.filter(c => !isChecked(p.id, c.id));
-    const done = p.chores.filter(c => isChecked(p.id, c.id));
-    const pc = state.pending.length;
-    const approvalBanner = pc > 0
-      ? `<div onclick="openPersonDetail('${p.id}')" style="display:flex;align-items:center;gap:6px;padding:5px 0 7px;border-bottom:1px solid var(--border-soft);cursor:pointer;margin-bottom:4px;">
-          <span style="font-size:15px;">⏳</span>
-          <span style="font-size:12px;font-weight:700;color:var(--accent);">${pc} need${pc === 1 ? 's' : ''} approval</span>
-          <span style="font-size:10px;color:var(--muted);margin-left:auto;">tap →</span>
-        </div>`
-      : '';
-    adultsHtml += `<div class="adult-compact-card" onclick="openPersonDetail('${p.id}')">
-      <div class="adult-card-label" style="color:var(--${p.id});">${escapeHtml(p.emoji)} ${escapeHtml(p.name)}</div>
-      ${approvalBanner}
-      ${active.map(c => `<div class="compact-row" onclick="event.stopPropagation();toggleChore('${p.id}','${c.id}')"><div class="chk"></div><span>${escapeHtml(c.name)}</span></div>`).join('')}
-      ${done.map(c => `<div class="compact-row done" onclick="event.stopPropagation();toggleChore('${p.id}','${c.id}')"><div class="chk" style="background:var(--${p.id});border-color:var(--${p.id});">✓</div><span>${escapeHtml(c.name)}</span></div>`).join('')}
-      ${p.chores.length === 0 ? '<div style="font-size:12px;color:var(--muted);">All clear ✓</div>' : ''}
-    </div>`;
-  });
-
-  adultsArea.innerHTML = adultsHtml || `<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px;">Add tasks with +</div>`;
 }
 
 function renderDetailedChoreManifestPage() {
