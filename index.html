@@ -1602,11 +1602,10 @@ function openPersonDetail(pid) {
     html += `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;">Weekly Chores</div>`;
     weekly.forEach(c => {
       const done = isChecked(pid, c.id);
-      const locked = isApproved(pid) && done;
-      html += `<div class="${done?'kid-chore-row done':'kid-chore-row'}" onclick="${locked?'':''}" style="border-bottom:1px solid var(--border-soft);">
+      html += `<div class="${done?'kid-chore-row done':'kid-chore-row'}" onclick="toggleChore('${pid}','${c.id}');openPersonDetail('${pid}')" style="border-bottom:1px solid var(--border-soft);cursor:pointer;">
         <div class="chk" style="${done?`background:${pcolor};border-color:${pcolor};`:''}">${done?'✓':''}</div>
         <span class="kid-chore-name" style="${done?'text-decoration:line-through;opacity:0.5;':''}">${escapeHtml(c.name)}</span>
-        ${!locked && !done ? `<span onclick="event.stopPropagation();toggleChore('${pid}','${c.id}');openPersonDetail('${pid}')" style="font-size:11px;color:${pcolor};font-weight:700;cursor:pointer;padding:4px 8px;border-radius:8px;border:1px solid ${pcolor};margin-left:auto;">Mark done</span>` : ''}
+        <span style="font-size:12px;font-weight:700;color:${done?pcolor:'var(--muted)'};margin-left:auto;padding:4px 8px;border-radius:8px;border:1px solid ${done?pcolor:'var(--border)'};white-space:nowrap;">${done?'✓ Done':'Mark done'}</span>
       </div>`;
     });
   }
@@ -1619,7 +1618,7 @@ function openPersonDetail(pid) {
       const japproved = isJobApproved(pid, c.id);
       const statusColor = japproved ? 'var(--green)' : jpending ? 'var(--amber)' : 'var(--accent)';
       const statusLabel = japproved ? '✓ Paid' : jpending ? '⏳ Waiting' : 'Tap to submit';
-      html += `<div class="${done?'kid-chore-row done':'kid-chore-row'}" onclick="${done?'':''}" style="border-bottom:1px solid var(--border-soft);">
+      html += `<div class="${done?'kid-chore-row done':'kid-chore-row'}" onclick="toggleChore('${pid}','${c.id}');openPersonDetail('${pid}')" style="border-bottom:1px solid var(--border-soft);cursor:pointer;">
         <div class="chk" style="${done?`background:${pcolor};border-color:${pcolor};`:''}">${done?'✓':''}</div>
         <span class="kid-chore-name" style="${done?'text-decoration:line-through;opacity:0.5;':''}">${escapeHtml(c.name)}</span>
         <span style="font-size:11px;font-weight:700;color:${statusColor};margin-left:auto;">${statusLabel}</span>
