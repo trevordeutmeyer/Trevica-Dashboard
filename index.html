@@ -86,26 +86,47 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 #clock { color: var(--text-strong); font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -0.03em; }
 #date { color: var(--text); font-size: 12px; font-weight: 600; margin-top: 2px; }
 
-/* Dynamic Announcement Bar */
+/* ─── Announcement Banner ─ manga panel style ──── */
 .smart-banner {
   flex-shrink: 0;
-  margin: 12px 12px 0;
-  padding: 11px 18px;
-  border-radius: var(--radius-sm);
+  margin: 10px 12px 0;
+  padding: 9px 16px 9px 14px;
   background: var(--card);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  box-shadow: var(--shadow);
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700; color: var(--text-strong);
+  box-shadow: var(--shadow); position: relative; overflow: hidden;
 }
+/* Speed-line fade on the right */
+.smart-banner::after {
+  content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 80px;
+  background: linear-gradient(90deg, transparent, rgba(217,119,6,0.06));
+  pointer-events: none;
+}
+/* Manga ink-tag label inside banners */
+.banner-tag {
+  font-size: 9px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--app); background: var(--text-strong);
+  padding: 2px 12px 2px 7px; flex-shrink: 0; line-height: 1.6;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%);
+}
+.banner-tag.accent { background: var(--accent); }
+.banner-tag.danger { background: #dc2626; }
+/* Alert state */
 .smart-banner.alert-active {
-  background: linear-gradient(90deg, var(--purple-soft), rgba(124, 58, 237, 0.4));
-  border-color: var(--purple);
-  box-shadow: 0 0 20px rgba(192, 132, 252, 0.2);
+  border-left-color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.07);
+  animation: banner-alarm 1s ease-in-out infinite;
+}
+.smart-banner.alert-active::after {
+  background: linear-gradient(90deg, transparent, rgba(220,38,38,0.08));
+}
+@keyframes banner-alarm {
+  0%, 100% { border-left-width: 4px; }
+  50%       { border-left-width: 6px; background: rgba(220,38,38,0.12); }
 }
 
 .content { flex: 1; min-height: 0; padding: 16px 12px 24px; position: relative; }
@@ -609,6 +630,22 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 <div id="settings-popup">
   <button class="settings-pop-btn" onclick="openHistoryFromSettings()">📋&nbsp; Activity Log</button>
   <button class="settings-pop-btn" onclick="openManageFromSettings()">⚙️&nbsp; Family Settings</button>
+  <div style="height:1px;background:var(--border);margin:4px 8px;"></div>
+  <button class="settings-pop-btn" onclick="location.reload(true)">🔄&nbsp; Reload App</button>
+</div>
+
+<!-- Kiosk update notification bar -->
+<div id="kiosk-update-bar" onclick="location.reload(true)" style="
+  display:none; position:fixed; bottom:88px; left:50%; transform:translateX(-50%);
+  z-index:500; background:var(--accent); color:white;
+  border:2.5px solid var(--text-strong); border-radius:14px;
+  padding:12px 22px; font-weight:700; font-size:14px; cursor:pointer;
+  align-items:center; gap:10px; box-shadow:0 6px 24px rgba(0,0,0,0.35);
+  white-space:nowrap; font-family:inherit;
+">
+  <span style="font-size:18px;">⚡</span>
+  <span id="kiosk-update-msg">New version ready</span>
+  <span style="font-size:11px; opacity:0.75; font-weight:600;">tap to update</span>
 </div>
 
 <!-- Person detail modal -->
@@ -707,14 +744,14 @@ const DEFAULT_PEOPLE = [
     { id:'m2', name:'Laundry', type:'weekly', amt:0 },
     { id:'m3', name:'Water the plants', type:'weekly', amt:0 },
   ]},
-  { id:'jules', name:'Jules', emoji:'🐎', cls:'card-jules', role:'child', age:'Age 9', weeklyAllowance:5.00, streak:3, chores:[
+  { id:'jules', name:'Jules', emoji:'🐎', cls:'card-jules', role:'child', age:'Age 9', weeklyAllowance:5.00, streak:0, chores:[
     { id:'j1', name:'Make bed', type:'weekly', amt:0 },
     { id:'j2', name:'Feed the pet', type:'weekly', amt:0 },
     { id:'j3', name:'Set the table', type:'weekly', amt:0 },
     { id:'j4', name:'Clean room', type:'weekly', amt:0 },
     { id:'j5', name:'Homework done', type:'weekly', amt:0 },
   ]},
-  { id:'henry', name:'Henry', emoji:'⚽', cls:'card-henry', role:'child', age:'Age 11', weeklyAllowance:7.00, streak:5, chores:[
+  { id:'henry', name:'Henry', emoji:'⚽', cls:'card-henry', role:'child', age:'Age 11', weeklyAllowance:7.00, streak:0, chores:[
     { id:'h1', name:'Make bed', type:'weekly', amt:0 },
     { id:'h2', name:'Empty dishwasher', type:'weekly', amt:0 },
     { id:'h3', name:'Vacuum living room', type:'weekly', amt:0 },
@@ -921,6 +958,7 @@ function freshState() {
     settings:{ dinnerEnabled: false, dinnerMenu: '' },
     dinnerEnabled: false,
     dinnerMenu: '',
+    streakResetDone: true,
     meta
   };
 }
@@ -943,12 +981,15 @@ function normalizeState(input) {
   };
   const rawPeople = Array.isArray(s.people) && s.people.length ? s.people : base.people;
   // Migrate: Jessica → Mom, ⭐ → 🐎 (Jules), 🚀 → ⚽ (Henry)
+  // + one-time streak reset (streakResetDone flag prevents re-running)
   const peopleSource = rawPeople.map(p => {
     if (!p) return p;
-    if (p.id === 'mom'   && p.name === 'Jessica') return { ...p, name: 'Mom' };
-    if (p.id === 'jules' && p.emoji === '⭐')      return { ...p, emoji: '🐎' };
-    if (p.id === 'henry' && p.emoji === '🚀')      return { ...p, emoji: '⚽' };
-    return p;
+    let out = p;
+    if (out.id === 'mom'   && out.name === 'Jessica') out = { ...out, name: 'Mom' };
+    if (out.id === 'jules' && out.emoji === '⭐')      out = { ...out, emoji: '🐎' };
+    if (out.id === 'henry' && out.emoji === '🚀')      out = { ...out, emoji: '⚽' };
+    if (!s.streakResetDone && out.role === 'child')    out = { ...out, streak: 0 };
+    return out;
   });
   return {
     schemaVersion: STATE_SCHEMA_VERSION,
@@ -964,6 +1005,7 @@ function normalizeState(input) {
     settings,
     dinnerEnabled: settings.dinnerEnabled,
     dinnerMenu: settings.dinnerMenu,
+    streakResetDone: true,
     meta
   };
 }
@@ -1015,13 +1057,15 @@ function processSystemBanners() {
   const now = new Date(), hrs = now.getHours(), mins = now.getMinutes();
   
   if ((hrs === 19 && mins >= 35) || (hrs === 20 && mins <= 5)) {
-    let delta = 80 - mins; if(hrs===20) delta = 5 - mins;
+    let delta = 80 - mins; if (hrs === 20) delta = 5 - mins;
     banner.className = "smart-banner alert-active";
-    banner.innerHTML = `🎬 <b>ALERT:</b> Family Movie Time begins in ${delta > 0 ? delta : 0} minutes! Clear your items.`;
+    banner.innerHTML = `<span class="banner-tag danger">ALERT</span> 🎬 Family Movie Time in <b style="color:var(--text-strong)">${delta > 0 ? delta : 0} min</b> — wrap it up!`;
   } else if (state.dinnerEnabled && state.dinnerMenu) {
-    banner.className = "smart-banner"; banner.innerHTML = `🍽️ <b>Tonight's Dinner:</b> ${escapeHtml(state.dinnerMenu)}`;
+    banner.className = "smart-banner";
+    banner.innerHTML = `<span class="banner-tag accent">TONIGHT</span> 🍽️ <b>${escapeHtml(state.dinnerMenu)}</b>`;
   } else {
-    banner.className = "smart-banner"; banner.innerHTML = `🏠 <b>Welcome home, Deutmeyers.</b> Have a great day!`;
+    banner.className = "smart-banner";
+    banner.innerHTML = `<span class="banner-tag">HOME</span> 🏠 Welcome home, Deutmeyers. Have a great day!`;
   }
 }
 setInterval(processSystemBanners, 15000);
@@ -1575,6 +1619,78 @@ function openPersonDetail(pid) {
   content.innerHTML = html;
   modal.classList.add('open');
 }
+
+// ══════════════════════════════════════════════
+// KIOSK AUTO-UPDATE ENGINE
+// ══════════════════════════════════════════════
+(function() {
+  const PAGE_URL = location.href.split('?')[0];
+  let knownTag = null;      // ETag or Last-Modified seen on first check
+  let updateReady = false;
+  let lastActivity = Date.now();
+
+  // Track any user interaction so we know if the kiosk is idle
+  ['click', 'touchstart', 'keydown', 'mousemove'].forEach(evt =>
+    document.addEventListener(evt, () => { lastActivity = Date.now(); }, { passive: true, capture: true })
+  );
+
+  async function pollForUpdate() {
+    try {
+      const res = await fetch(PAGE_URL + '?_kv=' + Date.now(), {
+        method: 'HEAD', cache: 'no-store'
+      });
+      // Prefer ETag; fall back to Last-Modified
+      const tag = res.headers.get('etag') || res.headers.get('last-modified');
+      if (!tag) return;
+      if (knownTag === null) { knownTag = tag; return; }   // baseline on first run
+      if (tag !== knownTag && !updateReady) {
+        updateReady = true;
+        handleUpdateDetected();
+      }
+    } catch { /* offline or network blip — ignore */ }
+  }
+
+  function handleUpdateDetected() {
+    const idleSec = (Date.now() - lastActivity) / 1000;
+    if (idleSec > 45) {
+      // Nobody using it — reload silently after a brief banner flash
+      showUpdateBar('Updating…');
+      setTimeout(() => location.reload(true), 1800);
+    } else {
+      // Someone is actively using the kiosk — show tap-to-update bar
+      showUpdateBar('New version ready — tap to update');
+    }
+  }
+
+  function showUpdateBar(msg) {
+    const bar = document.getElementById('kiosk-update-bar');
+    const msgEl = document.getElementById('kiosk-update-msg');
+    if (!bar || !msgEl) return;
+    msgEl.textContent = msg;
+    bar.style.display = 'flex';
+  }
+
+  // Poll every 10 minutes
+  setInterval(pollForUpdate, 10 * 60 * 1000);
+
+  // Re-check immediately whenever the Surface wakes from sleep
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !updateReady) pollForUpdate();
+  });
+
+  // Hard nightly reload at 3am as an unconditional fallback
+  function scheduleNightlyReload() {
+    const now = new Date();
+    const target = new Date(now);
+    target.setHours(3, 0, 0, 0);
+    if (target <= now) target.setDate(target.getDate() + 1);
+    setTimeout(() => location.reload(true), target - now);
+  }
+  scheduleNightlyReload();
+
+  // Kick off a baseline check after 5s (let Firebase settle first)
+  setTimeout(pollForUpdate, 5000);
+})();
 
 setupCalendar(); updateClock(); setInterval(updateClock, 15000); applyAutoTheme(); setInterval(applyAutoTheme, 60000); renderAll(); startCloudSync(); resetAmbientTimer(); setTimeout(processSystemBanners, 1000);
 </script>
