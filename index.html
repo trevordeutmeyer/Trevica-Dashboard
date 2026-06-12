@@ -718,6 +718,11 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
           <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer; font-size:14px; color:var(--text-strong)">
             <input type="checkbox" id="toggle-dinner-feature" onchange="toggleDinnerMenu(this.checked)" style="width:18px; height:18px;"> Show dinner plan
           </label>
+          <div style="height:1px;background:var(--border-soft);margin:10px 0;"></div>
+          <label style="display:inline-flex; align-items:center; gap:10px; font-weight:700; cursor:pointer; font-size:14px; color:var(--text-strong)">
+            <input type="checkbox" id="toggle-motion-wake" onchange="toggleMotionWake(this.checked)" style="width:18px; height:18px;"> Motion wake (sleep when no one nearby)
+          </label>
+          <div id="motion-wake-status" style="margin-top:6px;font-size:12px;color:var(--muted);display:none;"></div>
           <div id="manage-dinner-box" style="margin-top:12px; display:none;">
             <input type="text" id="dinner-input" class="inp" placeholder="What is for dinner?" style="max-width:320px; display:inline-block; margin-right:10px;" />
             <button class="pill-btn primary" onclick="saveDinnerMenu()">Save Dinner</button>
@@ -805,6 +810,17 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 </div>
 
 <!-- Settings popup -->
+<!-- Motion wake sleep screen -->
+<div id="sleep-screen" style="
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:#000; flex-direction:column;
+  align-items:center; justify-content:center; gap:12px;
+  cursor:pointer; transition:opacity 0.6s ease;
+" onclick="wakeFromSleep()">
+  <div id="sleep-clock" style="font-size:72px; font-weight:800; color:rgba(255,255,255,0.18); font-family:inherit; letter-spacing:-0.04em; line-height:1;"></div>
+  <div id="sleep-date"  style="font-size:18px; font-weight:600; color:rgba(255,255,255,0.10); font-family:inherit;"></div>
+</div>
+
 <div id="settings-popup">
   <button class="settings-pop-btn" onclick="openHistoryFromSettings()">📋&nbsp; Activity Log</button>
   <button class="settings-pop-btn" onclick="openManageFromSettings()">⚙️&nbsp; Family Settings</button>
@@ -837,6 +853,164 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 <div class="toast" id="toast"></div>
 
 <!-- CLOUD ROUTER FRAMEWORKS COMPAT CORE ATTACHMENTS -->
+
+// ══════════════════════════════════════════════════════════════
+// MOTION WAKE ENGINE
+// ══════════════════════════════════════════════════════════════
+const MOTION = {
+  stream: null,
+  video: null,
+  canvas: null,
+  ctx: null,
+  lastPixels: null,
+  sleepTimer: null,
+  clockInterval: null,
+  sleeping: false,
+  wakeLock: null,
+  IDLE_MS: 2 * 60 * 1000,   // 2 min no motion → sleep
+  DIFF_THRESH: 18,            // pixel brightness diff to count as motion
+  CHANGED_FRAC: 0.003,        // fraction of pixels that must change (0.3%)
+  SAMPLE_W: 160,
+  SAMPLE_H: 120,
+  CHECK_INTERVAL_MS: 1500,    // check every 1.5s
+};
+
+function toggleMotionWake(on) {
+  state.settings = { ...(state.settings||{}), motionWake: on };
+  saveState('settings.motionWake');
+  if (on) startMotionWake();
+  else     stopMotionWake();
+}
+
+async function startMotionWake() {
+  const statusEl = document.getElementById('motion-wake-status');
+  if (statusEl) { statusEl.style.display='block'; statusEl.textContent='Starting camera…'; }
+  try {
+    MOTION.stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: MOTION.SAMPLE_W, height: MOTION.SAMPLE_H, facingMode: 'user' },
+      audio: false
+    });
+    MOTION.video = document.createElement('video');
+    MOTION.video.srcObject = MOTION.stream;
+    MOTION.video.setAttribute('playsinline','');
+    await MOTION.video.play();
+    MOTION.canvas = document.createElement('canvas');
+    MOTION.canvas.width  = MOTION.SAMPLE_W;
+    MOTION.canvas.height = MOTION.SAMPLE_H;
+    MOTION.ctx = MOTION.canvas.getContext('2d');
+    MOTION.lastPixels = null;
+    MOTION.sleeping = false;
+    if (statusEl) { statusEl.textContent = '✓ Camera active — will sleep after 2 min of no motion'; }
+    resetMotionTimer();
+    requestWakeLock();
+    MOTION._checkLoop = setInterval(checkMotion, MOTION.CHECK_INTERVAL_MS);
+  } catch(e) {
+    if (statusEl) { statusEl.textContent = '⚠ Camera access denied — check browser permissions'; }
+    console.warn('Motion wake camera error:', e);
+  }
+}
+
+function stopMotionWake() {
+  clearInterval(MOTION._checkLoop);
+  clearTimeout(MOTION.sleepTimer);
+  clearInterval(MOTION.clockInterval);
+  if (MOTION.stream) { MOTION.stream.getTracks().forEach(t => t.stop()); MOTION.stream = null; }
+  if (MOTION.wakeLock) { try { MOTION.wakeLock.release(); } catch(e){} MOTION.wakeLock = null; }
+  wakeFromSleep();
+  const statusEl = document.getElementById('motion-wake-status');
+  if (statusEl) { statusEl.style.display='none'; statusEl.textContent=''; }
+}
+
+function checkMotion() {
+  if (!MOTION.video || !MOTION.ctx) return;
+  MOTION.ctx.drawImage(MOTION.video, 0, 0, MOTION.SAMPLE_W, MOTION.SAMPLE_H);
+  const data = MOTION.ctx.getImageData(0, 0, MOTION.SAMPLE_W, MOTION.SAMPLE_H).data;
+  // Compute grayscale brightness for each pixel
+  const pixels = new Uint8Array(MOTION.SAMPLE_W * MOTION.SAMPLE_H);
+  for (let i=0; i<pixels.length; i++) {
+    const off = i*4;
+    pixels[i] = (data[off]*0.299 + data[off+1]*0.587 + data[off+2]*0.114) | 0;
+  }
+  if (MOTION.lastPixels) {
+    let changed = 0;
+    for (let i=0; i<pixels.length; i++) {
+      if (Math.abs(pixels[i] - MOTION.lastPixels[i]) > MOTION.DIFF_THRESH) changed++;
+    }
+    const frac = changed / pixels.length;
+    if (frac > MOTION.CHANGED_FRAC) {
+      // Motion detected
+      if (MOTION.sleeping) wakeFromSleep();
+      resetMotionTimer();
+    }
+  }
+  MOTION.lastPixels = pixels;
+}
+
+function resetMotionTimer() {
+  clearTimeout(MOTION.sleepTimer);
+  MOTION.sleepTimer = setTimeout(goToSleep, MOTION.IDLE_MS);
+}
+
+function goToSleep() {
+  if (MOTION.sleeping) return;
+  MOTION.sleeping = true;
+  const ss = document.getElementById('sleep-screen');
+  if (!ss) return;
+  updateSleepClock();
+  MOTION.clockInterval = setInterval(updateSleepClock, 15000);
+  ss.style.display = 'flex';
+  ss.style.opacity = '0';
+  requestAnimationFrame(() => { ss.style.opacity = '1'; });
+}
+
+function wakeFromSleep() {
+  if (!MOTION.sleeping && document.getElementById('sleep-screen')?.style.display === 'none') return;
+  MOTION.sleeping = false;
+  clearInterval(MOTION.clockInterval);
+  const ss = document.getElementById('sleep-screen');
+  if (!ss) return;
+  ss.style.opacity = '0';
+  setTimeout(() => { ss.style.display = 'none'; }, 650);
+  resetMotionTimer();
+}
+
+function updateSleepClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  const hh = ((h % 12) || 12);
+  const mm = m < 10 ? '0'+m : m;
+  const clk = document.getElementById('sleep-clock');
+  const dt  = document.getElementById('sleep-date');
+  if (clk) clk.textContent = `${hh}:${mm} ${ampm}`;
+  if (dt)  dt.textContent  = now.toLocaleDateString([], {weekday:'long',month:'long',day:'numeric'});
+}
+
+async function requestWakeLock() {
+  if (!('wakeLock' in navigator)) return;
+  try {
+    MOTION.wakeLock = await navigator.wakeLock.request('screen');
+    MOTION.wakeLock.addEventListener('release', () => {
+      // Re-acquire if page still visible and motionWake still on
+      if (document.visibilityState === 'visible' && state.settings?.motionWake) {
+        setTimeout(requestWakeLock, 2000);
+      }
+    });
+  } catch(e) { console.warn('Wake lock not available:', e); }
+}
+
+// Re-acquire wake lock when tab becomes visible again
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && state.settings?.motionWake && !MOTION.wakeLock) {
+    requestWakeLock();
+  }
+});
+
+// Auto-start if setting was saved
+window.addEventListener('load', () => {
+  if (state.settings?.motionWake) startMotionWake();
+});
+
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
 <script>
@@ -1136,7 +1310,7 @@ function freshState() {
     logs:[],
     globalTodos:[],
     weekKey:getWeekKey(),
-    settings:{ dinnerEnabled: false, dinnerMenu: '' },
+    settings:{ dinnerEnabled: false, dinnerMenu: '', motionWake: false },
     dinnerEnabled: false,
     dinnerMenu: '',
     customBanners: [],
@@ -1186,6 +1360,7 @@ function normalizeState(input) {
     weekKey: typeof s.weekKey === 'string' ? s.weekKey : getWeekKey(),
     settings,
     dinnerEnabled: settings.dinnerEnabled,
+    motionWake: typeof settings.motionWake === 'boolean' ? settings.motionWake : false,
     dinnerMenu: settings.dinnerMenu,
     customBanners: Array.isArray(s.customBanners) ? s.customBanners : [],
     streakResetDone: true,
@@ -1767,6 +1942,7 @@ function renderManageView() {
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
+  const mwEl = document.getElementById('toggle-motion-wake'); if (mwEl) mwEl.checked = !!(state.settings && state.settings.motionWake);
   renderCustomBanners();
 }
 
