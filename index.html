@@ -307,6 +307,16 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .compact-row span { font-size: 15px; font-weight: 600; color: var(--text-strong); flex: 1; }
 .compact-clear-btn { font-size: 13px; color: var(--muted); background: none; border: none; cursor: pointer; padding: 4px 0 2px; font-weight: 600; font-family: inherit; }
 
+/* ─── Day scheduling ─────────────────────────── */
+.chore-day-badge { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 6px; background: var(--card-soft); color: var(--muted); flex-shrink: 0; text-transform: uppercase; }
+.chore-day-badge.today  { background: var(--accent); color: #fff; }
+.chore-day-badge.overdue { background: rgba(239,68,68,0.18); color: var(--red,#ef4444); }
+.kid-chore-row.overdue  { background: rgba(239,68,68,0.07); }
+.kid-chore-row.today-due { background: rgba(var(--accent-rgb,251,191,36),0.08); }
+.day-picker { display: flex; gap: 5px; flex-wrap: wrap; margin: 8px 0 4px; }
+.day-btn { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--card-soft); color: var(--muted); cursor: pointer; font-family: inherit; transition: all 0.12s; letter-spacing: 0.04em; }
+.day-btn.active { background: var(--accent); border-color: var(--accent); color: #1a1000; }
+
 /* ─── Settings gear button ───────────────────── */
 .settings-icon-btn {
   background: var(--card-soft); border: 1px solid var(--border); color: var(--muted);
@@ -965,12 +975,15 @@ function formatActivityTime(date = new Date()) {
 function normalizeChore(chore, fallbackId) {
   const source = chore && typeof chore === 'object' ? chore : {};
   const type = source.type === 'job' ? 'job' : 'weekly';
+  const validDays = ['mon','tue','wed','thu','fri','sat','sun'];
+  const days = Array.isArray(source.days) ? source.days.filter(d => validDays.includes(d)) : [];
   return {
     ...source,
     id: safeKey(source.id, fallbackId),
     name: cleanText(source.name, 'Untitled task'),
     type,
-    amt: type === 'job' ? toMoney(source.amt) : 0
+    amt: type === 'job' ? toMoney(source.amt) : 0,
+    days
   };
 }
 
@@ -1455,7 +1468,9 @@ function addChore(pid) {
   const p = state.people.find(x => x.id === pid);
   if (!p) return;
   const choreId = uid('chore');
-  p.chores.push({ id: choreId, name, amt, type });
+  const dayBtns = document.querySelectorAll(`#day-picker-${pid} .day-btn.active`);
+  const days = Array.from(dayBtns).map(b => b.dataset.day);
+  p.chores.push({ id: choreId, name, amt, type, days });
   pushLogTrail(`Task added for ${p.name}: ${name}`, { type:'chore', action:'chore.created', actorId:'parent', personId:pid, targetType:'chore', targetId:choreId, amount:amt });
   saveState('chore.add'); renderAll();
 }
@@ -1518,12 +1533,53 @@ function renderUnifiedFrontMatrix() {
       ? (pendingCount > 0 ? `⏳ ${pendingCount} job${pendingCount>1?'s':''} need approval` : (prog.pct===100 ? '✓ All done!' : `${prog.done}/${weekly.length} tasks`))
       : (earned > 0 ? `$${earned.toFixed(2)} earned` : `$${p.weeklyAllowance.toFixed(2)}/week`);
 
+    // Day-of-week sort + tint helpers
+    const DAY_KEYS = ['sun','mon','tue','wed','thu','fri','sat'];
+    const DAY_LABELS = { sun:'Sun', mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat' };
+    const todayKey = DAY_KEYS[new Date().getDay()];
+    const todayIdx = new Date().getDay(); // 0=Sun
+    function choreDayScore(ch) {
+      if (!ch.days || !ch.days.length) return 3; // unscheduled → middle
+      const indices = ch.days.map(d => DAY_KEYS.indexOf(d));
+      const hasTodayDay = indices.includes(todayIdx);
+      if (hasTodayDay) return 0; // today
+      const hasFuture = indices.some(i => i > todayIdx);
+      const hasPast   = indices.some(i => i < todayIdx);
+      if (hasFuture) return 1;
+      if (hasPast)   return 2;
+      return 3;
+    }
+    function choreRowClass(ch, done) {
+      if (done) return 'done';
+      if (!ch.days || !ch.days.length) return '';
+      const indices = ch.days.map(d => DAY_KEYS.indexOf(d));
+      if (indices.includes(todayIdx)) return 'today-due';
+      if (indices.every(i => i < todayIdx)) return 'overdue';
+      return '';
+    }
+    function dayBadgeHtml(ch) {
+      if (!ch.days || !ch.days.length) return '';
+      const indices = ch.days.map(d => DAY_KEYS.indexOf(d));
+      const label = ch.days.map(d => DAY_LABELS[d]||d).join(' · ');
+      let cls = 'chore-day-badge';
+      if (indices.includes(todayIdx)) cls += ' today';
+      else if (indices.every(i => i < todayIdx)) cls += ' overdue';
+      return `<span class="${cls}">${label}</span>`;
+    }
+    const sortedWeekly = [...weekly].sort((a,b) => {
+      const ad = isChecked(p.id,a.id), bd = isChecked(p.id,b.id);
+      if (ad !== bd) return ad ? 1 : -1; // done always last
+      return choreDayScore(a) - choreDayScore(b);
+    });
+
     const choreRows = [
-      ...weekly.map(c => {
+      ...sortedWeekly.map(c => {
         const done = isChecked(p.id, c.id);
-        return `<div class="kid-chore-row${done ? ' done' : ''}" onclick="toggleChore('${p.id}','${c.id}')">
+        const rowCls = choreRowClass(c, done);
+        return `<div class="kid-chore-row${rowCls ? ' '+rowCls : ''}" onclick="toggleChore('${p.id}','${c.id}')">
           <div class="chk" style="${done ? `background:var(--${p.id});border-color:var(--${p.id});` : ''}">${done ? '✓' : ''}</div>
           <span class="kid-chore-name">${escapeHtml(c.name)}</span>
+          ${dayBadgeHtml(c)}
         </div>`;
       }),
       ...jobs.map(c => {
@@ -1682,8 +1738,32 @@ function renderManageView() {
     return `<div class="card pad">
       <div style="font-weight:800; font-size:15px; color:var(--text-strong); margin-bottom:10px;">${escapeHtml(person.name)}</div>
       <div class="field-row"><label>Weekly Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
-      ${person.chores.map(c => `<div class="manage-chore-row"><span style="font-size:13px">${escapeHtml(c.name)}</span><button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button></div>`).join('')}
-      <div class="add-form"><input class="inp" id="inp-name-${person.id}" placeholder="New chore or task" /><div style="display:flex; gap:6px;"><input class="inp" id="inp-amt-${person.id}" type="number" placeholder="$" style="width:70px;" /><div class="type-row" style="flex:1;"><button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Chore</button><button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Paid</button></div></div><button class="add-btn" onclick="addChore('${person.id}')">Add Task</button></div>
+      ${person.chores.map(c => {
+        const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        const dayKeys   = ['mon','tue','wed','thu','fri','sat','sun'];
+        const dayStr = c.days && c.days.length ? c.days.map(d => dayLabels[dayKeys.indexOf(d)]||d).join(' · ') : '';
+        return `<div class="manage-chore-row">
+          <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;">
+            <span style="font-size:13px">${escapeHtml(c.name)}</span>
+            ${dayStr ? `<span style="font-size:11px;color:var(--muted);font-weight:600;">${dayStr}</span>` : ''}
+          </div>
+          <button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button>
+        </div>`;
+      }).join('')}
+      <div class="add-form">
+        <input class="inp" id="inp-name-${person.id}" placeholder="New chore or task" />
+        <div class="day-picker" id="day-picker-${person.id}">
+          ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((d,i)=>`<button class="day-btn" data-day="${['mon','tue','wed','thu','fri','sat','sun'][i]}" onclick="this.classList.toggle('active')">${d}</button>`).join('')}
+        </div>
+        <div style="display:flex; gap:6px;">
+          <input class="inp" id="inp-amt-${person.id}" type="number" placeholder="$" style="width:70px;" />
+          <div class="type-row" style="flex:1;">
+            <button class="type-btn selected" id="btn-weekly-${person.id}" onclick="selectType('${person.id}','weekly')">Chore</button>
+            <button class="type-btn" id="btn-job-${person.id}" onclick="selectType('${person.id}','job')">Paid</button>
+          </div>
+        </div>
+        <button class="add-btn" onclick="addChore('${person.id}')">Add Task</button>
+      </div>
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
