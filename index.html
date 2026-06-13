@@ -1240,7 +1240,8 @@ function normalizeSettings(input) {
   const settings = input.settings && typeof input.settings === 'object' ? input.settings : {};
   return {
     dinnerEnabled: typeof settings.dinnerEnabled === 'boolean' ? settings.dinnerEnabled : input.dinnerEnabled === true,
-    dinnerMenu: cleanText(settings.dinnerMenu ?? input.dinnerMenu)
+    dinnerMenu: cleanText(settings.dinnerMenu ?? input.dinnerMenu),
+    motionWake: typeof settings.motionWake === 'boolean' ? settings.motionWake : (input.motionWake === true)
   };
 }
 
