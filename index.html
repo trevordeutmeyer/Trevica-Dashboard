@@ -132,6 +132,8 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .content { flex: 1; min-height: 0; padding: 16px 12px 24px; position: relative; }
 .panel { display: none; height: 100%; }
 .panel.active { display: flex; flex-direction: column; }
+/* Manage panel is a fixed full-screen overlay so height always resolves correctly */
+#panel-manage.active { position: fixed; inset: 0; z-index: 150; background: var(--bg); display: flex; flex-direction: column; height: 100%; overflow: hidden; }
 
 /* Split Screen Content Matrix */
 .today-master-layout {
@@ -707,7 +709,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
     <!-- SYSTEM OVERRIDES MANAGEMENT LAYER -->
     <section class="panel" id="panel-manage">
-      <div class="panel-scroll-frame">
+      <div class="panel-scroll-frame" style="padding-top: 8px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
           <button class="pill-btn" onclick="switchTab('home'); manageUnlocked=false;" style="font-size:12px;padding:8px 14px;">← Today</button>
           <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Family Settings</div>
