@@ -1981,7 +1981,21 @@ let pinBuffer = '', pinAction = null;
 function requirePin(action) { pinAction = action; pinBuffer = ''; updatePinDots(); document.getElementById('pin-error').textContent = ''; document.getElementById('pin-modal').classList.add('open'); }
 function pinKey(k) { if (k === 'cancel') { closeModal('pin-modal'); return; } if (k === 'back') { pinBuffer = pinBuffer.slice(0,-1); updatePinDots(); return; } if (pinBuffer.length >= 4) return; pinBuffer += k; updatePinDots(); if (pinBuffer.length === 4) setTimeout(checkPin, 120); }
 function updatePinDots() { for (let i=0;i<4;i++) document.getElementById(`pd${i}`).classList.toggle('filled', i < pinBuffer.length); }
-function checkPin() { if (pinBuffer === PARENT_PIN) { closeModal('pin-modal'); if (pinAction === 'reset') document.getElementById('reset-modal').classList.add('open'); if (pinAction === 'manage') { manageUnlocked = true; switchTab('manage'); } } else { document.getElementById('pin-error').textContent = 'Wrong PIN.'; pinBuffer = ''; updatePinDots(); } }
+function checkPin() {
+  if (pinBuffer === PARENT_PIN) {
+    closeModal('pin-modal');   // close immediately so ghost-click lands on inactive home panel
+    if (pinAction === 'reset') {
+      setTimeout(() => document.getElementById('reset-modal').classList.add('open'), 50);
+    }
+    if (pinAction === 'manage') {
+      // Wait 400ms — past the 300ms ghost-click window — before switching to manage
+      setTimeout(() => { manageUnlocked = true; switchTab('manage'); }, 400);
+    }
+  } else {
+    document.getElementById('pin-error').textContent = 'Wrong PIN.';
+    pinBuffer = ''; updatePinDots();
+  }
+}
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function resetAmbientTimer() {}
 
