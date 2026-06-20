@@ -47,7 +47,7 @@ dinnerMenu, customBanners[], streakResetDone, meta{}
 dinnerEnabled (bool), dinnerMenu (string), motionWake (bool)
 ```
 
-> **Note**: `motionWake` is stored in `localStorage` (key `'motionWake'`, value `'1'` or `'0'`) — NOT in Firebase state. The camera is per-device; syncing via Firebase would cause other family devices to overwrite it. `getMotionWakeSetting()` reads localStorage; `toggleMotionWake(on)` writes to localStorage only.
+> **Note on motionWake persistence**: Edge kiosk mode runs InPrivate — localStorage is wiped on every session reset. `toggleMotionWake(on)` therefore **dual-writes**: to `state.settings.motionWake` + Firebase (survives InPrivate wipe, server-side) AND to `localStorage` key `'motionWake'` (faster read for normal browser sessions). `getMotionWakeSetting()` checks `state.settings.motionWake` first (Firebase-authoritative), then localStorage as fallback. `applyRemoteState` auto-calls `startMotionWake()` when Firebase delivers `motionWake=true` so the camera restarts automatically on each new kiosk session without user interaction.
 
 ### weekKey
 
@@ -138,7 +138,7 @@ Adult cards show: emoji, name, chore/task rows (no allowance or streak).
 
 ## Motion Wake
 
-Controlled by `localStorage.getItem('motionWake') === '1'` (read via `getMotionWakeSetting()`). **Not stored in Firebase** — camera is per-device. When `true`:
+Controlled by `state.settings.motionWake` (Firebase) with `localStorage` as fallback. Read via `getMotionWakeSetting()`. Written via `toggleMotionWake(on)` which dual-writes to both Firebase and localStorage. Auto-started from `applyRemoteState` on each Firebase sync (handles kiosk InPrivate session resets). When `true`:
 - `getUserMedia` opens a low-res camera stream.
 - Each frame is diffed against the previous (grayscale, `DIFF_THRESH=18`, `CHANGED_FRAC=0.003`).
 - No motion for `IDLE_MS=120000` (2 min) → sleep overlay shown.

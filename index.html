@@ -880,15 +880,22 @@ const MOTION = {
 };
 
 function toggleMotionWake(on) {
-  // motionWake is per-device (camera is local) — store in localStorage only
-  // so other family devices don't overwrite it via Firebase sync
+  // Dual-write: Firebase for kiosk (InPrivate wipes localStorage each session),
+  // localStorage for normal browsers (faster, survives Firebase reconnect delay).
+  state.settings = { ...(state.settings||{}), motionWake: on };
   localStorage.setItem('motionWake', on ? '1' : '0');
+  // Bypass debounce + isLoadingFromCloud — write immediately and unconditionally
+  state = stampStateForSave(state, 'settings.motionWake');
+  cacheState(state);
+  if (stateRef) stateRef.set(state).catch(() => {});
   renderManageView();
   if (on) startMotionWake();
   else     stopMotionWake();
 }
 function getMotionWakeSetting() {
-  return localStorage.getItem('motionWake') === '1';
+  // Firebase state is authoritative (survives kiosk InPrivate wipe).
+  // Fall back to localStorage for normal browser sessions before Firebase loads.
+  return !!(state.settings?.motionWake) || localStorage.getItem('motionWake') === '1';
 }
 
 async function startMotionWake() {
@@ -2072,7 +2079,7 @@ function renderManageView() {
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
-  const mwEl = document.getElementById('toggle-motion-wake'); if (mwEl) mwEl.checked = getMotionWakeSetting();
+  const mwEl = document.getElementById('toggle-motion-wake'); if (mwEl) mwEl.checked = !!(state.settings?.motionWake);
   const chip = document.getElementById('app-version-chip');
   if (chip) {
     const u = window._kioskUpdate || {};
@@ -2165,6 +2172,9 @@ function applyRemoteState(remoteState) {
   renderAll();
   isLoadingFromCloud = false;
   applySyncStatus('synced');
+  // Auto-start motion wake from Firebase state — handles kiosk InPrivate sessions
+  // where localStorage was wiped but motionWake=true is stored in Firebase
+  if (state.settings?.motionWake && !MOTION.stream) startMotionWake();
 }
 
 function seedCloudState() {
