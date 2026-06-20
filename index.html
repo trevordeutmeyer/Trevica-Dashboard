@@ -715,7 +715,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
           <button class="pill-btn" onclick="switchTab('home'); manageUnlocked=false;" style="font-size:12px;padding:8px 14px;">← Back</button>
           <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Family Settings</div>
-          <div style="width:80px;"></div>
+          <div id="app-version-chip" style="font-size:11px;font-weight:700;color:var(--muted);text-align:right;line-height:1.3;"></div>
         </div>
         <div class="card pad" style="margin-bottom:16px;">
           <div class="card-main-title" style="margin-bottom:10px">Dashboard Settings</div>
@@ -2072,6 +2072,13 @@ function renderManageView() {
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
   const mwEl = document.getElementById('toggle-motion-wake'); if (mwEl) mwEl.checked = !!(state.settings && state.settings.motionWake);
+  const chip = document.getElementById('app-version-chip');
+  if (chip) {
+    const u = window._kioskUpdate || {};
+    const fmt = d => d ? d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}) + ' · ' + d.toLocaleDateString([], {month:'short',day:'numeric'}) : '—';
+    const statusColor = u.status === 'Up to date' ? 'var(--green)' : u.status === 'Update detected' ? 'var(--accent)' : 'var(--muted)';
+    chip.innerHTML = `<span style="color:${statusColor};font-weight:800;">${u.status||'—'}</span><br>Loaded ${fmt(u.loadedAt)}<br>Checked ${fmt(u.lastChecked)}`;
+  }
   renderCustomBanners();
 }
 
@@ -2303,6 +2310,9 @@ function openPersonDetail(pid) {
 // ══════════════════════════════════════════════
 // KIOSK AUTO-UPDATE ENGINE
 // ══════════════════════════════════════════════
+// Shared update status readable by settings panel
+window._kioskUpdate = { loadedAt: new Date(), lastChecked: null, tag: null, status: 'Checking…' };
+
 (function() {
   const PAGE_URL = location.href.split('?')[0];
   let knownTag = null;      // ETag or Last-Modified seen on first check
@@ -2322,7 +2332,13 @@ function openPersonDetail(pid) {
       // Prefer ETag; fall back to Last-Modified
       const tag = res.headers.get('etag') || res.headers.get('last-modified');
       if (!tag) return;
-      if (knownTag === null) { knownTag = tag; return; }   // baseline on first run
+      window._kioskUpdate.lastChecked = new Date();
+      window._kioskUpdate.tag = tag;
+      if (knownTag === null) {
+        knownTag = tag;
+        window._kioskUpdate.status = 'Up to date';
+        return;
+      }   // baseline on first run
       if (tag !== knownTag && !updateReady) {
         updateReady = true;
         handleUpdateDetected();
@@ -2331,6 +2347,7 @@ function openPersonDetail(pid) {
   }
 
   function handleUpdateDetected() {
+    window._kioskUpdate.status = 'Update detected';
     const idleSec = (Date.now() - lastActivity) / 1000;
     if (idleSec > 45) {
       // Nobody using it — reload silently after a brief banner flash
