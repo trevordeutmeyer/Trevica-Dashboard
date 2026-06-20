@@ -699,7 +699,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <section class="panel" id="panel-history">
       <div class="panel-scroll-frame">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <button class="pill-btn" onclick="switchTab('home')" style="font-size:12px;padding:8px 14px;">← Today</button>
+          <button class="pill-btn" onclick="switchTab('home')" style="font-size:12px;padding:8px 14px;">← Back</button>
           <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Recent Activity</div>
           <button class="pill-btn danger" onclick="clearHistoryLogs()">Clear</button>
         </div>
@@ -711,7 +711,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     <section class="panel" id="panel-manage">
       <div class="panel-scroll-frame" style="padding-top: 8px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <button class="pill-btn" onclick="switchTab('home'); manageUnlocked=false;" style="font-size:12px;padding:8px 14px;">← Today</button>
+          <button class="pill-btn" onclick="switchTab('home'); manageUnlocked=false;" style="font-size:12px;padding:8px 14px;">← Back</button>
           <div style="font-size:16px; font-weight:800; color:var(--text-strong)">Family Settings</div>
           <div style="width:80px;"></div>
         </div>
@@ -880,6 +880,7 @@ const MOTION = {
 function toggleMotionWake(on) {
   state.settings = { ...(state.settings||{}), motionWake: on };
   saveState('settings.motionWake');
+  renderManageView(); // re-sync checkbox to saved state immediately
   if (on) startMotionWake();
   else     stopMotionWake();
 }
@@ -1428,8 +1429,9 @@ function saveState(reason = 'manual') {
   applySyncStatus(firebaseOnline ? 'saving' : 'local');
   if (stateRef && !isLoadingFromCloud) {
     clearTimeout(saveTimer);
+    const pendingState = state; // snapshot — immune to state reassignment during debounce
     saveTimer = setTimeout(() => {
-      stateRef.set(state).then(() => applySyncStatus('synced')).catch(() => applySyncStatus('local'));
+      stateRef.set(pendingState).then(() => applySyncStatus('synced')).catch(() => applySyncStatus('local'));
     }, 120);
   }
 }
