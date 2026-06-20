@@ -242,7 +242,9 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .type-btn { flex: 1; border: 1px solid var(--border); background: var(--card); color: var(--muted); padding: 10px; border-radius: 10px; font-weight: 700; font-size: 13px; }
 .type-btn.selected { background: var(--accent-soft); color: var(--accent); border-color: var(--accent); }
 .add-btn { border: none; background: var(--text-strong); color: var(--app); border-radius: 10px; padding: 12px; font-weight: 700; }
-.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; }
+.del-btn { border: none; background: var(--red-soft); color: var(--red); width: 32px; height: 32px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+.edit-btn { border: none; background: rgba(217,119,6,0.12); color: var(--accent); width: 32px; height: 32px; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; }
+.manage-chore-edit { background: var(--card-soft); padding: 12px; border-radius: var(--radius-sm); margin: 4px 0 8px; display: grid; gap: 10px; border: 1.5px solid var(--accent); }
 .manage-chore-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
 
 .modal-bg { display:none; position:fixed; inset:0; background:rgba(15,23,42,.7); backdrop-filter: blur(16px); z-index:200; align-items:center; justify-content:center; padding: 20px; }
@@ -1976,14 +1978,35 @@ function renderManageView() {
       <div style="font-weight:800; font-size:15px; color:var(--text-strong); margin-bottom:10px;">${escapeHtml(person.name)}</div>
       <div class="field-row"><label>Weekly Allowance ($)</label><input class="inp" type="number" min="0" step="0.5" value="${person.weeklyAllowance.toFixed(2)}" onchange="updateAllowance('${person.id}',this.value)" /></div>
       ${person.chores.map(c => {
-        const dayLabels = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-        const dayKeys   = ['mon','tue','wed','thu','fri','sat','sun'];
-        const dayStr = c.days && c.days.length ? c.days.map(d => dayLabels[dayKeys.indexOf(d)]||d).join(' · ') : '';
+        const DAY_LABELS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+        const DAY_KEYS   = ['mon','tue','wed','thu','fri','sat','sun'];
+        const isEditing = _editingChore?.pid === person.id && _editingChore?.cid === c.id;
+        if (isEditing) {
+          return `<div class="manage-chore-edit">
+            <input class="inp" id="edit-name-${c.id}" value="${escapeHtml(c.name)}" placeholder="Chore name" />
+            <div class="day-picker" id="edit-day-picker-${c.id}">
+              ${DAY_LABELS.map((d,i) => `<button class="day-btn${c.days?.includes(DAY_KEYS[i])?' active':''}" data-day="${DAY_KEYS[i]}" onclick="this.classList.toggle('active')">${d}</button>`).join('')}
+            </div>
+            <div style="display:flex;gap:6px;">
+              <input class="inp" id="edit-amt-${c.id}" type="number" placeholder="$" style="width:70px;" value="${c.amt||''}" />
+              <div class="type-row" style="flex:1;">
+                <button class="type-btn${c.type==='weekly'?' selected':''}" id="edit-btn-weekly-${c.id}" onclick="selectEditType('${c.id}','weekly')">Chore</button>
+                <button class="type-btn${c.type==='job'?' selected':''}" id="edit-btn-job-${c.id}" onclick="selectEditType('${c.id}','job')">Paid</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="add-btn" style="flex:1;" onclick="saveChoreEdit('${person.id}','${c.id}')">Save</button>
+              <button class="pill-btn" onclick="cancelChoreEdit()">Cancel</button>
+            </div>
+          </div>`;
+        }
+        const dayStr = c.days && c.days.length ? c.days.map(d => DAY_LABELS[DAY_KEYS.indexOf(d)]||d).join(' · ') : '';
         return `<div class="manage-chore-row">
           <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;">
             <span style="font-size:13px">${escapeHtml(c.name)}</span>
             ${dayStr ? `<span style="font-size:11px;color:var(--muted);font-weight:600;">${dayStr}</span>` : ''}
           </div>
+          <button class="edit-btn" onclick="editChore('${person.id}','${c.id}')">✏</button>
           <button class="del-btn" onclick="deleteChore('${person.id}','${c.id}')">×</button>
         </div>`;
       }).join('')}
@@ -2026,6 +2049,28 @@ function renderAll() {
 // SWITCH INTERFACES & PLATFORM ROUTERS
 // ══════════════════════════════════════════════
 let manageUnlocked = false;
+let _editingChore = null; // { pid, cid }
+
+function editChore(pid, cid) { _editingChore = { pid, cid }; renderManageView(); }
+function cancelChoreEdit() { _editingChore = null; renderManageView(); }
+function selectEditType(cid, type) {
+  document.getElementById(`edit-btn-weekly-${cid}`)?.classList.toggle('selected', type === 'weekly');
+  document.getElementById(`edit-btn-job-${cid}`)?.classList.toggle('selected', type === 'job');
+}
+function saveChoreEdit(pid, cid) {
+  const p = state.people.find(x => x.id === pid);
+  const ch = p?.chores.find(x => x.id === cid);
+  if (!p || !ch) return;
+  const name = document.getElementById(`edit-name-${cid}`)?.value.trim();
+  if (!name) return;
+  const days = Array.from(document.querySelectorAll(`#edit-day-picker-${cid} .day-btn.active`)).map(b => b.dataset.day);
+  const type = document.getElementById(`edit-btn-weekly-${cid}`)?.classList.contains('selected') ? 'weekly' : 'job';
+  const amt = type === 'job' ? (parseFloat(document.getElementById(`edit-amt-${cid}`)?.value) || 0) : 0;
+  ch.name = name; ch.days = days; ch.type = type; ch.amt = amt;
+  _editingChore = null;
+  pushLogTrail(`Task updated for ${p.name}: ${name}`, { type:'chore', action:'chore.updated', actorId:'parent', personId:pid, targetType:'chore', targetId:cid });
+  saveState('chore.edit'); renderAll();
+}
 function switchTab(name) {
   if (name === 'manage' && !manageUnlocked) { requirePin('manage'); return; }
   document.querySelectorAll('.nav-tab').forEach((t, i) => t.classList.toggle('active', ['home','chores','approvals','history','manage'][i] === name));
