@@ -46,22 +46,38 @@ Warm amber accent (`#d97706`). Light theme: warm off-white backgrounds (`#f7f4ef
 **Typography**
 Plus Jakarta Sans, 600/700/800 weights. All body text scaled up for walk-by readability. Kid card names at 26 px, chore rows at 16 px, checkboxes at 30×30 px.
 
+**Person emojis**
+Henry = ⚽, Jules = 🐎, Mom = 🌱 (gardening), Dad = 🪚 (carpentry).
+
 ## 5. Screen Layout — Home Panel
 
 **Smart announcement banner** — full-width strip below the header. See Section 9 for priority logic.
 
 **Stats strip** — three mini cards: total chores done/total, pending approvals, current week number.
 
-**Kids hero grid** — Jules and Henry occupy center stage in equal-height side-by-side cards. Each card shows: emoji, name, streak tag, progress bar, and all weekly chores as tappable rows. Tapping a row toggles it. Tapping the card header opens the full person detail modal.
+**Kids hero grid** — 2×2 grid: Henry (top-left), Jules (top-right), Mom (bottom-left), Dad (bottom-right). All four cards are equal size. Each card shows: emoji, name, streak tag (kids), progress bar (kids), and all chores as tappable rows. Tapping a row toggles it. Tapping the card header opens the full person detail modal.
 
 **Calendar strip** — Google Calendar embedded iframe, full width.
 
-**Adults compact strip** — Dad and Mom side by side in a compact horizontal row. Shows task list; tapping a row toggles it. Tapping the card opens the person detail modal.
-
 ## 6. Kids' Chore and Allowance System
 
+**Chore day scheduling**
+Each chore can optionally be assigned to specific days of the week (e.g., Mon/Wed/Fri). Day-specific chores:
+- Show a small badge with the day abbreviation next to the chore name
+- Today's badge is filled amber; overdue is red-tinted; future is muted
+- Sort order: today-due → overdue → future → unscheduled undone → completed
+- Reset automatically each day (a chore due Mon resets and reappears the following Mon)
+
+Chores without day assignments are "unscheduled weekly" — they can be done any day and reset each Monday.
+
+**Chore completion tracking**
+Completions are date-stamped (`YYYY-MM-DD`). This means:
+- Day-specific chores auto-reset without parent intervention
+- Weekly chores reset at the start of each Monday
+- A chore completed on Monday still counts toward the weekly allowance on Saturday (`wasCheckedThisWeek`)
+
 **Weekly allowance — all or nothing**
-Each child has a weekly allowance amount set by a parent. All core weekly chores must be completed to unlock allowance. Completing all chores auto-submits an approval request. After parent approval, the allowance is paid. If a chore is unchecked after approval, the approval is revoked and the chore list resets.
+Each child has a weekly allowance amount set by a parent. All core weekly chores must be completed (i.e., `wasCheckedThisWeek` = true for every weekly chore) to unlock allowance. Completing all chores auto-submits an approval request. After parent approval, the allowance is paid. If a chore is unchecked after approval, the approval is revoked and the chore list resets.
 
 **One-time paid jobs**
 Custom jobs with a dollar amount, added via the + button. No PIN required to add. Completing a job submits an individual approval request. Jobs are cleared on new-week reset.
@@ -71,7 +87,7 @@ Consecutive weeks of fully completed and approved chores. Displayed as a badge o
 
 ## 7. Adult Task Lists
 
-Dad and Mom each have task cards. Tasks are simple checklist items — no dollar amounts, approval flow, or streaks. Tasks reset on new-week reset.
+Dad and Mom each have task cards in the kids hero grid (bottom row), same size as the kids cards. Tasks are simple checklist items — no dollar amounts, approval flow, or streaks. Tasks reset on new-week reset.
 
 ## 8. Person Detail Modal
 
@@ -106,13 +122,14 @@ Navigation is accessed via the ⚙ gear icon in the top-right of the header. Tap
 - ⚙️ Family Settings (PIN required)
 - 🔄 Reload App
 
-The + floating action button always visible for quick task creation.
+The + floating action button is always visible for quick task creation.
 
 ## 12. Family Settings (PIN-gated)
 
 - Dashboard settings: dinner plan toggle and text
+- Motion wake toggle (camera-based sleep/wake — see Section 21)
 - Custom banners: schedule, list, and delete
-- Per-person: adjust weekly allowance, add/delete chores
+- Per-person: adjust weekly allowance, add/delete chores (with day picker)
 - Start New Week (destructive reset, also PIN-gated)
 
 ## 13. Approvals System
@@ -152,9 +169,23 @@ All state lives in Firebase Realtime Database at `familyDashboard/state`. Every 
 
 Triggered manually (PIN) or automatically on page load when the calendar week changes. Clears: weekly chore checkmarks, earned totals, one-time jobs. Keeps: weekly chore definitions, allowance amounts, streaks (updated based on prior week completion), activity log.
 
+Note: day-specific chores self-reset daily via date-stamp comparison and do not depend on the new-week reset trigger.
+
 ## 20. Hosting
 
 - GitHub Pages, `main` branch root, no build step.
 - Primary URL: `https://trevordeutmeyer.github.io/Trevica-Dashboard/`
 - Surface Pro runs it full-screen in Edge kiosk mode.
 - Any family device can access via bookmarked URL.
+
+## 21. Motion Wake (Camera-Based Sleep Screen)
+
+When enabled, the kiosk uses the front-facing camera to conserve attention and screen energy:
+
+- **Sleep trigger**: 2 minutes of no detected motion dims the display to a minimal sleep overlay (large clock + date).
+- **Wake trigger**: pixel-diff motion above threshold instantly dismisses the sleep overlay.
+- **Implementation**: `getUserMedia` captures a low-res video stream. Each frame is downsampled to grayscale and compared to the previous frame. If more than 0.3% of pixels change by more than 18 brightness units, motion is detected.
+- **Wake Lock**: `navigator.wakeLock.request('screen')` prevents the OS from sleeping the browser while the app is in use.
+- **Privacy**: no images or video are stored, transmitted, or recorded — only per-frame pixel diffs are computed in memory.
+- **Camera permission**: prompted on first enable. If denied, the toggle reverts.
+- **Setting**: `state.settings.motionWake` (boolean). Toggled in Family Settings. Persists in Firebase.

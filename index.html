@@ -295,7 +295,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 .kid-chore-row .chk { width: 34px; height: 34px; border-radius: 10px; font-size: 16px; border-width: 2px; flex-shrink: 0; }
 
 /* ─── Calendar full-width strip ──────────────── */
-.cal-full-strip { height: 145px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
+.cal-full-strip { height: 220px; flex-shrink: 0; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); background: var(--card); }
 .cal-full-strip iframe { width: 100%; height: 100%; border: 0; filter: var(--cal-filter); }
 
 /* ─── Adults horizontal strip ────────────────── */
@@ -465,7 +465,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
     gap: 12px;
   }
   .quick-stats-stack    { grid-area: stats;  margin-bottom: 0; }
-  .cal-full-strip       { grid-area: cal;    height: auto; min-height: 220px; }
+  .cal-full-strip       { grid-area: cal;    height: auto; min-height: 280px; }
   .adults-compact-area  {
     grid-area: adults; height: auto; flex-direction: row;
     overflow-x: visible; overflow-y: visible;
@@ -498,7 +498,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
 
   /* Home layout — single column, natural height */
   #panel-home { gap: 8px; }
-  .cal-full-strip { height: 180px; }
+  .cal-full-strip { height: 220px; }
   .kids-hero-grid {
     grid-template-columns: 1fr;
     flex: unset; height: auto;
@@ -528,7 +528,7 @@ body { font-family: 'Plus Jakarta Sans', Arial, sans-serif; color: var(--text); 
   .kids-hero-grid { grid-template-columns: 1fr 1fr; }
   .manga-headline { font-size: 34px; }
   .manga-clock-block #clock { font-size: 40px; }
-  .cal-full-strip { height: 200px; }
+  .cal-full-strip { height: 240px; }
 }
 
 /* ─── Phone landscape (any width, height < 520px) ──────── */

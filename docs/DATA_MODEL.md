@@ -27,10 +27,11 @@ Local fallback: `localStorage` key `fb_v11`.
   "activity": [],
   "logs": [],
   "globalTodos": [],
-  "weekKey": "w2026_24",
+  "weekKey": "2026-06-15",
   "settings": {
     "dinnerEnabled": false,
-    "dinnerMenu": ""
+    "dinnerMenu": "",
+    "motionWake": false
   },
   "dinnerEnabled": false,
   "dinnerMenu": "",
@@ -55,6 +56,12 @@ Local fallback: `localStorage` key `fb_v11`.
 
 `streakResetDone` is a one-time migration flag. When `false` (old data), `normalizeState` resets all child streaks to 0 and then sets it to `true`. New installs start with `true`.
 
+### weekKey format
+
+`weekKey` is the ISO date string of the **Monday** of the current week, e.g. `"2026-06-15"`. It is recalculated from `_mondayOf(new Date())` on every page load — the stored value is replaced, never trusted. This guarantees consistent week boundaries regardless of what was previously saved.
+
+> **Previous format** (before June 2026): `"w2026_25"` — a formula-based string that had a time-of-day dependency causing Mon–Fri completions to appear in a different week than Sat–Sun. No longer used.
+
 ## Person
 
 ```json
@@ -73,10 +80,10 @@ Current people:
 
 | id | name | emoji | role | weeklyAllowance |
 |---|---|---|---|---|
-| `dad` | Dad | 👨 | parent | 0 |
-| `mom` | Mom | 👩 | parent | 0 |
-| `jules` | Jules | 🐎 | child | 5.00 |
 | `henry` | Henry | ⚽ | child | 7.00 |
+| `jules` | Jules | 🐎 | child | 5.00 |
+| `mom` | Mom | 🌱 | parent | 0 |
+| `dad` | Dad | 🪚 | parent | 0 |
 
 `role` is either `"parent"` or `"child"`. Parents do not have allowance, streaks, or approval flow.
 
@@ -87,13 +94,60 @@ Current people:
   "id": "j1",
   "name": "Make bed",
   "type": "weekly",
-  "amt": 0
+  "amt": 0,
+  "days": [1, 3, 5]
 }
 ```
 
 `type` values:
 - `"weekly"` — core weekly chore, required for allowance unlock.
 - `"job"` — one-time paid job, requires individual parent approval.
+
+`days` (optional array of integers, 0 = Sunday … 6 = Saturday): the specific days of the week this chore is due. When present and non-empty the chore is "day-specific" and resets each day. When absent or empty the chore is "unscheduled weekly" and resets each week.
+
+Day-specific chores show a colored badge next to their name:
+- **Today** — filled amber badge
+- **Overdue** (past due this week, not yet done) — red tinted badge + row background tint
+- **Future** — muted badge
+
+## checked Schema
+
+`state.checked` is a dict keyed by `personId`. Each value is a **date-stamped dict** (not an array):
+
+```json
+{
+  "jules": {
+    "j1": "2026-06-15",
+    "j2": "2026-06-17"
+  },
+  "henry": {
+    "h1": "2026-06-16"
+  }
+}
+```
+
+The value for each chore is the `YYYY-MM-DD` string of the date it was last checked off.
+
+### isChecked logic
+
+```
+if chore.days is non-empty:
+    done = (stored date === today)                            // resets each day
+else:
+    done = (dateToWeekKey(stored date) === weekKey)           // resets each week
+```
+
+### wasCheckedThisWeek logic
+
+```
+done_this_week = (dateToWeekKey(stored date) === weekKey)
+```
+
+Used for allowance progress — a day-specific chore checked on Monday still counts toward the weekly allowance on Saturday.
+
+### Migration from old array format
+
+`normalizeChecked` detects the old `[cid, cid, ...]` array format and migrates it by stamping each entry with the Monday of the current week. Migrated checks count as "done this week" on first load.
 
 ## Custom Banner
 
@@ -150,7 +204,7 @@ Job approvals also include `"choreId"`.
   "time": "6/8/2026 7:15 AM",
   "createdAt": "2026-06-08T13:15:00.000Z",
   "createdAtMs": 1749367200000,
-  "weekKey": "w2026_24",
+  "weekKey": "2026-06-08",
   "clientId": "client_abc",
   "actorId": "jules",
   "personId": "jules",
@@ -161,14 +215,31 @@ Job approvals also include `"choreId"`.
 
 The log is capped at 80 entries (newest kept). Supported actions include: `chore.completed`, `chore.reopened`, `allowance.requested`, `allowance.approved`, `allowance.denied`, `job.completed`, `job.approved`, `job.denied`, `settings.dinner.updated`, `week.reset`, `banner.add`, `banner.delete`.
 
+## Settings
+
+```json
+{
+  "dinnerEnabled": false,
+  "dinnerMenu": "",
+  "motionWake": false
+}
+```
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `dinnerEnabled` | boolean | `false` | Whether to show the dinner plan banner |
+| `dinnerMenu` | string | `""` | Dinner description text |
+| `motionWake` | boolean | `false` | Camera-based motion wake: sleep screen when idle, wake on motion |
+
 ## State Normalization Pipeline
 
 Every state load passes through:
 
-1. `normalizeSettings(s)` — extracts `dinnerEnabled`, `dinnerMenu`.
+1. `normalizeSettings(s)` — extracts `dinnerEnabled`, `dinnerMenu`, `motionWake`.
 2. `normalizeHousehold(s.household)` — fills missing household fields.
 3. `normalizePerson(p, index)` — fills missing person fields, applies migrations.
-4. `normalizeState(input)` — assembles the full normalized object, runs one-time migrations.
+4. `normalizeChecked(s.checked)` — migrates old array format to date-stamped dict.
+5. `normalizeState(input)` — assembles the full normalized object, runs one-time migrations. Always recalculates `weekKey` from `getWeekKey()`.
 
 Migrations inside `normalizeState` (run only on existing saved data):
 - `p.name === 'Jessica'` → `p.name = 'Mom'` (id: mom)
@@ -176,7 +247,18 @@ Migrations inside `normalizeState` (run only on existing saved data):
 - `p.emoji === '🚀'` (Henry) → `p.emoji = '⚽'`
 - `!streakResetDone && role === 'child'` → `streak = 0`
 
-New fields added to state must be added to both `freshState()` and the `normalizeState` return object.
+New fields added to state must be added to both `freshState()` and the `normalizeState` return object. New settings fields must also be added to `normalizeSettings`.
+
+## Week Key Helpers
+
+```javascript
+function _mondayOf(d)           // returns 'YYYY-MM-DD' of the Monday of d's week
+function getWeekKey()           // Monday of the current week
+function getWeekMondayStr()     // alias of getWeekKey()
+function dateToWeekKey(dateStr) // Monday of the week containing dateStr
+```
+
+All four use `_mondayOf`. ISO week: Monday = start, Sunday = end. A completion on any day Mon–Sun maps to the same weekKey as every other day in that week.
 
 ## Realtime Sync
 

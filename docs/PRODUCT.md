@@ -32,6 +32,7 @@ A family command center that is useful at a glance from across the room and easy
 - **Theme**: Automatically light (7 AM–8 PM) and dark (8 PM–7 AM).
 - **Typography**: Plus Jakarta Sans. Body copy and chore rows are large by web standards — designed for walk-by readability, not desktop density.
 - **Person colors**: Dad = green, Mom = coral, Jules = sky blue, Henry = orange.
+- **Person emojis**: Henry = ⚽, Jules = 🐎, Mom = 🌱 (gardening), Dad = 🪚 (carpentry).
 
 ## Design Direction
 
@@ -41,6 +42,39 @@ A family command center that is useful at a glance from across the room and easy
 - No tabs or dense navigation on the first screen. Settings one tap deeper via gear icon.
 - Gamification for kids: confetti, chimes, streaks, expressive emoji badges.
 - Announcements feel like manga panel captions (parallelogram tags, bold labels).
+
+## Chore Day Scheduling
+
+Each chore can optionally be assigned to specific days of the week (e.g., "take out trash" on Mon/Thu). Day-specific chores:
+
+- Show a small day badge next to the chore name (Mon, Tue, etc.)
+- Today's chores have an amber-filled badge
+- Overdue chores (past due this week, not yet done) show a red badge and a faint red row tint
+- Future-due chores show a muted badge
+- Chores are sorted: today-due first, then overdue, then future, then undone unscheduled, then completed
+
+Chores without day assignments are "unscheduled weekly" — they reset at the start of each week and can be done any day.
+
+## Chore Reset and Tracking
+
+Chore completions are date-stamped (`YYYY-MM-DD`), not stored as a flat boolean. This means:
+
+- **Day-specific chores** reset automatically each day — checked off Monday, they reappear Tuesday.
+- **Unscheduled weekly chores** reset each Monday — checked off any time this week, they stay checked until the new week.
+- A chore checked off earlier in the week still counts toward the weekly allowance progress bar even after it resets.
+
+This eliminates the need for a manual "start new week" to clear chores — daily chores self-manage.
+
+## Motion Wake (Camera-Based Sleep Screen)
+
+When enabled in Family Settings, the kiosk uses the front-facing camera to detect motion:
+
+- **Idle**: if no motion is detected for 2 minutes, the screen dims to a minimal sleep view (clock + date only).
+- **Wake**: motion above a configurable pixel-diff threshold wakes the screen instantly.
+- No images or video are stored or transmitted — only per-frame brightness diffs are computed.
+- Requires browser camera permission (prompted on first enable).
+- Also uses the Wake Lock API to prevent the OS from sleeping the browser.
+- Toggle is in Family Settings (PIN not required to toggle, PIN required to enter settings).
 
 ## Banner System
 
@@ -59,3 +93,5 @@ Custom banners allow parents to schedule messages for specific occasions — sch
 - Whether calendar should move to a custom Firebase event list instead of Google Calendar embed.
 - Whether streak tracking should show a historical streak graph.
 - Whether to add push notifications for approval requests to parent phones.
+- Whether to add a kid-facing phone view (read-only chore list + allowance balance).
+- Whether to add earned/paid allowance balance tracking (Greenlight-style running total).
