@@ -881,8 +881,11 @@ const MOTION = {
 
 function toggleMotionWake(on) {
   state.settings = { ...(state.settings||{}), motionWake: on };
-  saveState('settings.motionWake');
-  renderManageView(); // re-sync checkbox to saved state immediately
+  // Bypass debounce + isLoadingFromCloud guard — write immediately and unconditionally
+  state = stampStateForSave(state, 'settings.motionWake');
+  cacheState(state); // localStorage
+  if (stateRef) stateRef.set(state).catch(() => {}); // Firebase, no debounce
+  renderManageView();
   if (on) startMotionWake();
   else     stopMotionWake();
 }
