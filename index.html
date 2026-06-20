@@ -893,9 +893,32 @@ function toggleMotionWake(on) {
 async function startMotionWake() {
   const statusEl = document.getElementById('motion-wake-status');
   if (statusEl) { statusEl.style.display='block'; statusEl.textContent='Starting camera…'; }
+
+  // Check API availability
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    const msg = '⚠ Camera API not available in this browser/context.';
+    if (statusEl) statusEl.textContent = msg;
+    showToast(msg);
+    return;
+  }
+
+  // Check current permission state before requesting (avoids silent denial)
+  if (navigator.permissions) {
+    try {
+      const perm = await navigator.permissions.query({ name: 'camera' });
+      if (perm.state === 'denied') {
+        const msg = '⚠ Camera blocked — go to Edge Settings → Site permissions → Camera and allow this site.';
+        if (statusEl) statusEl.textContent = msg;
+        showToast('Camera blocked in Edge — allow it in Site permissions.');
+        return;
+      }
+    } catch(e) { /* permissions API not fully supported, continue anyway */ }
+  }
+
   try {
+    // Try without facingMode first — more compatible with Surface Pro cameras
     MOTION.stream = await navigator.mediaDevices.getUserMedia({
-      video: { width: MOTION.SAMPLE_W, height: MOTION.SAMPLE_H, facingMode: 'user' },
+      video: { width: MOTION.SAMPLE_W, height: MOTION.SAMPLE_H },
       audio: false
     });
     MOTION.video = document.createElement('video');
@@ -908,13 +931,19 @@ async function startMotionWake() {
     MOTION.ctx = MOTION.canvas.getContext('2d');
     MOTION.lastPixels = null;
     MOTION.sleeping = false;
-    if (statusEl) { statusEl.textContent = '✓ Camera active — will sleep after 2 min of no motion'; }
+    const okMsg = '✓ Camera active — screen will sleep after 2 min of no motion';
+    if (statusEl) statusEl.textContent = okMsg;
+    showToast('Motion wake active 📷');
     resetMotionTimer();
     requestWakeLock();
     MOTION._checkLoop = setInterval(checkMotion, MOTION.CHECK_INTERVAL_MS);
   } catch(e) {
-    if (statusEl) { statusEl.textContent = '⚠ Camera access denied — check browser permissions'; }
-    console.warn('Motion wake camera error:', e);
+    const errMsg = e.name === 'NotAllowedError'
+      ? '⚠ Camera permission denied — click the camera icon in the Edge address bar and choose Allow.'
+      : `⚠ Camera error: ${e.name}. Check that no other app is using the camera.`;
+    if (statusEl) statusEl.textContent = errMsg;
+    showToast('Camera access denied — see settings for details.');
+    console.warn('Motion wake camera error:', e.name, e.message);
   }
 }
 
@@ -1387,7 +1416,12 @@ function normalizeState(input) {
     people: peopleSource.map((person, index) => normalizePerson(person, index)),
     checked: normalizeChecked(s.checked),
     approved: normalizeApproved(s.approved),
-    pending: normalizePending(s.pending),
+    pending: normalizePending(s.pending).filter(item => {
+      const person = peopleSource.find(p => p.id === item.personId);
+      if (!person) return false;
+      if (item.choreId) return person.chores?.some(c => c.id === item.choreId);
+      return true;
+    }),
     activity,
     logs: activity,
     globalTodos: Array.isArray(s.globalTodos) ? s.globalTodos.map(normalizeTodo) : [],
@@ -1528,7 +1562,14 @@ function personProgress(p) {
   const total = weekly.length;
   return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
 }
-function pendingCount() { return state.pending.length; }
+function pendingCount() {
+  return state.pending.filter(item => {
+    const person = state.people.find(p => p.id === item.personId);
+    if (!person) return false;
+    if (item.choreId) return person.chores.some(c => c.id === item.choreId);
+    return true;
+  }).length;
+}
 function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot'), label = document.getElementById('sync-label'); if(!dot || !label) return;
   dot.className = 'status-dot' + (mode !== 'synced' && mode !== 'saving' && mode !== 'seeding' ? ' offline' : '');
