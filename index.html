@@ -1122,7 +1122,18 @@ try {
   firebaseOnline = true;
 } catch (err) { console.warn('Bypassed sync integration framework.', err); }
 
-function getWeekKey() { const d = new Date(), j1 = new Date(d.getFullYear(),0,1); return `w${d.getFullYear()}_${Math.ceil(((d-j1)/86400000+j1.getDay()+1)/7)}`; }
+// Week key = ISO Monday date string (e.g. "2026-06-15") — stable, timezone-safe
+function _mondayOf(d) {
+  const dow = d.getDay(); // 0=Sun
+  const m = new Date(d);
+  m.setHours(12,0,0,0); // noon to avoid DST edge cases
+  m.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+  return `${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}-${String(m.getDate()).padStart(2,'0')}`;
+}
+function getWeekKey()          { return _mondayOf(new Date()); }
+function getWeekMondayStr()    { return _mondayOf(new Date()); }
+function dateToWeekKey(dateStr){ return _mondayOf(new Date(dateStr + 'T12:00:00')); }
+function todayStr() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function deepCopy(v) { return JSON.parse(JSON.stringify(v)); }
 
 function cleanText(value, fallback = '') {
@@ -1184,10 +1195,24 @@ function normalizePerson(person, index) {
 
 function normalizeChecked(checked) {
   const result = {};
-  if (!checked || typeof checked !== 'object' || Array.isArray(checked)) return result;
-  Object.entries(checked).forEach(([personId, choreIds]) => {
-    if (!Array.isArray(choreIds)) return;
-    result[safeKey(personId, 'person')] = choreIds.map((id, index) => safeKey(id, `task_${index + 1}`));
+  if (!checked || typeof checked !== 'object') return result;
+  const today = todayStr();
+  Object.entries(checked).forEach(([personId, value]) => {
+    const pid = safeKey(personId, 'person');
+    if (Array.isArray(value)) {
+      // Migrate old format: array of choreIds → dict with this week's Monday date
+      const weekMon = getWeekMondayStr();
+      result[pid] = {};
+      value.forEach((id, idx) => { result[pid][safeKey(id, `task_${idx+1}`)] = weekMon; });
+    } else if (value && typeof value === 'object') {
+      // New format: dict of cid → dateStr
+      result[pid] = {};
+      Object.entries(value).forEach(([cid, dateStr]) => {
+        if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+          result[pid][safeKey(cid, 'task')] = dateStr;
+        }
+      });
+    }
   });
   return result;
 }
@@ -1360,7 +1385,7 @@ function normalizeState(input) {
     activity,
     logs: activity,
     globalTodos: Array.isArray(s.globalTodos) ? s.globalTodos.map(normalizeTodo) : [],
-    weekKey: typeof s.weekKey === 'string' ? s.weekKey : getWeekKey(),
+    weekKey: getWeekKey(), // always use current Monday-anchored format
     settings,
     dinnerEnabled: settings.dinnerEnabled,
     motionWake: typeof settings.motionWake === 'boolean' ? settings.motionWake : false,
@@ -1463,10 +1488,39 @@ function processSystemBanners() {
 }
 setInterval(processSystemBanners, 15000);
 
-function isChecked(pid,cid) { return (state.checked[pid] || []).includes(cid); }
+function isChecked(pid, cid) {
+  const checks = state.checked[pid];
+  if (!checks || typeof checks !== 'object' || Array.isArray(checks)) return false;
+  const dateStr = checks[cid];
+  if (!dateStr) return false;
+  // Find the chore to check if it has day assignments
+  const chore = state.people.find(x => x.id === pid)?.chores.find(x => x.id === cid);
+  if (!chore) return false;
+  if (chore.days && chore.days.length > 0) {
+    // Day-specific: "done" if completed TODAY
+    return dateStr === todayStr();
+  } else {
+    // Unscheduled weekly: "done" if completed this week
+    return dateToWeekKey(dateStr) === (state.weekKey || getWeekKey());
+  }
+}
+// True if this chore was completed on a specific date this week (for history display)
+function wasCheckedThisWeek(pid, cid) {
+  const checks = state.checked[pid];
+  if (!checks || typeof checks !== 'object' || Array.isArray(checks)) return false;
+  const dateStr = checks[cid];
+  if (!dateStr) return false;
+  return dateToWeekKey(dateStr) === (state.weekKey || getWeekKey());
+}
 function isApproved(pid) { return state.approved[pid]?.allowance === true; }
 function isJobApproved(pid,cid) { return state.approved[pid]?.jobs?.[cid] === true; }
-function personProgress(p) { const total = p.chores.length; const done = p.chores.filter(c => isChecked(p.id, c.id)).length; return { total, done, pct: total ? Math.round(done / total * 100) : 0 }; }
+function personProgress(p) {
+  const weekly = p.chores.filter(c => c.type === 'weekly');
+  // done = completed on any day this week (tracks toward allowance even if day-specific chore was done earlier this week)
+  const done = weekly.filter(c => wasCheckedThisWeek(p.id, c.id)).length;
+  const total = weekly.length;
+  return { total, done, pct: total ? Math.round(done / total * 100) : 0 };
+}
 function pendingCount() { return state.pending.length; }
 function applySyncStatus(mode) {
   const dot = document.getElementById('cloud-dot'), label = document.getElementById('sync-label'); if(!dot || !label) return;
@@ -1506,23 +1560,26 @@ function recordActivity(details) {
   return entry;
 }
 function pushLogTrail(message, details = {}) { return recordActivity({ ...details, message }); }
-function allWeeklyDone(pid) { const p = state.people.find(x => x.id === pid); const weekly = p ? p.chores.filter(c => c.type === 'weekly') : []; return weekly.length > 0 && weekly.every(c => isChecked(pid, c.id)); }
+function allWeeklyDone(pid) { const p = state.people.find(x => x.id === pid); const weekly = p ? p.chores.filter(c => c.type === 'weekly') : []; return weekly.length > 0 && weekly.every(c => wasCheckedThisWeek(pid, c.id)); }
 function earnedTotal(pid) { const p = state.people.find(x => x.id === pid); if (!p) return 0; let total = isApproved(pid) ? p.weeklyAllowance : 0; p.chores.filter(c => c.type === 'job').forEach(c => { if (isJobApproved(pid,c.id)) total += Number(c.amt) || 0; }); return total; }
 
 // ══════════════════════════════════════════════
 // ENGINE MUTATION PIPELINES
 // ══════════════════════════════════════════════
 function toggleChore(pid,cid) {
-  if (!state.checked[pid]) state.checked[pid] = [];
-  const idx = state.checked[pid].indexOf(cid);
+  // Ensure checked is a dict (migrate if old array format)
+  if (!state.checked[pid] || Array.isArray(state.checked[pid])) state.checked[pid] = {};
   const p = state.people.find(x => x.id === pid); const c = p?.chores.find(x => x.id === cid);
   if (!p || !c) return;
 
-  if (idx === -1) {
-    state.checked[pid].push(cid); chimeCheck(); confetti({ particleCount: 35, spread: 45, origin: { y: 0.85 } });
+  if (!isChecked(pid, cid)) {
+    // Mark done with today's date
+    state.checked[pid][cid] = todayStr();
+    chimeCheck(); confetti({ particleCount: 35, spread: 45, origin: { y: 0.85 } });
     pushLogTrail(`${p.name} completed: ${c.name}`, { type:'chore', action:'chore.completed', actorId:pid, personId:pid, targetType:'chore', targetId:cid });
   } else {
-    state.checked[pid].splice(idx, 1);
+    // Uncheck — remove the date stamp
+    delete state.checked[pid][cid];
     // If unchecking a weekly chore after allowance was approved, revoke the approval
     if (c.type === 'weekly' && isApproved(pid)) {
       if (state.approved[pid]) state.approved[pid].allowance = false;
@@ -1596,8 +1653,8 @@ function requestJobApproval(pid,cid) {
   const p = state.people.find(x => x.id === pid);
   const c = p?.chores.find(x => x.id === cid);
   if (!p || !c) return;
-  if (!state.checked[pid]) state.checked[pid] = [];
-  if (!state.checked[pid].includes(cid)) state.checked[pid].push(cid);
+  if (!state.checked[pid] || Array.isArray(state.checked[pid])) state.checked[pid] = {};
+  if (!state.checked[pid][cid]) state.checked[pid][cid] = todayStr();
   if (!isJobApproved(pid, cid) && !state.pending.some(x => x.type === 'job' && x.personId === pid && x.choreId === cid)) {
     const pendingId = uid('pending');
     state.pending.push({ id: pendingId, type: 'job', personId: pid, choreId: cid, amt: Number(c.amt) || 0 });
@@ -1624,8 +1681,8 @@ function approveItem(itemId) {
 function denyItem(itemId) {
   const item = state.pending.find(x => x.id === itemId); if (!item) return;
   const p = state.people.find(x => x.id === item.personId);
-  if (item.type === 'allowance') state.checked[item.personId] = [];
-  else if (item.choreId && state.checked[item.personId]) state.checked[item.personId] = state.checked[item.personId].filter(x => x !== item.choreId);
+  if (item.type === 'allowance') state.checked[item.personId] = {};
+  else if (item.choreId && state.checked[item.personId]) delete state.checked[item.personId][item.choreId];
   pushLogTrail(`Parent denied ${item.type} request for ${p?.name || 'family member'}`, { type:'approval', action:'approval.denied', actorId:'parent', personId:item.personId, targetType:item.type, targetId:item.choreId || itemId, amount:item.amt });
   state.pending = state.pending.filter(x => x.id !== itemId); saveState('approval.deny'); renderAll();
 }
@@ -1657,7 +1714,7 @@ function deleteChore(pid,cid) {
   if (!p) return;
   const removed = p.chores.find(c => c.id === cid);
   p.chores = p.chores.filter(c => c.id !== cid);
-  if (state.checked[pid]) state.checked[pid] = state.checked[pid].filter(x => x !== cid);
+  if (state.checked[pid] && !Array.isArray(state.checked[pid])) delete state.checked[pid][cid];
   state.pending = state.pending.filter(x => !(x.personId === pid && x.choreId === cid));
   if (removed) pushLogTrail(`Task removed from ${p.name}: ${removed.name}`, { type:'chore', action:'chore.deleted', actorId:'parent', personId:pid, targetType:'chore', targetId:cid });
   saveState('chore.delete'); renderAll();
