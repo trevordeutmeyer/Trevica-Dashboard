@@ -880,14 +880,15 @@ const MOTION = {
 };
 
 function toggleMotionWake(on) {
-  state.settings = { ...(state.settings||{}), motionWake: on };
-  // Bypass debounce + isLoadingFromCloud guard — write immediately and unconditionally
-  state = stampStateForSave(state, 'settings.motionWake');
-  cacheState(state); // localStorage
-  if (stateRef) stateRef.set(state).catch(() => {}); // Firebase, no debounce
+  // motionWake is per-device (camera is local) — store in localStorage only
+  // so other family devices don't overwrite it via Firebase sync
+  localStorage.setItem('motionWake', on ? '1' : '0');
   renderManageView();
   if (on) startMotionWake();
   else     stopMotionWake();
+}
+function getMotionWakeSetting() {
+  return localStorage.getItem('motionWake') === '1';
 }
 
 async function startMotionWake() {
@@ -1029,7 +1030,7 @@ async function requestWakeLock() {
     MOTION.wakeLock = await navigator.wakeLock.request('screen');
     MOTION.wakeLock.addEventListener('release', () => {
       // Re-acquire if page still visible and motionWake still on
-      if (document.visibilityState === 'visible' && state.settings?.motionWake) {
+      if (document.visibilityState === 'visible' && getMotionWakeSetting()) {
         setTimeout(requestWakeLock, 2000);
       }
     });
@@ -1038,14 +1039,14 @@ async function requestWakeLock() {
 
 // Re-acquire wake lock when tab becomes visible again
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible' && state.settings?.motionWake && !MOTION.wakeLock) {
+  if (document.visibilityState === 'visible' && getMotionWakeSetting() && !MOTION.wakeLock) {
     requestWakeLock();
   }
 });
 
 // Auto-start if setting was saved
 window.addEventListener('load', () => {
-  if (state.settings?.motionWake) startMotionWake();
+  if (getMotionWakeSetting()) startMotionWake();
 });
 
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
@@ -2071,7 +2072,7 @@ function renderManageView() {
     </div>`;
   }).join('');
   document.getElementById('toggle-dinner-feature').checked = state.dinnerEnabled; document.getElementById('manage-dinner-box').style.display = state.dinnerEnabled ? 'block' : 'none'; document.getElementById('dinner-input').value = state.dinnerMenu;
-  const mwEl = document.getElementById('toggle-motion-wake'); if (mwEl) mwEl.checked = !!(state.settings && state.settings.motionWake);
+  const mwEl = document.getElementById('toggle-motion-wake'); if (mwEl) mwEl.checked = getMotionWakeSetting();
   const chip = document.getElementById('app-version-chip');
   if (chip) {
     const u = window._kioskUpdate || {};

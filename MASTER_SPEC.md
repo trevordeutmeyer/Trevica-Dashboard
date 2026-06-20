@@ -188,4 +188,4 @@ When enabled, the kiosk uses the front-facing camera to conserve attention and s
 - **Wake Lock**: `navigator.wakeLock.request('screen')` prevents the OS from sleeping the browser while the app is in use.
 - **Privacy**: no images or video are stored, transmitted, or recorded — only per-frame pixel diffs are computed in memory.
 - **Camera permission**: prompted on first enable. If denied, the toggle reverts.
-- **Setting**: `state.settings.motionWake` (boolean). Toggled in Family Settings. Persists in Firebase.
+- **Setting**: stored in `localStorage` (key `motionWake`, value `'1'`/`'0'`), NOT in Firebase. The camera is per-device — syncing via Firebase would let other family members' phones overwrite the kiosk setting.

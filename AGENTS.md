@@ -47,6 +47,8 @@ dinnerMenu, customBanners[], streakResetDone, meta{}
 dinnerEnabled (bool), dinnerMenu (string), motionWake (bool)
 ```
 
+> **Note**: `motionWake` is stored in `localStorage` (key `'motionWake'`, value `'1'` or `'0'`) — NOT in Firebase state. The camera is per-device; syncing via Firebase would cause other family devices to overwrite it. `getMotionWakeSetting()` reads localStorage; `toggleMotionWake(on)` writes to localStorage only.
+
 ### weekKey
 
 `weekKey` is a `YYYY-MM-DD` string — the Monday of the current ISO week (e.g. `"2026-06-15"`). It is **always recalculated** from `getWeekKey()` on load; the stored value is never trusted.
@@ -136,7 +138,7 @@ Adult cards show: emoji, name, chore/task rows (no allowance or streak).
 
 ## Motion Wake
 
-Controlled by `state.settings.motionWake`. When `true`:
+Controlled by `localStorage.getItem('motionWake') === '1'` (read via `getMotionWakeSetting()`). **Not stored in Firebase** — camera is per-device. When `true`:
 - `getUserMedia` opens a low-res camera stream.
 - Each frame is diffed against the previous (grayscale, `DIFF_THRESH=18`, `CHANGED_FRAC=0.003`).
 - No motion for `IDLE_MS=120000` (2 min) → sleep overlay shown.
